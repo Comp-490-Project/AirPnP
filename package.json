@@ -5,7 +5,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "lint": "eslint --ext .tsx --ext .ts src/"
   },
   "dependencies": {
     "expo": "~42.0.1",
@@ -16,7 +17,12 @@
     "react-native-web": "~0.13.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0"
+    "@babel/core": "^7.9.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/parser": "^4.31.2",
+    "eslint": "^7.32.0",
+    "eslint-plugin-react": "^7.26.0",
+    "eslint-plugin-react-hooks": "^4.2.0"
   },
   "private": true
 }
