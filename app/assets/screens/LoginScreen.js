@@ -1,14 +1,19 @@
 import React from 'react'
 import { ImageBackground, StyleSheet, Text, View } from 'react-native'
-
-export default function LoginScreen(props) {
+import AppButton from '../../components/AppButton';
+import colors from '../config/colors';
+export default function LoginScreen() {
     return (
         <ImageBackground 
         style= {styles.background}
         source= {require("../../assets/backround.jpg")}
         >
-            <View style={styles.loginButton}></View>
-            <View style={styles.RegisterButton}></View>
+         <View style = {styles.buttonsContainer}>    
+        <AppButton title= "Login" />
+        <AppButton title= "Register" />    
+        </View>
+
+
         </ImageBackground>
     )
 }
@@ -18,15 +23,12 @@ const styles = StyleSheet.create({
 background: {
     flex: 1,
     justifyContent: "flex-end",
+    alignItems: "center",  
+    
 },
-loginButton: {
-    width: "100%",
-    height: 70,
-    backgroundColor: 'blue',
-},
-RegisterButton: {
-    width: "100%",
-    height: 70,
-    backgroundColor: 'red',
-},
+buttonsContainer: {
+    padding: 20,
+    width: "80%",
+}
+
 })
