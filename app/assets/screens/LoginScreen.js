@@ -1,6 +1,6 @@
 import React from 'react'
 import { ImageBackground, StyleSheet, Text, View } from 'react-native'
-
+import colors from '../config/colors';
 export default function LoginScreen(props) {
     return (
         <ImageBackground 
@@ -20,13 +20,21 @@ background: {
     justifyContent: "flex-end",
 },
 loginButton: {
-    width: "100%",
+    width: "30%",
     height: 70,
-    backgroundColor: 'blue',
+    backgroundColor: colors.buttons,
+    position: "absolute",
+    bottom: 100,
+    left: 40,
 },
 RegisterButton: {
-    width: "100%",
+    width: "30%",
     height: 70,
-    backgroundColor: 'red',
+    backgroundColor: colors.buttons,
+    position: "absolute",
+    bottom: 100,
+    right: 40,
+
+
 },
 })
