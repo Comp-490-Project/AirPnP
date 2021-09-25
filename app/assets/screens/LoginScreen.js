@@ -3,6 +3,7 @@ import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import AppButton from '../../components/AppButton';
 import colors from '../config/colors';
 export default function LoginScreen() {
+<<<<<<< HEAD
   return (
     <ImageBackground
       style={styles.background}
@@ -14,6 +15,21 @@ export default function LoginScreen() {
       </View>
     </ImageBackground>
   );
+=======
+    return (
+        <ImageBackground 
+        style= {styles.background}
+        source= {require("../../assets/background.jpg")}
+        >
+         <View style = {styles.buttonsContainer}>    
+        <AppButton title= "Login" />
+        <AppButton title= "Register" />    
+        </View>
+
+
+        </ImageBackground>
+    )
+>>>>>>> ff8e7c8cdd7a4613c1fc68797c46c966bee9b136
 }
 
 const styles = StyleSheet.create({
