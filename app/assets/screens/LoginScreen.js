@@ -6,7 +6,7 @@ export default function LoginScreen() {
     return (
         <ImageBackground 
         style= {styles.background}
-        source= {require("../../assets/backround.jpg")}
+        source= {require("../../assets/background.jpg")}
         >
          <View style = {styles.buttonsContainer}>    
         <AppButton title= "Login" />
