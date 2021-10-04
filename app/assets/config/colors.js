@@ -5,7 +5,8 @@ export default{
     buttonText: "#fff",
     textInput: "#fff",
     medium: "#6e6969",
-    dark: "#0c0c0c"
+    dark: "#0c0c0c",
+    white: "#fff",
 
 
 //we can edit these colors once the wireframes are done.

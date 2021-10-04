@@ -18,7 +18,7 @@ export default function LoginScreen() {
         >
             <Formik
                 initialValues={{ email: "", password: ""}}
-                onSubmit={() => console.log("change this to  database login") } 
+                onSubmit={(values) => console.log(values) } //change this to send to db
                 validationSchema={validationSchema}
             >
                 { ({handleChange, handleSubmit, errors }) => (
@@ -46,14 +46,17 @@ export default function LoginScreen() {
                             <Text style= {{color: 'red'}}>{errors.password}</Text>
                         </View>
                         <View style= {styles.loginButton}>
-                            <AppButton  title= "Login" onPress={() => handleSubmit}/>
+                            <AppButton  
+                            title= "Login" 
+                            onPress={handleSubmit}
+                            />
                         </View>
                     </>
                 )}
             </Formik>
             
             <View style= {styles.registerButton}>
-                <AppButton  title= "Register"/>
+                <AppButton  title= "Register" />
             </View>
             <View style= {styles.guestButton}>
                 <AppButton  title= "Guest"/>
@@ -72,6 +75,7 @@ loginButton: {
     right:20,
     height: 30,
     marginBottom:10,
+    
     
 },
 registerButton: {
