@@ -5,6 +5,7 @@ import AppTextInput from '../../components/AppTextInput';
 import AppText from '../../components/AppText';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import colors from '../config/colors';
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().required().email().label("Email"),
@@ -45,6 +46,9 @@ export default function LoginScreen() {
                             />
                             <Text style= {{color: 'red'}}>{errors.password}</Text>
                         </View>
+                        
+                        <Text style= {styles.forgot}>forgot password?</Text>
+                        
                         <View style= {styles.loginButton}>
                             <AppButton  
                             title= "Login" 
@@ -61,6 +65,7 @@ export default function LoginScreen() {
             <View style= {styles.guestButton}>
                 <AppButton  title= "Guest"/>
             </View>
+            
         </ImageBackground>
         
     )
@@ -77,6 +82,14 @@ loginButton: {
     marginBottom:10,
     
     
+},
+forgot:{
+    fontSize: 10,
+    color: colors.blue,
+    position: "absolute",
+    bottom: 150,
+    right: 20,
+    width: "22%",
 },
 registerButton: {
     position: "absolute",
