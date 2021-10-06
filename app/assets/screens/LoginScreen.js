@@ -45,6 +45,7 @@ export default function LoginScreen() {
                             />
                             <Text style= {{color: 'red'}}>{errors.password}</Text>
                         </View>
+                         <Text style= {styles.forgot}>forgot password?</Text>                       
                         <View style= {styles.loginButton}>
                             <AppButton  
                             title= "Login" 
@@ -78,6 +79,14 @@ loginButton: {
     
     
 },
+ forgot:{
+    fontSize: 10,
+    color: colors.blue,
+    position: "absolute",
+    bottom: 150,
+    right: 20,
+    width: "22%",
+},   
 registerButton: {
     position: "absolute",
     bottom: 50,
