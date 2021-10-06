@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "AirPandP",
-    "slug": "AirPandP",
+    "name": "AirPnP",
+    "slug": "AirPnP",
     "version": "1.0.0",
-    "orientation": "default",
+    "orientation": "portrait",
     "icon": "./app/assets/icon.png",
     "splash": {
       "image": "./app/assets/splash.png",
@@ -24,9 +24,9 @@
         "foregroundImage": "./app/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-    "config": {
-      "googleMaps": {
-        "apiKey": "AIzaSyB65lV0eONvq5_rGwaZm7pMHOJZYM4gVMk"
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB65lV0eONvq5_rGwaZm7pMHOJZYM4gVMk"
         }
       }
     },
