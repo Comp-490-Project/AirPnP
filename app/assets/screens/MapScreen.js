@@ -8,11 +8,20 @@ import useLocation from "../../hooks/useLocation";
 
 export default function MapScreen(){
   const location = useLocation();
+  console.log(JSON.stringify(location));
   return(
     <View style={styles.container}>
       <MapView 
-
-      />
+      provider={PROVIDER_GOOGLE} //Google Maps 
+      style = {styles.map}
+      showsUserLocation = {true}
+      region={{
+        latitude: location.latitude,
+        longitude: location.longitude,
+        latitudeDelta: 0.0015,
+        longitudeDelta: 0.0121,
+      }}
+      ></MapView> 
     </View>
   )
 }

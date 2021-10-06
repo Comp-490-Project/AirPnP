@@ -6,16 +6,16 @@ export default function useLocation(){ //Custom Hook To Get User Location.
     
     const getLocation = async() => {
       try{ //Handle Denied Permissions.
-        const {granted} = await Location.requestForegroundPermissionsAsync;
+        const {granted} = await Location.requestForegroundPermissionsAsync();
         if(!granted){
           console.log('NOT GRANTED');
           return;
         }
         const{
           coords: {latitude,longitude},
-        } = await Location.getLastKnownPositionAsync();
+        } = await Location.getCurrentPositionAsync();
         setLocation({latitude,longitude});
-      } catch (error){  
+      }catch (error){  
         console.log(error);
       }
     }
@@ -23,9 +23,6 @@ export default function useLocation(){ //Custom Hook To Get User Location.
     useEffect(() => {
         getLocation();
     }, []);
-
-    console.log(location);
-
     return location;
   };
   

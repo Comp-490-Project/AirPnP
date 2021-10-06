@@ -3,6 +3,7 @@ import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import AppButton from '../../components/AppButton';
 import colors from '../config/colors';
 import firebase from '../../../Firebase/firebase';
+
 export default function LoginScreen() {
   return (
     <ImageBackground
