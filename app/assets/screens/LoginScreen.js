@@ -4,9 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
-  TextInput,
-<<<<<<< HEAD
+  
 } from 'react-native';
 import AppButton from '../../components/AppButton';
 import AppTextInput from '../../components/AppTextInput';
@@ -15,17 +13,6 @@ import colors from '../../assets/config/colors';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import colors from '../config/colors';
-=======
-} from "react-native";
-import AppButton from "../../components/AppButton";
-import AppTextInput from "../../components/AppTextInput";
-import AppText from "../../components/AppText";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import { Link } from "react-router-native";
-import RegisterScreen from "./RegisterScreen";
-import colors from "../../assets/config/colors";
->>>>>>> a5c60b93582d7655fbebb9de7d21823cd90b9869
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
