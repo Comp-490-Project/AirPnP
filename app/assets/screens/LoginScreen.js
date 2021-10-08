@@ -7,23 +7,13 @@ import {
   TouchableOpacity,
   
 } from 'react-native';
+
 import AppButton from '../../components/AppButton';
 import AppTextInput from '../../components/AppTextInput';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
 import { Link } from 'react-router-native';
 import colors from '../../assets/config/colors';
-
-} from "react-native";
-import AppButton from "../../components/AppButton";
-import AppTextInput from "../../components/AppTextInput";
-import AppText from "../../components/AppText";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-native";
-import RegisterScreen from "./RegisterScreen";
-import colors from "../../assets/config/colors";
-
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
