@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import useLocation from "../../hooks/useLocation";
+import React from 'react';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import useLocation from '../../hooks/useLocation';
 
 export default function MapScreen() {
   const location = useLocation();
@@ -32,11 +32,11 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
 });
