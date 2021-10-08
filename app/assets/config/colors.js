@@ -9,6 +9,5 @@ export default{
     white: "#fff",
     blue: "#0000FF"
 
-
 //we can edit these colors once the wireframes are done.
 }
