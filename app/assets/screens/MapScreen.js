@@ -16,6 +16,7 @@ export default function MapScreen() {
             provider={PROVIDER_GOOGLE} //Google Maps
             style={styles.map}
             showsUserLocation={true}
+            showsMyLocationButton={true}
             region={{
               latitude: location.latitude,
               longitude: location.longitude,
