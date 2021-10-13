@@ -16,7 +16,7 @@ const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
   password: Yup.string().required().min(6).label('Password'),
 });
-export default function RegisterScreen() {
+export default function RegisterScreen({history}) {
   return (
     <>
       <Image
@@ -30,8 +30,9 @@ export default function RegisterScreen() {
           .createUserWithEmailAndPassword(values.email,values.password)
           .then(UserCredentials => {
             const user = UserCredentials.user;
-
+            history.push('/map') ;
           }) 
+          .catch(error => alert(error.message))
         }}
         validationSchema={validationSchema}
       >
