@@ -1,7 +1,8 @@
 import * as firebase from 'firebase';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCPKNOoCCeaB6DY2UOQ_KTPVyoJfsJAPZ4',
+  //apiKey: 'AIzaSyCPKNOoCCeaB6DY2UOQ_KTPVyoJfsJAPZ4',
+  apiKey: 'AIzaSyDOeEKbcngBARFdVV8a5K75fakxbrS3Kro',
   authDomain: 'airpnp-92187.firebaseapp.com',
   projectId: 'airpnp-92187',
   storageBucket: 'airpnp-92187.appspot.com',
@@ -10,9 +11,12 @@ const firebaseConfig = {
   measurementId: 'G-RNLPTZ7F2C',
 };
 
-if (!firebase.apps.length) {
-  // Check if app has been initialized already
-  firebase.initializeApp(firebaseConfig);
+let app;//redid this initializing code
+if(firebase.apps.length === 0){
+  app = firebase.initializeApp(firebaseConfig);
+} else{
+  app = firebase.app()
 }
+const auth = firebase.auth()
 
-export { firebase }; // Import when database required.
+export{ auth };
