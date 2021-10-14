@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   ImageBackground,
   StyleSheet,
@@ -12,13 +12,17 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-native';
 import colors from '../../assets/config/colors';
+import { auth } from '../../../Firebase/firebase';
+
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
   password: Yup.string().required().min(6).label('Password'),
 });
 
-export default function LoginScreen() {
+
+export default function LoginScreen({history}) {
+  
   return (
     <ImageBackground
       style={{ flex: 1, justifyContent: 'center' }}
@@ -26,9 +30,20 @@ export default function LoginScreen() {
     >
       <Formik
         initialValues={{ email: '', password: '' }}
-        onSubmit={(values) => console.log(values)} //change this to send to db
+        onSubmit={(values) => { 
+          auth.
+          signInWithEmailAndPassword(values.email, values.password)
+          .then(UserCredentials => {
+            const user = UserCredentials.user;
+             history.push('/map') ;
+            
+          }) 
+          .catch(error => alert(error.message))
+          
+        }} //change this to send to db
         validationSchema={validationSchema}
       >
+        
         {({ handleChange, handleSubmit, errors }) => (
           <>
             <View style={styles.inputFields}>

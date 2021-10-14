@@ -1,10 +1,12 @@
 import React from 'react';
-import { Image, StyleSheet, Text, ScrollView } from 'react-native';
+import { Image, StyleSheet, Text, ScrollView,TouchableOpacity } from 'react-native';
 import AppButton from '../../components/AppButton';
 import AppTextInput from '../../components/AppTextInput';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-native';
+import { auth } from '../../../Firebase/firebase';
+
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -14,7 +16,7 @@ const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
   password: Yup.string().required().min(6).label('Password'),
 });
-export default function RegisterScreen() {
+export default function RegisterScreen({history}) {
   return (
     <>
       <Image
@@ -23,7 +25,15 @@ export default function RegisterScreen() {
       />
       <Formik
         initialValues={{ email: '', password: '' }}
-        onSubmit={(values) => console.log(values)} //change this to send to db
+        onSubmit={(values) => {
+          auth
+          .createUserWithEmailAndPassword(values.email,values.password)
+          .then(UserCredentials => {
+            const user = UserCredentials.user;
+            history.push('/map') ;
+          }) 
+          .catch(error => alert(error.message))
+        }}
         validationSchema={validationSchema}
       >
         {({ handleChange, handleSubmit, errors }) => (
@@ -81,8 +91,9 @@ export default function RegisterScreen() {
               textContentType="password"
             />
             <Text style={{ color: 'red' }}>{errors.password}</Text>
-
-            <AppButton title="Register" />
+            <TouchableOpacity onPress={handleSubmit}>
+              <AppButton title="Register" />
+            </TouchableOpacity>
             {/* Add text here for "Already have an account? Login." it would link to '/'*/}
             <Link to="/">
               <Text> Already have an account? Login. </Text>
