@@ -23,6 +23,17 @@ const validationSchema = Yup.object().shape({
 
 export default function LoginScreen({history}) {
   
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if(user){
+        history.push('/map') ;
+      }
+    })
+    return unsubscribe
+  }, [])
+
+
+
   return (
     <ImageBackground
       style={{ flex: 1, justifyContent: 'center' }}

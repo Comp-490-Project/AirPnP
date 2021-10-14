@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, StyleSheet, Text, ScrollView,TouchableOpacity } from 'react-native';
 import AppButton from '../../components/AppButton';
 import AppTextInput from '../../components/AppTextInput';
@@ -17,6 +17,16 @@ const validationSchema = Yup.object().shape({
   password: Yup.string().required().min(6).label('Password'),
 });
 export default function RegisterScreen({history}) {
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if(user){
+        history.push('/map') ;
+      }
+    })
+    return unsubscribe
+  }, [])
+
+
   return (
     <>
       <Image
