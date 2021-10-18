@@ -53,7 +53,7 @@ export default function LoginScreen({history}) {
         validationSchema={validationSchema}
       >
         
-        {({ handleChange, handleSubmit, errors,  }) => (
+        {({ handleChange, handleSubmit, errors  }) => (
           <>
             <View style={styles.inputFields}>
               <AppTextInput
