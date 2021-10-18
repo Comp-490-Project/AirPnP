@@ -1,0 +1,88 @@
+import React, { useEffect } from 'react';
+import {
+    ImageBackground,
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+  } from 'react-native';
+  import { Formik } from 'formik';
+  import * as Yup from 'yup';
+  import AppTextInput from '../../components/AppTextInput';
+  import AppButton from '../../components/AppButton';
+  import { auth } from '../../../Firebase/firebase';
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required().email().label('Email'),
+});
+
+
+
+export default function ForgotPassword({history}) {
+
+    return(
+    <ImageBackground
+      style={{ flex: 1, justifyContent: 'center' }}
+      source={require('../../assets/background.jpg')}
+    >
+
+        <Formik
+         initialValues={{ email: ''}}
+         onSubmit={(values) => { 
+          auth.
+          sendPasswordResetEmail(values.email)
+          .catch(error => alert(error.message))
+          
+          history.push('/')
+         }} 
+            validationSchema={validationSchema}
+         >
+        
+         {({ handleChange, handleSubmit, errors,  }) => (
+          <>
+            <View style={styles.inputFields}>
+              <AppTextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                icon="email"
+                keyboardType="email-address"
+                onChangeText={handleChange('email')}
+                placeholder="Email"
+                textContentType="emailAddress"
+              />
+              <Text style={{ color: 'red' }}>{errors.email}</Text>
+              
+            </View>
+            <View style={styles.resetButton}>
+              <TouchableOpacity onPress={handleSubmit}>
+                <AppButton title="Reset Password" />
+              </TouchableOpacity>
+            </View>
+          </>
+          )}
+          </Formik>
+
+    </ImageBackground>
+
+    )
+
+}
+const styles = StyleSheet.create({
+    inputFields: {
+        position: 'absolute',
+        bottom: 150,
+        left: 20,
+        right: 20,
+      },
+      resetButton: {
+        position: 'absolute',
+        bottom: 90,
+        left: 20,
+        right: 20,
+        height: 30,
+        marginBottom: 10,
+      },
+
+
+
+})

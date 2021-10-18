@@ -32,8 +32,6 @@ export default function LoginScreen({history}) {
     return unsubscribe
   }, [])
 
-
-
   return (
     <ImageBackground
       style={{ flex: 1, justifyContent: 'center' }}
@@ -51,11 +49,11 @@ export default function LoginScreen({history}) {
           }) 
           .catch(error => alert(error.message))
           
-        }} //change this to send to db
+        }} 
         validationSchema={validationSchema}
       >
         
-        {({ handleChange, handleSubmit, errors }) => (
+        {({ handleChange, handleSubmit, errors  }) => (
           <>
             <View style={styles.inputFields}>
               <AppTextInput
@@ -87,7 +85,13 @@ export default function LoginScreen({history}) {
           </>
         )}
       </Formik>
-
+      <View style={styles.forgot}>
+        <Link to="/forgotPassword"> 
+          <Text style={styles.forgot2}>
+            forgot password?
+          </Text>
+        </Link>
+      </View>
       <View style={styles.registerButton}>
         <Link to="/register">
           <AppButton title="Register" />
@@ -98,6 +102,8 @@ export default function LoginScreen({history}) {
           <AppButton title="Guest" />
         </Link>
       </View>
+      
+      
     </ImageBackground>
   );
 }
@@ -112,13 +118,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   forgot: {
-    fontSize: 10,
-    color: colors.blue,
     position: 'absolute',
     bottom: 150,
     right: 20,
-    width: '22%',
+    width: '25%',
   },
+  forgot2: {
+    fontSize: 10,
+    color: colors.blue,
+  },
+
   registerButton: {
     position: 'absolute',
     bottom: 50,

@@ -13,7 +13,7 @@ export default function MapScreen() {
   return (
     <>
       {!location ? (
-        <Text>Loading...</Text>
+        <Text style= {styles.loadingText}>Loading...</Text>
 
       ) : (
         
@@ -51,6 +51,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  loadingText:{
+    position: 'absolute',
+    top: 100
   },
   map: {
     width: Dimensions.get('window').width,
