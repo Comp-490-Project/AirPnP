@@ -32,6 +32,7 @@ export default function ForgotPassword({navigation}) {
           auth.
           sendPasswordResetEmail(values.email)
           .catch(error => alert(error.message))
+          alert("Email Sent")   
           navigation.navigate("login")
          }} 
             validationSchema={validationSchema}
