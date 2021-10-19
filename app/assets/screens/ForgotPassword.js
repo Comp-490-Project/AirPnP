@@ -18,7 +18,7 @@ import {
 
 
 
-export default function ForgotPassword({history}) {
+export default function ForgotPassword({navigation}) {
 
     return(
     <ImageBackground
@@ -32,8 +32,7 @@ export default function ForgotPassword({history}) {
           auth.
           sendPasswordResetEmail(values.email)
           .catch(error => alert(error.message))
-          
-          history.push('/')
+          navigation.navigate("login")
          }} 
             validationSchema={validationSchema}
          >
@@ -54,8 +53,8 @@ export default function ForgotPassword({history}) {
               
             </View>
             <View style={styles.resetButton}>
-              <TouchableOpacity onPress={handleSubmit}>
-                <AppButton title="Reset Password" />
+              <TouchableOpacity >
+                <AppButton title="Reset Password" onPress={handleSubmit} />
               </TouchableOpacity>
             </View>
           </>
