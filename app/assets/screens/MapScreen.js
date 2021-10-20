@@ -7,19 +7,13 @@ import SearchBar from '../../components/SearchBar';
 
 export default function MapScreen() {
   const location = useLocation();
- 
- 
- 
   return (
     <>
       {!location ? (
         <Text style= {styles.loadingText}>Loading...</Text>
-
-      ) : (
-        
+      ) : ( 
         <View style={styles.container}>
          
-
           <MapView
             provider={PROVIDER_GOOGLE} //Google Maps
             style={styles.map}
@@ -31,12 +25,10 @@ export default function MapScreen() {
               latitudeDelta: 0.0015,
               longitudeDelta: 0.0121,
             }}
+            loadingEnabled={true}
           >
-            
-
           </MapView>
           <SearchBar/>
-
         </View>
       )}
     </>
