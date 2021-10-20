@@ -26,6 +26,7 @@
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-maps": "^0.28.0",
+    "react-native-screens": "^3.8.0",
     "react-native-web": "~0.13.12",
     "react-router-native": "^5.2.1",
     "yup": "^0.32.9"

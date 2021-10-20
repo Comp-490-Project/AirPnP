@@ -25,7 +25,7 @@ export default function LoginScreen({navigation}) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if(user){
-        navigation.navigate("map") ;
+        {navigation.navigate("map")} ;
       }
     })
     return unsubscribe
@@ -104,7 +104,7 @@ export default function LoginScreen({navigation}) {
 const styles = StyleSheet.create({
   loginButton: {
     position: 'absolute',
-    bottom: 90,
+    bottom: 100,
     left: 20,
     right: 20,
     height: 30,
