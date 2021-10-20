@@ -10,7 +10,6 @@ import AppButton from '../../components/AppButton';
 import AppTextInput from '../../components/AppTextInput';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Link } from 'react-router-native';
 import colors from '../../assets/config/colors';
 import { auth } from '../../../Firebase/firebase';
 
@@ -21,12 +20,12 @@ const validationSchema = Yup.object().shape({
 });
 
 
-export default function LoginScreen({history}) {
+export default function LoginScreen({navigation}) {
   
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if(user){
-        history.push('/map') ;
+        {navigation.navigate("map")} ;
       }
     })
     return unsubscribe
@@ -44,7 +43,7 @@ export default function LoginScreen({history}) {
           signInWithEmailAndPassword(values.email, values.password)
           .then(UserCredentials => {
             const user = UserCredentials.user;
-             history.push('/map') ;
+            navigation.navigate("map") ;
             
           }) 
           .catch(error => alert(error.message))
@@ -78,29 +77,23 @@ export default function LoginScreen({history}) {
               <Text style={{ color: 'red' }}>{errors.password}</Text>
             </View>
             <View style={styles.loginButton}>
-              <TouchableOpacity onPress={handleSubmit}>
-                <AppButton title="Login" />
+              <TouchableOpacity>
+                <AppButton title="Login"  onPress={handleSubmit} />
               </TouchableOpacity>
             </View>
           </>
         )}
       </Formik>
       <View style={styles.forgot}>
-        <Link to="/forgotPassword"> 
-          <Text style={styles.forgot2}>
-            forgot password?
-          </Text>
-        </Link>
+        <Text style={styles.forgot2} onPress={()=>navigation.navigate("forgot")}>
+          forgot password?
+        </Text>
       </View>
       <View style={styles.registerButton}>
-        <Link to="/register">
-          <AppButton title="Register" />
-        </Link>
+        <AppButton title="Register" onPress={()=>navigation.navigate("register")}/>
       </View>
       <View style={styles.guestButton}>
-        <Link to="/map">
-          <AppButton title="Guest" />
-        </Link>
+        <AppButton title="Guest" onPress={()=>navigation.navigate("map")}/>
       </View>
       
       
@@ -111,7 +104,7 @@ export default function LoginScreen({history}) {
 const styles = StyleSheet.create({
   loginButton: {
     position: 'absolute',
-    bottom: 90,
+    bottom: 100,
     left: 20,
     right: 20,
     height: 30,

@@ -4,7 +4,6 @@ import AppButton from '../../components/AppButton';
 import AppTextInput from '../../components/AppTextInput';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Link } from 'react-router-native';
 import { auth } from '../../../Firebase/firebase';
 
 
@@ -16,11 +15,11 @@ const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
   password: Yup.string().required().min(6).label('Password'),
 });
-export default function RegisterScreen({history}) {
+export default function RegisterScreen({navigation}) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if(user){
-        history.push('/map') ;
+        navigation.navigate("map")
       }
     })
     return unsubscribe
@@ -40,7 +39,7 @@ export default function RegisterScreen({history}) {
           .createUserWithEmailAndPassword(values.email,values.password)
           .then(UserCredentials => {
             const user = UserCredentials.user;
-            history.push('/map') ;
+            navigation.navigate("map");
           }) 
           .catch(error => alert(error.message))
         }}
@@ -101,13 +100,11 @@ export default function RegisterScreen({history}) {
               textContentType="password"
             />
             <Text style={{ color: 'red' }}>{errors.password}</Text>
-            <TouchableOpacity onPress={handleSubmit}>
-              <AppButton title="Register" />
+            <TouchableOpacity>
+              <AppButton title="Register"  onPress={handleSubmit} />
             </TouchableOpacity>
             {/* Add text here for "Already have an account? Login." it would link to '/'*/}
-            <Link to="/">
-              <Text> Already have an account? Login. </Text>
-            </Link>
+           <Text onPress={()=>navigation.navigate("login")}> Already have an account? Login. </Text>
           </ScrollView>
         )}
       </Formik>
