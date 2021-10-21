@@ -1,7 +1,6 @@
 import * as firebase from 'firebase';
 
 const firebaseConfig = {
-  //apiKey: 'AIzaSyCPKNOoCCeaB6DY2UOQ_KTPVyoJfsJAPZ4',
   apiKey: 'AIzaSyDOeEKbcngBARFdVV8a5K75fakxbrS3Kro',
   authDomain: 'airpnp-327419.firebaseapp.com',
   projectId: 'airpnp-327419',
@@ -20,4 +19,6 @@ if (firebase.apps.length === 0) {
 
 export const auth = firebase.auth();
 
+
 export { firebase };
+
