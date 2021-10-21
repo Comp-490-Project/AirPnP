@@ -1,8 +1,9 @@
 import React, { useEffect,useState } from "react";
 import { StyleSheet, Button, Text, View, Dimensions, SafeAreaView,Image} from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import * as Location from 'expo-location'
+import * as Permissions from 'expo-permissions'
 import useLocation from "../../hooks/useLocation";
-import MapViewDirections from 'react-native-maps-directions'
 import AppButton from "../../components/AppButton";
 import markerImage from '../marker.png';
 
@@ -76,57 +77,105 @@ const styles = StyleSheet.create({
 }); 
 
 */
+export default function AddScreen() {
 
-function AddScreen() {
+  const [ mapRegion, setRegion ] = useState(null)
+  const [ hasLocationPermissions, setLocationPermission ] = useState( false )
+  const [ location, setLocation] = useState(null);
 
-  const location = useLocation();
+  useEffect(()=>{
+    const getLocationAsync = async () =>{
+      let {status} = await Location.requestForegroundPermissionsAsync();
+      if('granted'!==status){
+        setLocation('Permission to access location was denied')
+      }else{
+        setLocationPermission(true);
+      }
 
-  const [region,setRegion]=useState({
-    latitude: location.latitude,
-    longitude: location.longitude,
-    latidudeDelta: 0.025,
-    longitudeDelta: 0.025
+      let {coords:{ latitude,longitude } } = await Location.getLastKnownPositionAsync();
+      setLocation( JSON.stringify( { latitude, longitude } ) )
+
+      setRegion({latitude, longitude, latitudeDelta: 0.0015, longitudeDelta: 0.0015}) //Center Map on Location fetched above.
+    }
+    getLocationAsync();
   })
-  
-  const onRegionChange = region =>{
-    setRegion(region)
+
+  if ( location === null ) { //Loading Animations Here
+      return <Text>Finding your current location...</Text>
   }
 
+  if ( hasLocationPermissions === false ) { //Loading Animations Here
+      return <Text>Location permissions are not granted.</Text>
+  }
 
-  return(
-    <View style={styles.map}>
+  if ( mapRegion === null ) { //Loading Animations Here
+      return <Text>Map region doesn't exist.</Text>
+  }
+
+  const onRegionChange = mapRegion =>{
+    setRegion(mapRegion)
+  }
+
+  return (
+    <View style={styles.container}>
       <MapView
-        style={styles.map}
-        initialRegion={region}
+        style={ styles.map }
+        showsMyLocationButton={true}
+        initialRegion={mapRegion}
         onRegionChangeComplete={onRegionChange}
-        loadingEnabled={true}
-      />
+      >
+      </MapView>
       <View style={styles.markerFixed}>
         <Image style={styles.marker} source={markerImage}/>
       </View>
+      <View style={styles.addButton}>
+        <AppButton title="Add" onPress={null}/>
+      </View>
       <SafeAreaView style={styles.footer}>
-        <Text style={styles.region}>{JSON.stringify(region,null,2)}</Text>
-      </SafeAreaView>
-    </View>
-  );
+          <Text style={styles.region}>{JSON.stringify(mapRegion, null, 2)}</Text>
+      </SafeAreaView>   
+   </View>
+   
+  )
 }
 
-export default AddScreen;
-
 const styles = StyleSheet.create({
-  map:{
-    flex: 1
+  container: {
+    flex: 1,
+    alignItems: "center"
+  },
+  addButton:{
+    position: 'absolute',
+    bottom: 50,
+    width: 200,
+    marginBottom: 10,
+    height: 10,
+
   },
   markerFixed: {
     left: '50%',
     marginLeft: -24,
-    marginTop: -48,
+    marginTop: -50,
     position: 'absolute',
     top: '50%'
+  },
+  map: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
+  region: {
+    color: '#fff',
+    lineHeight: 20,
+    margin: 20
   },
   marker: {
     height: 30,
     width: 30
+  },
+  region: {
+    color: '#fff',
+    lineHeight: 20,
+    margin: 20
   },
   footer: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -134,9 +183,4 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%'
   },
-  region: {
-    color: '#fff',
-    lineHeight: 20,
-    margin: 20
-  }
 })
