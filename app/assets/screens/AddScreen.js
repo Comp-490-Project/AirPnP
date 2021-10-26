@@ -5,9 +5,8 @@ import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
 import useLocation from "../../hooks/useLocation";
 import AppButton from "../../components/AppButton";
+import {firebase} from "../../../Firebase/firebase"
 import markerImage from '../marker.png';
-
-
 
 export default function AddScreen() {
 
@@ -15,7 +14,39 @@ export default function AddScreen() {
   const [ hasLocationPermissions, setLocationPermission ] = useState( false )
   const [ location, setLocation] = useState(null);
 
-  useEffect(()=>{
+  /* Awaiting for the AddDetails Screen for the Restroom
+  const [markerLoaded, setMarkerLoaded] = useState(false); 
+
+  //Send Restroom Data to Firestore
+  async function addRestroom(){
+    const dataRef=firebase.firestore().collection('testing')
+    await dataRef.doc('locationTest').set({
+      latitude: mapRegion.latitude,
+      longitude: mapRegion.longitude
+    });
+  };
+
+  //Get single document from Firestore
+  async function getOneRestroom(){
+    const dataRef=firebase.firestore().collection('testing').doc('locationTest');
+    const doc = await dataRef.get();
+    console.log(doc.data());  
+  }
+
+//Get all documents from Colectio in Firestore
+  async function getRestrooms(){
+    const query = firebase.firestore().collection('testing');
+    query.get().then((querySnapshot)=>{
+     const docs = querySnapshot.docs;
+      for(const doc of docs){
+        setRestrooms((restrooms)=>[...restrooms,doc.data()]);
+      }
+      setMarkerLoadded(true);
+    });
+  }
+*/
+
+  useEffect(()=>{ //Must be made into a Hook (Leaving it Here For Now)
     const getLocationAsync = async () =>{
       let {status} = await Location.requestForegroundPermissionsAsync();
       if('granted'!==status){
@@ -28,7 +59,6 @@ export default function AddScreen() {
 
       setRegion({latitude, longitude, latitudeDelta: 0.0121, longitudeDelta: 0.0015}) //Center Map on Location fetched above.
     };
-    console.log(mapRegion);
     getLocationAsync();
   },[]);
 
@@ -48,14 +78,17 @@ export default function AddScreen() {
     setRegion(mapRegion)
   }
 
-  const markerHandle = mapRegion =>{
+  const handlePress = () => {
+    if(mapRegion.latitude!=undefined && mapRegion.longitude!=undefined){ 
+    animateToRegion
+    return(
     <Marker
       coordinate={{
-        latitude: -118,
-        longitude:-34
+        latitude: mapRegion.latitude,
+        longitude: mapRegion.longitude
       }}
-    > 
-    </Marker>
+      >
+    </Marker>)}
   }
 
   return (
@@ -67,6 +100,7 @@ export default function AddScreen() {
         initialRegion={mapRegion}
         onRegionChangeComplete={onRegionChange}
       >
+      {/*
       <Circle //TODO: This needs to be responsive in regards to the latDelta/longDelta values in the MapView. 
         center={mapRegion}
         strokeColor = { '#1a66ff' }
@@ -74,14 +108,15 @@ export default function AddScreen() {
         radius={20}
         fillColor = { 'rgba(230,238,255,0.5)' }
       ></Circle>
+      */}
       </MapView>
       <View style={styles.markerFixed}>
         <Image style={styles.marker} source={markerImage}/>    
       </View> 
       <View style={styles.addButton}>
-        <AppButton title="Add" onPress={markerHandle}/>
+        <AppButton title="Add" onPress={handlePress}/>
       </View>
-   </View>
+   </View>  
 
   )
 }
@@ -113,9 +148,5 @@ const styles = StyleSheet.create({
     height: 48,
     width: 48
   },
-  region: {
-    color: '#fff',
-    lineHeight: 20,
-    margin: 20
-  },
+
 })
