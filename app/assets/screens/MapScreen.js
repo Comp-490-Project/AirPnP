@@ -17,7 +17,7 @@ export default function MapScreen({navigation}) {
   const [markerLoaded, setMarkerLoaded] = useState(false);
   const [restrooms, setRestrooms] = useState([]);
   const reference = React.createRef();
-
+  
   var lat = 0;
   var long = 0;
   var name = '';
@@ -41,7 +41,7 @@ export default function MapScreen({navigation}) {
     long = marker.longitude
     name = marker.name
     desc = marker.description
-
+    reference.current.snapTo(0)
   }
   
   renderInner = () => (
@@ -97,20 +97,17 @@ export default function MapScreen({navigation}) {
             }}
           >
             {markerLoaded &&
-              restrooms.map((marker, i) => (
+              restrooms.map((marker, index) => (
                 <Marker
-                  key={i}
-                  
-                  
+                  key={index}                
                   image = {require('../../assets/Logo.png')}
                   coordinate={{
                     latitude: marker.latitude,
                     longitude: marker.longitude,                    
                   }}                 
                 >  
-                  <Callout tooltip onPress={()=>reference.current.snapTo(0)}>
-                    <View>
-                      {restroomAttributes(marker)}
+                  <Callout tooltip onPress={()=>restroomAttributes(marker)}>
+                    <View>  
                       <View style = {styles.calloutWindow}>
                         <Text style= {styles.name}>
                           {marker.name}
