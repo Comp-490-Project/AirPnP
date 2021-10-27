@@ -8,11 +8,21 @@ import colors from '../../assets/config/colors';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated'
 import AppButton from '../../components/AppButton';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+
+
 
 export default function MapScreen({navigation}) {
   const [markerLoaded, setMarkerLoaded] = useState(false);
   const [restrooms, setRestrooms] = useState([]);
   const reference = React.createRef();
+
+  var lat = 0;
+  var long = 0;
+  var name = '';
+  var desc = '';
+  
   
   async function getRestrooms() {
     const query = firebase.firestore().collection('testing');
@@ -25,17 +35,29 @@ export default function MapScreen({navigation}) {
       setMarkerLoaded(true);
     });
   }
+
+  restroomAttributes = (marker) => {
+    lat = marker.latitude
+    long = marker.longitude
+    name = marker.name
+    desc = marker.description
+
+  }
   
   renderInner = () => (
-    <View style={styles.bottomSheetPanel}> 
+    <View style={styles.bottomSheetPanel} > 
       <View style= {{alignItems: 'center'}}>
-        <Text style= {styles.panelRestroomName}>Restroom Name</Text>
-        <Text style= {styles.panelRestroomDescription}>Description of the restroom</Text>
+        <Text style= {styles.panelRestroomName}>{name}</Text>
+        <Text style= {styles.panelRestroomDescription}>{desc}</Text>
       </View>
       <View style = {{alignContent:'space-around'}}>
-          <AppButton title= {'Navigate'} styles={{width:"80%"}}/>   
+        <TouchableOpacity style = {{margin: 5}}>
+          <AppButton title= {'Navigate'} styles={{width:"80%"}} /> 
+        </TouchableOpacity >
           <View Style={{height: 10, backgroundColor: colors.white}}/> 
-          <AppButton title= {'Rate'} styles={{width:"80%"}}/>     
+        <TouchableOpacity style = {{margin: 5}}>
+          <AppButton title= {'Rate'} styles={{width:"80%"}}/>    
+        </TouchableOpacity>
       </View>         
     </View>
   );
@@ -88,6 +110,7 @@ export default function MapScreen({navigation}) {
                 >  
                   <Callout tooltip onPress={()=>reference.current.snapTo(0)}>
                     <View>
+                      {restroomAttributes(marker)}
                       <View style = {styles.calloutWindow}>
                         <Text style= {styles.name}>
                           {marker.name}
@@ -107,7 +130,7 @@ export default function MapScreen({navigation}) {
           <SearchBar />
           <BottomSheet
             ref ={reference}
-            snapPoints={[400,0]}
+            snapPoints={["57%",0]}
             initialSnap= {1}
             enabledGestureInteraction={true}
             renderContent={renderInner}
