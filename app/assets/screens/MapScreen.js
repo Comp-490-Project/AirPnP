@@ -17,11 +17,13 @@ export default function MapScreen({navigation}) {
   const [markerLoaded, setMarkerLoaded] = useState(false);
   const [restrooms, setRestrooms] = useState([]);
   const reference = React.createRef();
-  
+  const [name,setName] = useState('');
+  const [desc,setDesc] = useState('');
+
+
   var lat = 0;
   var long = 0;
-  var name = '';
-  var desc = '';
+  
   
   
   async function getRestrooms() {
@@ -39,8 +41,8 @@ export default function MapScreen({navigation}) {
   restroomAttributes = (marker) => {
     lat = marker.latitude
     long = marker.longitude
-    name = marker.name
-    desc = marker.description
+    setName(marker.name);
+    setDesc(marker.description);
     reference.current.snapTo(0)
   }
   
