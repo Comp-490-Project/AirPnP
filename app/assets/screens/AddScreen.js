@@ -129,3 +129,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
+      {/*
+      <Circle //TODO: This needs to be responsive in regards to the latDelta/longDelta values in the MapView. 
+        center={mapRegion}
+        strokeColor = { '#1a66ff' }
+        strokeWidth = { 1 }
+        radius={20}
+        fillColor = { 'rgba(230,238,255,0.5)' }
+      ></Circle>
+      */}
