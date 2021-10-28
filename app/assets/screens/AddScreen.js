@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from "react";
-import { StyleSheet, Button, Text, View, Dimensions, SafeAreaView,Image,TextInput,ToucableOpacity} from "react-native";
+import { StyleSheet, Button, Text, View, Dimensions, SafeAreaView,Image,TextInput,TouchableOpacity} from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker,Circle } from "react-native-maps";
 import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
@@ -19,9 +19,9 @@ export default function AddScreen() {
 
   const sheetRef = React.useRef(null);
 
-  const renderContent = () =>(
+  const renderCont = () =>(
     <View style={styles.swipeBox}>
-      <Text Swipe Down To Close></Text>
+      <Text>Swipe Down To Close</Text>
       <View style={styles.cont3}>
         <Text style={styles.title}> Address:</Text>
         <Text style={styles.subtitle}> 7420 Hi Ave</Text>
@@ -36,13 +36,13 @@ export default function AddScreen() {
         <Text style={styles.title}> Rating: HERE</Text>
         <Text style={styles.text}></Text>
         <View style={styles.cont1}>
-          <ToucableOpacity style={styles.btn}>
+          <TouchableOpacity style={styles.btn}>
             <Text style={styles.btnText}>Submit</Text>
-          </ToucableOpacity>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
-  )
+  );
 
 
   /* Awaiting for the AddDetails Screen for the Restroom
@@ -118,15 +118,6 @@ export default function AddScreen() {
         initialRegion={mapRegion}
         onRegionChangeComplete={onRegionChange}
       >
-      {/*
-      <Circle //TODO: This needs to be responsive in regards to the latDelta/longDelta values in the MapView. 
-        center={mapRegion}
-        strokeColor = { '#1a66ff' }
-        strokeWidth = { 1 }
-        radius={20}
-        fillColor = { 'rgba(230,238,255,0.5)' }
-      ></Circle>
-      */}
       </MapView>
       <View style={styles.markerFixed}>
         <Image style={styles.marker} source={markerImage}/>    
@@ -138,7 +129,7 @@ export default function AddScreen() {
         ref={sheetRef}
         snapPoints={[450,300,0]}
         borderRadius={10}
-        renderContent={renderContent}
+        renderContent={renderCont}
       />
    </View>  
   )
