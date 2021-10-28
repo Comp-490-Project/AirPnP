@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import {
-  Image,
+  ImageBackground,
   StyleSheet,
   Text,
   ScrollView,
   TouchableOpacity,
+  SafeAreaView
 } from "react-native";
 import AppButton from "../../components/AppButton";
 import AppTextInput from "../../components/AppTextInput";
@@ -35,11 +36,12 @@ export default function RegisterScreen({ navigation }) {
   }, []);
 
   return (
-    <>
-      <Image
+<>
+  <ImageBackground
         style={styles.image}
         source={require("../../assets/background.jpg")}
-      />
+      >
+    <SafeAreaView>  
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={(values) => {
@@ -125,16 +127,18 @@ export default function RegisterScreen({ navigation }) {
           </ScrollView>
         )}
       </Formik>
-    </>
+    </SafeAreaView>   
+  </ImageBackground>  
+</>
   );
 }
 
 const styles = StyleSheet.create({
   ViewContainer: {
-    paddingTop: 20,
+    paddingTop: 40,
     padding: 15,
   },
   image: {
-    position: "absolute",
+    flex: 1
   },
 });
