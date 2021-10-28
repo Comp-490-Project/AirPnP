@@ -9,6 +9,7 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated'
 import AppButton from '../../components/AppButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Linking } from 'react-native';
 
 
 
@@ -19,13 +20,15 @@ export default function MapScreen({navigation}) {
   const reference = React.createRef();
   const [name,setName] = useState('');
   const [desc,setDesc] = useState('');
+  const [lat,setLat] = useState(0);
+  const[long,setLong] = useState(0);
+  
+  const openGps = (lati, lng) => {
+    var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
+    var url = scheme + `${lati},${lng}`;
+    Linking.openURL(url);
+  };
 
-
-  var lat = 0;
-  var long = 0;
-  
-  
-  
   async function getRestrooms() {
     const query = firebase.firestore().collection('testing');
 
@@ -39,11 +42,11 @@ export default function MapScreen({navigation}) {
   }
 
   restroomAttributes = (marker) => {
-    lat = marker.latitude
-    long = marker.longitude
+    setLat(marker.latitude);
+    setLong(marker.longitude);
     setName(marker.name);
     setDesc(marker.description);
-    reference.current.snapTo(0)
+    reference.current.snapTo(0);
   }
   
   renderInner = () => (
@@ -53,9 +56,9 @@ export default function MapScreen({navigation}) {
         <Text style= {styles.panelRestroomDescription}>{desc}</Text>
       </View>
       <View style = {{alignContent:'space-around'}}>
-        <TouchableOpacity style = {{margin: 5}}>
+        <TouchableOpacity style = {{margin: 5}} onPress={()=>  openGps(lat, long) }>
           <AppButton title= {'Navigate'} styles={{width:"80%"}} /> 
-        </TouchableOpacity >
+        </TouchableOpacity > 
           <View Style={{height: 10, backgroundColor: colors.white}}/> 
         <TouchableOpacity style = {{margin: 5}}>
           <AppButton title= {'Rate'} styles={{width:"80%"}}/>    
