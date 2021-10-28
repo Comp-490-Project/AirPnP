@@ -6,7 +6,6 @@ import SearchBar from '../../components/SearchBar';
 import { firebase } from '../../../Firebase/firebase';
 import colors from '../../assets/config/colors';
 import BottomSheet from 'reanimated-bottom-sheet';
-import Animated from 'react-native-reanimated'
 import AppButton from '../../components/AppButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
