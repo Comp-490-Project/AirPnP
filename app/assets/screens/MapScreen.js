@@ -28,7 +28,7 @@ export default function MapScreen() {
   }, [markerLoaded]);
 
   const location = useLocation();
-
+    
   return (
     <>
       {!location ? (
@@ -46,6 +46,7 @@ export default function MapScreen() {
               latitudeDelta: 0.0015,
               longitudeDelta: 0.0121,
             }}
+            loadingEnabled={true}
           >
             {markerLoaded &&
               restrooms.map((marker, i) => (
