@@ -8,6 +8,7 @@ export default {
   dark: '#0c0c0c',
   white: '#fff',
   blue: '#0000FF',
+  lightgray: '#00000040'
 
   //we can edit these colors once the wireframes are done.
 };
