@@ -1,56 +1,92 @@
 import React from "react";
-import { StyleSheet, Image, Text, View, TouchableOpacity,Dimensions} from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Feather from "@expo/vector-icons/Feather";
-import { useLinkProps } from "@react-navigation/native";
+import {
+  StyleSheet,
+  Image,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+  Button,
+  TextInput,
+} from "react-native";
+
+import Animated from "react-native-reanimated";
+import BottomSheet from "reanimated-bottom-sheet";
 import MapView from "react-native-maps";
 
-function profileScreen(props){
-  return(
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={()=>props.navigation.goBack()}>
-          <Feather name="chevron-left" color ='#FFF' size={25}/>
-        </TouchableOpacity>
-      </View>
-      <MapView
-        style={styles.map}
-        region={{
-          latitude: 34,
-          longitude: -118,
-          latitudeDelta: 0.0015,
-          longitudeDelta: 0.0121
-        }}
-      >
-      </MapView>
+export default function App() {
+  const [text, setText] = React.useState("");
+
+  const renderContent = () => (
+    <View
+      style={{
+        backgroundColor: "white",
+        padding: 16,
+        height: 450,
+        alignItems: "center",
+        justifyContent: "flex-end",
+      }}
+    >
+      <Text>Swipe down to close</Text>
       <View style={styles.cont3}>
-        <Text style={styles.title}> XXXXXXXX </Text>
-        <Text style={styles.subtitle}> YYYYYYY </Text>
-        <View style={styles.cont2}>
-          <Text style={{...styles.title, flex: 2, marginTop:0}}>Colors</Text>
-          <View styles={styles.selected}>
-            <View style={styles.c1}/>
-          </View>
-          <View style={styles.c2}/>
-          <View style={styles.c3}/>
-        </View>
-        <Text style={styles.text}>
-          
-        </Text>
+        <Text style={styles.title}> Address: </Text>
+        <Text style={styles.subtitle}> 7420 Hi Ave </Text>
+        <Text style={styles.title}> Descripton: </Text>
+        <TextInput
+          label="Description:"
+          style={{ height: 40 }}
+          onChangeText={(text) => setText(text)}
+          placeholder="Describe the features of the restroom being added."
+          mode="outlined"
+        />
+
+        <Text style={styles.title}> Rating: here </Text>
+
+        <Text style={styles.text}></Text>
         <View style={"styles.cont1"}>
-          <FontAwesome name = "heart-o" color="#000" size={25}/>
-          <TouchableOpacity
-            style={styles.btn}
-          >
-            <Text style={styles.btnText}>Next</Text>
+          <TouchableOpacity style={styles.btn}>
+            <Text style={styles.btnText}>Submit</Text>
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
-};
 
-export default profileScreen;
+  const sheetRef = React.useRef(null);
+
+  return (
+    <>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "papayawhip",
+          alignItems: "center",
+          justifyContent: "flex-end",
+        }}
+      >
+        <MapView
+          style={styles.map}
+          region={{
+            latitude: 34,
+            longitude: -118,
+            latitudeDelta: 0.0015,
+            longitudeDelta: 0.0121,
+          }}
+        ></MapView>
+        <Button
+          title="Add Bathroom:"
+          onPress={() => sheetRef.current.snapTo(0)}
+        />
+      </View>
+      <BottomSheet
+        ref={sheetRef}
+        snapPoints={[450, 300, 0]}
+        borderRadius={10}
+        renderContent={renderContent}
+      />
+    </>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -59,9 +95,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#121212",
   },
-  map:{
-    width:'100%',
-    height: '35%',
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+  map: {
+    width: "100%",
+    height: "100%",
   },
   title: {
     fontSize: 25,
@@ -82,6 +124,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 60,
     paddingVertical: 12,
     borderRadius: 30,
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
   },
   btnText: {
     fontSize: 20,
@@ -105,7 +150,7 @@ const styles = StyleSheet.create({
     width: 20,
     borderRadius: 15,
     backgroundColor: "#529C47",
-    marginHorizontal:10
+    marginHorizontal: 10,
   },
   c1: {
     height: 20,
@@ -134,13 +179,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 20,
   },
   cont3: {
     flex: 1,
     backgroundColor: "#FFF",
     width: "100%",
     paddingHorizontal: 20,
-
   },
 });
