@@ -1,18 +1,9 @@
 import React from "react";
-import {
-  StyleSheet,
-  Image,
-  Text,
-  View,
-  TouchableOpacity,
-  Dimensions,
-  Button,
-  TextInput,
-} from "react-native";
-
+import {StyleSheet,Image,Text,View,TouchableOpacity,Dimensions,Button,TextInput,} from "react-native";
 import Animated from "react-native-reanimated";
 import BottomSheet from "reanimated-bottom-sheet";
 import MapView from "react-native-maps";
+
 
 export default function App() {
   const [text, setText] = React.useState("");
@@ -22,7 +13,7 @@ export default function App() {
       style={{
         backgroundColor: "white",
         padding: 16,
-        height: 450,
+        height: 1000,
         alignItems: "center",
         justifyContent: "flex-end",
       }}
@@ -30,23 +21,17 @@ export default function App() {
       <Text>Swipe down to close</Text>
       <View style={styles.cont3}>
         <Text style={styles.title}> Address: </Text>
-        <Text style={styles.subtitle}> 7420 Hi Ave </Text>
-        <Text style={styles.title}> Descripton: </Text>
-        <TextInput
+        <Text style={styles.subtitle}> 7420 Hi Ave </Text> 
+        {/* Look into Reverse Geocoding Google API to transer coords to address*/}
+        <Text style={styles.title}> Description: </Text>
+        <View style={styles.TextInput}>
+          <TextInput
+          multiline={true}
           label="Description:"
-          style={{ height: 40 }}
           onChangeText={(text) => setText(text)}
           placeholder="Describe the features of the restroom being added."
           mode="outlined"
-        />
-
-        <Text style={styles.title}> Rating: here </Text>
-
-        <Text style={styles.text}></Text>
-        <View style={"styles.cont1"}>
-          <TouchableOpacity style={styles.btn}>
-            <Text style={styles.btnText}>Submit</Text>
-          </TouchableOpacity>
+          />
         </View>
       </View>
     </View>
@@ -80,11 +65,11 @@ export default function App() {
       </View>
       <BottomSheet
         ref={sheetRef}
-        snapPoints={[450, 300, 0]}
-        borderRadius={10}
+        snapPoints={[550, 450, 0]}
+        borderRadius={40}
         renderContent={renderContent}
       />
-    </>
+    </> 
   );
 }
 
@@ -187,4 +172,13 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 20,
   },
+  TextInput:{
+    height: 200, 
+    borderWidth: 3,
+    borderRadius: 20,
+    paddingTop:10,
+    paddingLeft: 10,
+    paddingRight: 10,
+
+  }
 });

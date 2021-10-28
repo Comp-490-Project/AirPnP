@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from "react";
-import { StyleSheet, Button, Text, View, Dimensions, SafeAreaView,Image} from "react-native";
+import { StyleSheet, Button, Text, View, Dimensions, SafeAreaView,Image,TextInput,ToucableOpacity} from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker,Circle } from "react-native-maps";
 import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
@@ -7,12 +7,43 @@ import useLocation from "../../hooks/useLocation";
 import AppButton from "../../components/AppButton";
 import {firebase} from "../../../Firebase/firebase"
 import markerImage from '../marker.png';
+import BottomSheet from 'reanimated-bottom-sheet';
+import Animated from "react-native-reanimated";
 
 export default function AddScreen() {
 
   const [ mapRegion, setRegion ] = useState(null)
   const [ hasLocationPermissions, setLocationPermission ] = useState( false )
   const [ location, setLocation] = useState(null);
+  const [text, setText] = useState(null);
+
+  const sheetRef = React.useRef(null);
+
+  const renderContent = () =>(
+    <View style={styles.swipeBox}>
+      <Text Swipe Down To Close></Text>
+      <View style={styles.cont3}>
+        <Text style={styles.title}> Address:</Text>
+        <Text style={styles.subtitle}> 7420 Hi Ave</Text>
+        <Text style={styles.title}> Description</Text>
+        <TextInput
+          label="Description:"
+          style={{ height: 40 }}
+          onChangeText={(text) => setText(text)}
+          placeholder="Describe the features of the restroom being added."
+          mode="outlined"
+        />
+        <Text style={styles.title}> Rating: HERE</Text>
+        <Text style={styles.text}></Text>
+        <View style={styles.cont1}>
+          <ToucableOpacity style={styles.btn}>
+            <Text style={styles.btnText}>Submit</Text>
+          </ToucableOpacity>
+        </View>
+      </View>
+    </View>
+  )
+
 
   /* Awaiting for the AddDetails Screen for the Restroom
   const [markerLoaded, setMarkerLoaded] = useState(false); 
@@ -78,19 +109,6 @@ export default function AddScreen() {
     setRegion(mapRegion)
   }
 
-  const handlePress = () => {
-    if(mapRegion.latitude!=undefined && mapRegion.longitude!=undefined){ 
-    animateToRegion
-    return(
-    <Marker
-      coordinate={{
-        latitude: mapRegion.latitude,
-        longitude: mapRegion.longitude
-      }}
-      >
-    </Marker>)}
-  }
-
   return (
     <View style={styles.container}>
       <MapView
@@ -114,14 +132,26 @@ export default function AddScreen() {
         <Image style={styles.marker} source={markerImage}/>    
       </View> 
       <View style={styles.addButton}>
-        <AppButton title="Add" onPress={handlePress}/>
+        <AppButton title="Add" onPress={()=>sheetRef.current.snapTo(1)}/>
       </View>
+      <BottomSheet
+        ref={sheetRef}
+        snapPoints={[450,300,0]}
+        borderRadius={10}
+        renderContent={renderContent}
+      />
    </View>  
-
   )
 }
 
 const styles = StyleSheet.create({
+  swipeBox:{
+    backgroundColor: "white",
+    padding: 16,
+    height: 450,
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
   container: {
     flex: 1,
     alignItems: "center"
@@ -148,5 +178,44 @@ const styles = StyleSheet.create({
     height: 48,
     width: 48
   },
-
+  cont1: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    justifyContent: "space-between",
+    marginTop: 40,
+  },
+  title: {
+    fontSize: 25,
+    marginTop: 30,
+  },
+  subtitle: {
+    fontSize: 20,
+    color: "#474747",
+    marginTop: 10,
+  },
+  cont3: {
+    flex: 1,
+    backgroundColor: "#FFF",
+    width: "100%",
+    paddingHorizontal: 20,
+  },
+  text: {
+    fontSize: 18,
+    paddingRight: 80,
+    lineHeight: 25,
+  },
+  btn: {
+    backgroundColor: "#E2443B",
+    paddingHorizontal: 60,
+    paddingVertical: 12,
+    borderRadius: 30,
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnText: {
+    fontSize: 20,
+    color: "#FFF",
+  },
 })
