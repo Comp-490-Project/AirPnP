@@ -80,8 +80,7 @@ export default function MapScreen({navigation}) {
   }, [markerLoaded]);
 
   const location = useLocation();
-  bs = React.createRef();
-  fall = new Animated.Value(1);
+
   return (
     <>
       {!location ? (
@@ -100,6 +99,7 @@ export default function MapScreen({navigation}) {
               latitudeDelta: 0.0015,
               longitudeDelta: 0.0121,
             }}
+            loadingEnabled={true}
           >
             {markerLoaded &&
               restrooms.map((marker, index) => (
