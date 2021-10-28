@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
   lastName: Yup.string().max(50, "Too Long!").required("Last Name is required"),
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(6).label("Password"),
-  passwordConfirmation: Yup.string().oneOf(
+  passwordConfirmation: Yup.string().required().oneOf(
     [Yup.ref("password"), null],
     "Passwords must match"
   ),
@@ -57,7 +57,8 @@ export default function RegisterScreen({ navigation }) {
                 email: values.email,
               });
               navigation.navigate("map");
-            });
+            })
+            .catch((error) => alert(error.message));  
         }}
         validationSchema={validationSchema}
       >
