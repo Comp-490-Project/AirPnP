@@ -9,6 +9,7 @@ import {firebase} from "../../../Firebase/firebase"
 import markerImage from '../marker.png';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from "react-native-reanimated";
+import Rating from "../../components/Rating";
 
 export default function AddScreen() {
 
@@ -23,17 +24,18 @@ export default function AddScreen() {
     <View style={styles.swipeBox}>
       <Text>Swipe Down To Close</Text>
       <View style={styles.cont3}>
-        <Text style={styles.title}> Address:</Text>
-        <Text style={styles.subtitle}> 7420 Hi Ave</Text>
-        <Text style={styles.title}> Description</Text>
-        <TextInput
-          label="Description:"
-          style={{ height: 40 }}
-          onChangeText={(text) => setText(text)}
-          placeholder="Describe the features of the restroom being added."
-          mode="outlined"
-        />
-        <Text style={styles.title}> Rating: HERE</Text>
+        <Text style={styles.title}>Description</Text>
+        <View style={styles.TextInput}>
+          <TextInput
+            label="Description:"
+            onChangeText={(text) => setText(text)}
+            placeholder="How Was It?."
+            mode="outlined"
+            multiline={true}
+          />
+        </View>
+        <Text style={styles.title}>Rating</Text>
+        <Rating></Rating>
         <Text style={styles.text}></Text>
         <View style={styles.cont1}>
           <TouchableOpacity style={styles.btn}>
@@ -72,7 +74,7 @@ export default function AddScreen() {
       for(const doc of docs){
         setRestrooms((restrooms)=>[...restrooms,doc.data()]);
       }
-      setMarkerLoadded(true);
+      setMarkerLoadded(true); 
     });
   }
 */
@@ -123,13 +125,15 @@ export default function AddScreen() {
         <Image style={styles.marker} source={markerImage}/>    
       </View> 
       <View style={styles.addButton}>
-        <AppButton title="Add" onPress={()=>sheetRef.current.snapTo(1)}/>
+        <AppButton title="Add" onPress={()=>sheetRef.current.snapTo(0)}/>
       </View>
       <BottomSheet
         ref={sheetRef}
-        snapPoints={[450,300,0]}
+        snapPoints={["57%",0]}
+        initialSnap={1}
         borderRadius={10}
         renderContent={renderCont}
+        enabledGestureInteraction={true}
       />
    </View>  
   )
@@ -139,9 +143,10 @@ const styles = StyleSheet.create({
   swipeBox:{
     backgroundColor: "white",
     padding: 16,
-    height: 450,
+    height: 600,
     alignItems: "center",
     justifyContent: "flex-end",
+    borderRadius: 40
   },
   container: {
     flex: 1,
@@ -175,10 +180,12 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-between",
     marginTop: 40,
+    paddingLeft: 13
   },
   title: {
-    fontSize: 25,
+    fontSize: 35,
     marginTop: 30,
+    alignSelf: 'center'
   },
   subtitle: {
     fontSize: 20,
@@ -201,12 +208,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 60,
     paddingVertical: 12,
     borderRadius: 30,
+    width: 300,
     position: "relative",
     alignItems: "center",
-    justifyContent: "center",
   },
   btnText: {
     fontSize: 20,
     color: "#FFF",
   },
+  TextInput:{
+    height: 200, 
+    borderWidth: 3,
+    borderRadius: 20,
+    paddingTop:10,
+    paddingLeft: 10,
+    paddingRight: 10,
+  }
 })
