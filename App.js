@@ -1,11 +1,39 @@
-// Status Bar
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import LoginScreen from './app/assets/screens/LoginScreen';
-import AppText from './app/components/AppText';
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
+import {NavigationContainer} from "@react-navigation/native"
+import {createNativeStackNavigator} from "@react-navigation/native-stack"
+import { Tabs } from './Navigation/Tabs';
+
+import RegisterScreen from './app/assets/screens/RegisterScreen';
 import MapScreen from './app/assets/screens/MapScreen';
+import LoginScreen from './app/assets/screens/LoginScreen';
+import ForgotPassword from './app/assets/screens/ForgotPassword';
+import HomeScreen from './app/assets/screens/HomeScreen';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  return <MapScreen />;
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{headerShown:false}}>
+        <Stack.Screen
+          name="login"
+          component={LoginScreen} 
+        ></Stack.Screen>
+        <Stack.Screen
+         name="register"
+         component={RegisterScreen} 
+        ></Stack.Screen>
+        <Stack.Screen
+          name="map"
+          component={HomeScreen}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="forgot"
+          component={ForgotPassword}
+        ></Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
+
