@@ -17,7 +17,7 @@ export default function AddScreen() {
   const [ hasLocationPermissions, setLocationPermission ] = useState( false )
   const [ location, setLocation] = useState(null);
   const [text, setText] = useState(null);
-
+  const [markerLoaded, setMarkerLoaded] = useState(false); 
   const sheetRef = React.useRef(null);
 
   const renderCont = () =>(
@@ -47,8 +47,6 @@ export default function AddScreen() {
   );
 
 
-  /* Awaiting for the AddDetails Screen for the Restroom
-  const [markerLoaded, setMarkerLoaded] = useState(false); 
 
   //Send Restroom Data to Firestore
   async function addRestroom(){
@@ -66,7 +64,6 @@ export default function AddScreen() {
     console.log(doc.data());  
   }
 
-//Get all documents from Colectio in Firestore
   async function getRestrooms(){
     const query = firebase.firestore().collection('testing');
     query.get().then((querySnapshot)=>{
@@ -77,7 +74,6 @@ export default function AddScreen() {
       setMarkerLoadded(true); 
     });
   }
-*/
 
   useEffect(()=>{ //Must be made into a Hook (Leaving it Here For Now)
     const getLocationAsync = async () =>{

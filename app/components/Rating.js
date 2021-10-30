@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import {SafeAreAView, StyleSheet, Text, Touchable, View,Image} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View,Image} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function Rating (){
     const [defaultRating, setdefaultRating] = useState(2);
     const [maxRating, setmaxRating] = useState([1,2,3,4,5])
 
-    const starImgFilled='https://raw.githubusercontent.com/tranhonghan/images/main/star_corner.png'
-    const starImgCorner='https://raw.githubusercontent.com/tranhonghan/images/main/star_filled.png'
+    const starImgFilled='https://raw.githubusercontent.com/tranhonghan/images/main/star_filled.png'
+    const starImgCorner=  'https://raw.githubusercontent.com/tranhonghan/images/main/star_corner.png'
 
     const CustomRatingBar = () =>{
         return(
@@ -36,11 +36,10 @@ export default function Rating (){
         )
     }
     return(
-        <SafeAreAView style={styles.container}>
-            <Text style={styles.textStyle}>Rate the Restroom</Text>
+        <SafeAreaView style={styles.container}>
             <CustomRatingBar>
             </CustomRatingBar>
-        </SafeAreAView> 
+        </SafeAreaView> 
     )
 };
 
