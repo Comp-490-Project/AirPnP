@@ -12,14 +12,13 @@ import Animated from "react-native-reanimated";
 import Rating from "../../components/Rating";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
 
+
 export default function AddScreen() {
 
   const [ mapRegion, setRegion ] = useState(null)
   const [ hasLocationPermissions, setLocationPermission ] = useState( false )
   const [ location, setLocation] = useState(null);
   const [text, setText] = useState(null);
-  const [markerLoaded, setMarkerLoaded] = useState(false); 
-  const [description, setDescription] = useState(); 
   const sheetRef = React.useRef(null);
 
   const renderCont = () =>(
@@ -27,7 +26,7 @@ export default function AddScreen() {
       <Text>Swipe Down To Close</Text>
       <View style={styles.cont3}>
         <Text style={styles.title}>Description</Text>
-        <View style={styles.TextInput}>
+        <View style={styles.TextInput}>     
           <TextInput
             label="Description:"
             onChangeText={(text) => setText(text)}
@@ -55,7 +54,7 @@ export default function AddScreen() {
     await dataRef.doc('locationTest').set({
       latitude: mapRegion.latitude,
       longitude: mapRegion.longitude,
-      name: 'Restroom X'
+      discription: text
     });
   };
 
