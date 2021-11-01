@@ -10,6 +10,7 @@ import markerImage from '../marker.png';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from "react-native-reanimated";
 import Rating from "../../components/Rating";
+import { NativeViewGestureHandler } from "react-native-gesture-handler";
 
 export default function AddScreen() {
 
@@ -18,6 +19,7 @@ export default function AddScreen() {
   const [ location, setLocation] = useState(null);
   const [text, setText] = useState(null);
   const [markerLoaded, setMarkerLoaded] = useState(false); 
+  const [description, setDescription] = useState(); 
   const sheetRef = React.useRef(null);
 
   const renderCont = () =>(
@@ -38,7 +40,7 @@ export default function AddScreen() {
         <Rating></Rating>
         <Text style={styles.text}></Text>
         <View style={styles.cont1}>
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity onPress={addRestroom} style={styles.btn}>
             <Text style={styles.btnText}>Submit</Text>
           </TouchableOpacity>
         </View>
@@ -47,33 +49,16 @@ export default function AddScreen() {
   );
 
 
-
   //Send Restroom Data to Firestore
   async function addRestroom(){
     const dataRef=firebase.firestore().collection('testing')
     await dataRef.doc('locationTest').set({
       latitude: mapRegion.latitude,
-      longitude: mapRegion.longitude
+      longitude: mapRegion.longitude,
+      name: 'Restroom X'
     });
   };
 
-  //Get single document from Firestore
-  async function getOneRestroom(){
-    const dataRef=firebase.firestore().collection('testing').doc('locationTest');
-    const doc = await dataRef.get();
-    console.log(doc.data());  
-  }
-
-  async function getRestrooms(){
-    const query = firebase.firestore().collection('testing');
-    query.get().then((querySnapshot)=>{
-     const docs = querySnapshot.docs;
-      for(const doc of docs){
-        setRestrooms((restrooms)=>[...restrooms,doc.data()]);
-      }
-      setMarkerLoadded(true); 
-    });
-  }
 
   useEffect(()=>{ //Must be made into a Hook (Leaving it Here For Now)
     const getLocationAsync = async () =>{
@@ -129,7 +114,7 @@ export default function AddScreen() {
         initialSnap={1}
         borderRadius={10}
         renderContent={renderCont}
-        enabledGestureInteraction={true}
+        enabledContentTapInteraction={false}
       />
    </View>  
   )
