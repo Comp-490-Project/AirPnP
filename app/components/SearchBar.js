@@ -1,73 +1,104 @@
-import React from 'react';
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
+import React, { useState } from 'react';
+import {View, Text,  StyleSheet, SafeAreaView, ScrollView, Dimensions} from 'react-native'; //Scroll
 import { MaterialIcons } from '@expo/vector-icons'; 
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const WIDTH = Dimensions.get('window').width;
 export const SearchBar = function(props){
     const[input, setInput]= React.useState("")
+   
+    const [destinationPlace, setDestinationPlace] = useState('null'); 
   
     return (
-        <TouchableOpacity onPress={() => {} } style={styles.container}>
+    
+        
+        <SafeAreaView onPress={() => {} } style={styles.container}>
+            
             <View style={styles.leftCol}>
             <MaterialIcons name="location-on" color="black" size={25} style={{alignSelf: 'center'}}/>
             </View>
-
+            
+            
             <View  style={styles.centerCol}>
-                 
-            <TextInput
-                    style={styles.inputStyle} 
-                    value={input}
-                    onChangeText={(text) => setInput(text)}
-                     placeholder="Search here"
-                  //value={term}
-                  //onChangeText={newTerm => onTermChange(newTerm)}
+               
+            <GooglePlacesAutocomplete   
+             value={input}
+            onChangeText={(text) => setInput(text)}
+                 placeholder="Search here"           
+                onPress={(data, details = null) => {
+                setDestinationPlace={data, details};                    
+                  }}
+                  styles={{
+                      
+                    style:styles.inputStyle                   
+                   }}
+                  
+                  fetchDetails = {true}
+                  query={{
+                    key: 'AIzaSyDOeEKbcngBARFdVV8a5K75fakxbrS3Kro',
+                    language: 'en',
+                  }}
+                  GooglePlacesDetailsQuery={{
+                      fields: ['formatted_address','geometry'],
+                  }}
                   />
-                
-        
+           
             </View>
-
+                
             <View style={styles.rightCol}>
-            <Text style={{fontSize: 8}}> 
-                
-                </Text>
-                
-            </View >
+                <Text style={{fontSize: 8}}>
 
-        </TouchableOpacity>
+                </Text>
+
+            </View>
+        </SafeAreaView>
+        
     )
         
 }
 
 const styles = StyleSheet.create({
-    container: {
-        zIndex: 5,
+    container : { //centerCol container
+        //zIndex: 5,
         position: 'absolute',
         flexDirection: 'row',
         width: (WIDTH-40), //width of window so its dynamic
-        height: 40,
-        top: 50,
+        top: 60,
         left: 20,
-        borderRadius: 2,
+        //borderRadius: 2,
         backgroundColor: 'white',
-        alignItems: 'center',
-        shadowColor: 'black',
-        elevation: 7,
-        shadowRadius: 5,
-        shadowOpacity: 1.0,
-        //padding: 10,
+        elevation: 7, 
+        flex: 10,
     },
+   
     rightCol: {
         flex: 1,
-        alignItems: 'center',
+        alignSelf: 'center',
+        
 
     },
+
+
+   
     leftCol: {
         flex: 1,
-        borderLeftWidth: 1,
-        borderColor: '#ededed',
+     borderLeftWidth: 1,
+       borderColor: '#ededed',
+       height: '45%',
+       alignItems: 'center',
+       padding: 10,
+       
     },
+    
+    centerCol: {
+        flex: 10,
+        top: 0,
+        left: 0,
+        height: '40%',
+      
+        
+    },
+      
 })
 
 export default SearchBar;
-
-
