@@ -139,9 +139,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center"
   },
-  addButton: {
+  addButton:{
     position: 'absolute',
     bottom: 50,
     width: 200,
@@ -153,11 +153,15 @@ const styles = StyleSheet.create({
     marginLeft: -24,
     marginTop: -50,
     position: 'absolute',
-    top: '50%',
+    top: '55%'
   },
   map: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
+  },
+  marker: { //TODO: This needs to be responsive in regards to the latDelta/longDelta values in the MapView. 
+    height: 48,
+    width: 48
   },
   cont1: {
     flexDirection: "row",
