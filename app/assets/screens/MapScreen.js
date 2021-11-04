@@ -9,7 +9,7 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import AppButton from '../../components/AppButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
-
+import {geofire} from '../../../Firebase/geofire'
 
 
 

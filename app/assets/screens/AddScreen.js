@@ -16,18 +16,29 @@ export default function AddScreen() {
   const [ mapRegion, setRegion ] = useState(null)
   const [ hasLocationPermissions, setLocationPermission ] = useState( false )
   const [ location, setLocation] = useState(null);
-  const [text, setText] = useState(null);
+  const [title, setTitle] = useState(null);
+  const [description, setDescription] = useState(null);
   const sheetRef = React.useRef(null);
 
   const renderCont = () =>(
     <View style={styles.swipeBox}>
       <Text>Swipe Down To Close</Text>
       <View style={styles.cont3}>
+        <Text style={styles.title}>Title</Text>
+        <View style={styles.TextInput}>
+            <TextInput
+              label="Title:"
+              onChangeText={(title) => setTitle(title)}
+              placeholder="Name Your Place"
+              mode="outlined"
+              multiline={true}
+            />
+        </View>  
         <Text style={styles.title}>Description</Text>
         <View style={styles.TextInput}>     
           <TextInput
             label="Description:"
-            onChangeText={(text) => setText(text)}
+            onChangeText={(description) => setDescription(description)}
             placeholder="How Was It?."
             mode="outlined"
             multiline={true}
@@ -48,11 +59,12 @@ export default function AddScreen() {
 
   //Send Restroom Data to Firestore
   async function addRestroom(){
-    const dataRef=firebase.firestore().collection('testing')
-    await dataRef.doc('locationTest').set({
+    const dataRef=firebase.firestore().collection('AddedRestrooms')
+    await dataRef.doc(title).set({
       latitude: mapRegion.latitude,
       longitude: mapRegion.longitude,
-      discription: text
+      description: description,
+      rating: Rating,
     });
   };
 
@@ -74,7 +86,7 @@ export default function AddScreen() {
         latitude,
         longitude,
         latitudeDelta: 0.0015,
-        longitudeDelta: 0.0015,
+        longitudeDelta:0.0121,
       }); //Center Map on Location fetched above.
     };
     getLocationAsync();
@@ -132,7 +144,7 @@ const styles = StyleSheet.create({
   swipeBox:{
     backgroundColor: "white",
     padding: 16,
-    height: 600,
+    height: 900,
     alignItems: "center",
     justifyContent: "flex-end",
     borderRadius: 40
@@ -192,6 +204,7 @@ const styles = StyleSheet.create({
     paddingRight: 80,
     lineHeight: 25,
   },
+  
   btn: {
     backgroundColor: "#E2443B",
     paddingHorizontal: 60,
@@ -212,5 +225,14 @@ const styles = StyleSheet.create({
     paddingTop:10,
     paddingLeft: 10,
     paddingRight: 10,
-  }
+  },
+  TextInputText:{
+    height: 50, 
+    borderWidth: 3,
+    borderRadius: 20,
+    paddingTop:10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignContent: 'center'
+  },
 })
