@@ -9,11 +9,13 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import AppButton from '../../components/AppButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
-
+import { geohashQueryBounds , distanceBetween} from 'geofire-common';
 
 
 
 export default function MapScreen({navigation}) {
+
+  const location = useLocation();
   const [markerLoaded, setMarkerLoaded] = useState(false);
   const [restrooms, setRestrooms] = useState([]);
   const reference = React.createRef();
@@ -28,17 +30,44 @@ export default function MapScreen({navigation}) {
     Linking.openURL(url);
   };
 
-  async function getRestrooms() {
-    const query = firebase.firestore().collection('testing');
+async function getRestrooms() {
+  const center = [location.latitude, location.longitude]
+  const radiusInM = 2500
+const bounds = geohashQueryBounds(center, radiusInM);
+const promises = [];
+for (const b of bounds) {
+  const q = firebase.firestore().collection('Los-Angeles')
+    .orderBy('geohash')
+    .startAt(b[0])
+    .endAt(b[1]);
 
-    query.get().then((querySnapshot) => {
-      const docs = querySnapshot.docs;
-      for (const doc of docs) {
-        setRestrooms((restrooms) => [...restrooms, doc.data()]);
+  promises.push(q.get());
+}
+
+Promise.all(promises).then((snapshots) => {
+  const matchingDocs = [];
+  for (const snap of snapshots) {
+    for (const doc of snap.docs) {
+      const lat = doc.get('latitude');
+      const lng = doc.get('longitude');
+
+      const distanceInKm = distanceBetween([lat, lng], center);
+      const distanceInM = distanceInKm * 1000;
+      if (distanceInM <= radiusInM) {
+        matchingDocs.push(doc);
       }
-      setMarkerLoaded(true);
-    });
+    }
   }
+
+  return matchingDocs;
+}).then((matchingDocs) => {
+  matchingDocs.forEach((matchingDoc) => {
+    setRestrooms((restrooms) => [...restrooms, matchingDoc.data()]);
+  }
+  );
+  setMarkerLoaded(true);
+});
+}
 
   restroomAttributes = (marker) => {
     setLat(marker.latitude);
@@ -78,7 +107,7 @@ export default function MapScreen({navigation}) {
     }
   }, [markerLoaded]);
 
-  const location = useLocation();
+  
 
   return (
     <>
@@ -219,7 +248,4 @@ const styles = StyleSheet.create({
     fontWeight:'normal',
     margin:10,
   },
-
-
-  
 });
