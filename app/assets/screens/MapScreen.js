@@ -9,65 +9,66 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import AppButton from '../../components/AppButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
-import { geohashQueryBounds , distanceBetween} from 'geofire-common';
+import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 
-
-
-export default function MapScreen({navigation}) {
-
-  const location = useLocation();
+export default function MapScreen({ navigation }) {
   const [markerLoaded, setMarkerLoaded] = useState(false);
   const [restrooms, setRestrooms] = useState([]);
   const reference = React.createRef();
-  const [name,setName] = useState('');
-  const [desc,setDesc] = useState('');
-  const [lat,setLat] = useState(0);
-  const[long,setLong] = useState(0);
-  
+  const [name, setName] = useState('');
+  const [desc, setDesc] = useState('');
+  const [lat, setLat] = useState(0);
+  const [long, setLong] = useState(0);
+
+  const { location, loading } = useLocation();
+
   const openGps = (lati, lng) => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
     var url = scheme + `${lati},${lng}`;
     Linking.openURL(url);
   };
 
-async function getRestrooms() {
-  const center = [location.latitude, location.longitude]
-  const radiusInM = 2500
-const bounds = geohashQueryBounds(center, radiusInM);
-const promises = [];
-for (const b of bounds) {
-  const q = firebase.firestore().collection('Los-Angeles')
-    .orderBy('geohash')
-    .startAt(b[0])
-    .endAt(b[1]);
+  async function getRestrooms() {
+    const center = [location.latitude, location.longitude];
+    const radiusInM = 2500;
+    const bounds = geohashQueryBounds(center, radiusInM);
+    const promises = [];
+    for (const b of bounds) {
+      const q = firebase
+        .firestore()
+        .collection('Los-Angeles')
+        .orderBy('geohash')
+        .startAt(b[0])
+        .endAt(b[1]);
 
-  promises.push(q.get());
-}
-
-Promise.all(promises).then((snapshots) => {
-  const matchingDocs = [];
-  for (const snap of snapshots) {
-    for (const doc of snap.docs) {
-      const lat = doc.get('latitude');
-      const lng = doc.get('longitude');
-
-      const distanceInKm = distanceBetween([lat, lng], center);
-      const distanceInM = distanceInKm * 1000;
-      if (distanceInM <= radiusInM) {
-        matchingDocs.push(doc);
-      }
+      promises.push(q.get());
     }
-  }
 
-  return matchingDocs;
-}).then((matchingDocs) => {
-  matchingDocs.forEach((matchingDoc) => {
-    setRestrooms((restrooms) => [...restrooms, matchingDoc.data()]);
+    Promise.all(promises)
+      .then((snapshots) => {
+        const matchingDocs = [];
+        for (const snap of snapshots) {
+          for (const doc of snap.docs) {
+            const lat = doc.get('latitude');
+            const lng = doc.get('longitude');
+
+            const distanceInKm = distanceBetween([lat, lng], center);
+            const distanceInM = distanceInKm * 1000;
+            if (distanceInM <= radiusInM) {
+              matchingDocs.push(doc);
+            }
+          }
+        }
+
+        return matchingDocs;
+      })
+      .then((matchingDocs) => {
+        matchingDocs.forEach((matchingDoc) => {
+          setRestrooms((restrooms) => [...restrooms, matchingDoc.data()]);
+        });
+        setMarkerLoaded(true);
+      });
   }
-  );
-  setMarkerLoaded(true);
-});
-}
 
   restroomAttributes = (marker) => {
     setLat(marker.latitude);
@@ -75,48 +76,50 @@ Promise.all(promises).then((snapshots) => {
     setName(marker.name);
     setDesc(marker.description);
     reference.current.snapTo(0);
-  }
-  
+  };
+
   renderInner = () => (
-    <View style={styles.bottomSheetPanel} > 
-      <View style= {{alignItems: 'center'}}>
-        <Text style= {styles.panelRestroomName}>{name}</Text>
-        <Text style= {styles.panelRestroomDescription}>{desc}</Text>
+    <View style={styles.bottomSheetPanel}>
+      <View style={{ alignItems: 'center' }}>
+        <Text style={styles.panelRestroomName}>{name}</Text>
+        <Text style={styles.panelRestroomDescription}>{desc}</Text>
       </View>
-      <View style = {{alignContent:'space-around'}}>
-        <TouchableOpacity style = {{margin: 5}} onPress={()=>  openGps(lat, long) }>
-          <AppButton title= {'Navigate'} styles={{width:"80%"}} /> 
-        </TouchableOpacity > 
-          <View Style={{height: 10, backgroundColor: colors.white}}/> 
-        <TouchableOpacity style = {{margin: 5}}>
-          <AppButton title= {'Rate'} styles={{width:"80%"}}/>    
+      <View style={{ alignContent: 'space-around' }}>
+        <TouchableOpacity
+          style={{ margin: 5 }}
+          onPress={() => openGps(lat, long)}
+        >
+          <AppButton title={'Navigate'} styles={{ width: '80%' }} />
         </TouchableOpacity>
-      </View>         
+        <View Style={{ height: 10, backgroundColor: colors.white }} />
+        <TouchableOpacity style={{ margin: 5 }}>
+          <AppButton title={'Rate'} styles={{ width: '80%' }} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
-  renderHeader = () =>(
+  renderHeader = () => (
     <View style={styles.bottomSheetHeader}>
       <View style={styles.bottomSheetpanelHeader}>
-        <View style={styles.bottomSheetpanelHandle}/>
+        <View style={styles.bottomSheetpanelHandle} />
       </View>
     </View>
   );
+
   useEffect(() => {
-    if (!markerLoaded) {
+    if (!markerLoaded && !loading) {
       getRestrooms();
     }
-  }, [markerLoaded]);
-
-  
+  }, [loading]);
 
   return (
     <>
-      {!location ? (
-        <Text style={styles.loadingText}>Loading...</Text>
+      {loading ? (
+        <Text>Loading</Text>
       ) : (
         <View style={styles.container}>
           <MapView
-            onPress={()=>reference.current.snapTo(1)}
+            onPress={() => reference.current.snapTo(1)}
             provider={PROVIDER_GOOGLE} //Google Maps
             style={styles.map}
             showsUserLocation={true}
@@ -132,39 +135,34 @@ Promise.all(promises).then((snapshots) => {
             {markerLoaded &&
               restrooms.map((marker, index) => (
                 <Marker
-                  key={index}                
-                  image = {require('../../assets/Logo.png')}
+                  key={index}
+                  image={require('../../assets/Logo.png')}
                   coordinate={{
                     latitude: marker.latitude,
-                    longitude: marker.longitude,                    
-                  }}                 
-                >  
-                  <Callout tooltip onPress={()=>restroomAttributes(marker)}>
-                    <View>  
-                      <View style = {styles.calloutWindow}>
-                        <Text style= {styles.name}>
-                          {marker.name}
-                        </Text>
-                        <Text>
-                          {marker.description}
-                        </Text>
-                        </View>
-                        <View style={styles.arrowBorder}/>
-                        <View style={styles.arrow}/>                     
+                    longitude: marker.longitude,
+                  }}
+                >
+                  <Callout tooltip onPress={() => restroomAttributes(marker)}>
+                    <View>
+                      <View style={styles.calloutWindow}>
+                        <Text style={styles.name}>{marker.name}</Text>
+                        <Text>{marker.description}</Text>
+                      </View>
+                      <View style={styles.arrowBorder} />
+                      <View style={styles.arrow} />
                     </View>
                   </Callout>
                 </Marker>
               ))}
-              
           </MapView>
           <SearchBar />
           <BottomSheet
-            ref ={reference}
-            snapPoints={["57%",0]}
-            initialSnap= {1}
+            ref={reference}
+            snapPoints={['57%', 0]}
+            initialSnap={1}
             enabledGestureInteraction={true}
             renderContent={renderInner}
-            renderHeader= {renderHeader}
+            renderHeader={renderHeader}
           />
         </View>
       )}
@@ -186,8 +184,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
- calloutWindow:{
-   flexDirection: 'column',
+  calloutWindow: {
+    flexDirection: 'column',
     alignSelf: 'stretch',
     backgroundColor: colors.white,
     borderRadius: 7,
@@ -196,12 +194,12 @@ const styles = StyleSheet.create({
     padding: 15,
     width: 150,
   },
-  name:{
+  name: {
     fontSize: 15,
-    fontWeight:'bold',
+    fontWeight: 'bold',
     marginBottom: 5,
   },
-  arrow:{
+  arrow: {
     backgroundColor: 'transparent',
     borderColor: 'transparent',
     borderTopColor: colors.white,
@@ -209,7 +207,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: -32,
   },
-  arrowBorder:{
+  arrowBorder: {
     backgroundColor: 'transparent',
     borderColor: 'transparent',
     borderTopColor: colors.white,
@@ -217,35 +215,33 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: -0.5,
   },
-  bottomSheetHeader:{
+  bottomSheetHeader: {
     backgroundColor: colors.white,
     paddingTop: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-  bottomSheetpanelHeader:{
+  bottomSheetpanelHeader: {
     alignItems: 'center',
   },
-  bottomSheetpanelHandle:{
+  bottomSheetpanelHandle: {
     width: 40,
     height: 8,
     borderRadius: 5,
     backgroundColor: colors.lightgray,
     marginBottom: 10,
   },
-  bottomSheetPanel:{
+  bottomSheetPanel: {
     backgroundColor: colors.white,
     padding: 10,
-
   },
-  panelRestroomName:{
+  panelRestroomName: {
     fontSize: 18,
-    fontWeight:'bold',
-  
+    fontWeight: 'bold',
   },
-  panelRestroomDescription:{
+  panelRestroomDescription: {
     fontSize: 12,
-    fontWeight:'normal',
-    margin:10,
+    fontWeight: 'normal',
+    margin: 10,
   },
 });
