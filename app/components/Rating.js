@@ -2,10 +2,12 @@ import React, {useState} from 'react';
 import {SafeAreaView, StyleSheet, Text, View,Image} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default function Rating (){
+var userRating = null // TEMP SOLUTION
+
+export default function useRating (){
     const [defaultRating, setdefaultRating] = useState(2);
     const [maxRating, setmaxRating] = useState([1,2,3,4,5])
-
+    userRating = defaultRating //TEMP SOLUTION
     const starImgFilled='https://raw.githubusercontent.com/tranhonghan/images/main/star_filled.png'
     const starImgCorner=  'https://raw.githubusercontent.com/tranhonghan/images/main/star_corner.png'
 
@@ -56,7 +58,7 @@ const styles= StyleSheet.create({
     customRatingBarStyle:{
         justifyContent: 'center',
         flexDirection:  'row',
-        marginTop: 30
+        marginTop: -30
     },
     starImgStyle:{
         width: 40,
@@ -64,3 +66,5 @@ const styles= StyleSheet.create({
         resizeMode: 'cover'
     }
 });
+
+export {userRating};

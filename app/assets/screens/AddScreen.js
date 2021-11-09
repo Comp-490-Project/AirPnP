@@ -2,15 +2,13 @@ import React, { useEffect,useState } from "react";
 import { StyleSheet, Button, Text, View, Dimensions, SafeAreaView,Image,TextInput,TouchableOpacity} from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker,Circle } from "react-native-maps";
 import * as Location from 'expo-location'
-import * as Permissions from 'expo-permissions'
-import useLocation from "../../hooks/useLocation";
 import AppButton from "../../components/AppButton";
 import {firebase} from "../../../Firebase/firebase"
 import markerImage from '../marker.png';
 import BottomSheet from 'reanimated-bottom-sheet';
-import Animated from "react-native-reanimated";
 import Rating from "../../components/Rating";
-import { NativeViewGestureHandler } from "react-native-gesture-handler";
+import {geohashForLocation} from 'geofire-common'
+import { userRating } from "../../components/Rating";
 
 export default function AddScreen() {
   const [ mapRegion, setRegion ] = useState(null)
@@ -20,11 +18,12 @@ export default function AddScreen() {
   const [description, setDescription] = useState(null);
   const sheetRef = React.useRef(null);
 
+
   const renderCont = () =>(
     <View style={styles.swipeBox}>
       <Text>Swipe Down To Close</Text>
       <View style={styles.cont3}>
-        <Text style={styles.title}>Title</Text>
+        <Text style={styles.title}>Name</Text>
         <View style={styles.TextInput}>
             <TextInput
               label="Title:"
@@ -45,7 +44,9 @@ export default function AddScreen() {
           />
         </View>
         <Text style={styles.title}>Rating</Text>
-        <Rating></Rating>
+        <SafeAreaView style={styles.container1}>
+          <Rating></Rating>
+        </SafeAreaView>
         <Text style={styles.text}></Text>
         <View style={styles.cont1}>
           <TouchableOpacity onPress={addRestroom} style={styles.btn}>
@@ -58,15 +59,17 @@ export default function AddScreen() {
 
 
   //Send Restroom Data to Firestore
-  async function addRestroom(){
-    const dataRef=firebase.firestore().collection('AddedRestrooms')
-    await dataRef.doc(title).set({
+  async function addRestroom() {
+    const dataRef = firebase.firestore().collection('AddedRestrooms');
+    await dataRef.doc(geohashForLocation([mapRegion.latitude, mapRegion.longitude])).set({
       latitude: mapRegion.latitude,
       longitude: mapRegion.longitude,
       description: description,
-      rating: Rating,
+      name: title,
+      geohash: geohashForLocation([mapRegion.latitude, mapRegion.longitude]), 
+      rating: userRating
     });
-  };
+  }
 
 
   useEffect(()=>{ //Must be made into a Hook (Leaving it Here For Now)
@@ -181,7 +184,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-between",
     marginTop: 40,
-    paddingLeft: 13
+    paddingLeft: 13,
   },
   title: {
     fontSize: 35,
@@ -207,7 +210,7 @@ const styles = StyleSheet.create({
   
   btn: {
     backgroundColor: "#E2443B",
-    paddingHorizontal: 60,
+    paddingHorizontal: 40,
     paddingVertical: 12,
     borderRadius: 30,
     width: 300,
@@ -234,5 +237,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     alignContent: 'center'
+  },
+  container1:{
+    flex: 1,
+    padding: 1,
+    justifyContent: 'center'
   },
 })
