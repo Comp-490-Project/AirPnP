@@ -26,7 +26,7 @@ export const SearchBar = function(props){
             onChangeText={(text) => setInput(text)}
                  placeholder="Search here"           
                 onPress={(data, details = null) => {
-                setDestinationPlace={data, details};                    
+                setDestinationPlace({data, details});                    
                   }}
                   styles={{
                       
