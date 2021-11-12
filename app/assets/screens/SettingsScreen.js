@@ -28,38 +28,50 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import Rating from "../../components/Rating";
 
 
-renderInner=()=>(
-  <View style={styles.panel}>
-    <View style={{alignItems: 'center'}}>
-      <Text style={styles.panelTitle}>Uplod Photo</Text>
-      <Text style={styles.panelSubtitle}>No PooPoo Pics Plz</Text>
-    </View>
-    <TouchableOpacity style={styles.panelButton} onPress={null}>
-      <Text style={styles.panelButtonTitle}>Take Photo</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.panelButton} onPress={null}>
-      <Text style={styles.panelButtonTitle}>Choose From Library</Text>
-    </TouchableOpacity>
-    <TouchableOpacity
-      style={styles.panelButton}
-      onPress={()=>this.bs.current.snapTo(1)}>
-      <Text style={styles.panelButtonTitle}>Cancel</Text>
-    </TouchableOpacity>
-  </View>
-);
 
-
-function SettingsScreen(){
+export default function SettingScreen(){
   const [review, setReview] = useState();
+  const rateRef = React.useRef(null);
+
+  renderInner=()=>(
+    <View style={styles.panel}>
+      <View style={{alignItems: 'center'}}>
+        <Text style={styles.panelTitle}>Uplod Photo</Text>
+        <Text style={styles.panelSubtitle}>No PooPoo Pics Plz</Text>
+      </View>
+      <TouchableOpacity style={styles.panelButton} onPress={null}>
+        <Text style={styles.panelButtonTitle}>Take Photo</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.panelButton} onPress={null}>
+        <Text style={styles.panelButtonTitle}>Choose From Library</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.panelButton}
+        onPress={()=> rateRef.current.snapTo(0)}>
+        <Text style={styles.panelButtonTitle}>Cancel</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  renderHeader = () => (
+    <View style={styles.header}>
+      <View style={styles.panelHeader}>
+        <View style={styles.panelHandle} />
+      </View>
+    </View>
+  );
+  
   return(
-      <SafeAreaView>
+      <SafeAreaView style={styles.container}>
         <BottomSheet 
-          ref={this.bs}
-          snapPoints={[330,0]}
-          renderContent={this.renderInner}
-          renderHeader={this.renderHeader}
+          ref={rateRef}
+          snapPoints={["50%",0]}
+          renderContent={renderInner}
+          renderHeader={renderHeader}
           initialSnap={1}
-          callbackNode={this.fall}
+          borderRadius={10}
+          enabledContentTapInteraction={false}
+          //callbackNode={this.fall}
           enableGestureInteraction={true}
         />
         <ScrollView style={styles.scrollView}>
@@ -80,19 +92,17 @@ function SettingsScreen(){
             </SafeAreaView>
             <View style={styles.photocontainer}>
               <Text style={styles.title}>Upload Photos</Text>
+              <TouchableOpacity style={styles.panelButton}title="Upload Shit" onPress={()=>rateRef.current.snapTo(0)}/>
             </View>
           </View>
         </ScrollView>
       </SafeAreaView>
-  )}
+  )};
 
 
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
-        paddingTop: StatusBar.currentHeight,
     },
     scrollView:{
         marginHorizontal: 5,
@@ -145,6 +155,26 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       color: 'white',
     },
+    header: {
+      backgroundColor: '#FFFFFF',
+      shadowColor: '#333333',
+      shadowOffset: {width: -1, height: -3},
+      shadowRadius: 2,
+      shadowOpacity: 0.4,
+      // elevation: 5,
+      paddingTop: 20,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+    },
+    panelHeader: {
+      alignItems: 'center',
+    },
+    panelHandle: {
+      width: 40,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: '#00000040',
+      marginBottom: 10,
+    },
 })
 
-export default SettingsScreen;
