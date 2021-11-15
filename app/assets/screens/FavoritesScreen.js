@@ -4,7 +4,7 @@ import { StyleSheet, Button, Text, View } from "react-native";
  function FavoritesScreen() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>FavoritesScreen! Welcome! </Text>
+      <Text> FavoritesScreen! Welcome! </Text>
     </View>
   );
 }
