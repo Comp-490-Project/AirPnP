@@ -58,7 +58,7 @@ export default function MapScreen({navigation}) {
           <AppButton title= {'Navigate'} styles={{width:"80%"}} /> 
         </TouchableOpacity > 
           <View Style={{height: 10, backgroundColor: colors.white}}/> 
-        <TouchableOpacity style = {{margin: 5}}>
+        <TouchableOpacity style = {{margin: 5}} onPress={() => navigation.navigate("review")}>
           <AppButton title= {'Rate'} styles={{width:"80%"}}/>    
         </TouchableOpacity>
       </View>         
