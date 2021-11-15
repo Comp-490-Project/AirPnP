@@ -9,6 +9,8 @@ import MapScreen from './app/assets/screens/MapScreen';
 import LoginScreen from './app/assets/screens/LoginScreen';
 import ForgotPassword from './app/assets/screens/ForgotPassword';
 import HomeScreen from './app/assets/screens/HomeScreen';
+import SettingScreen from './app/assets/screens/SettingsScreen';
+import ReviewScreen from './app/assets/screens/ReviewScreen'
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +33,10 @@ export default function App() {
         <Stack.Screen
           name="forgot"
           component={ForgotPassword}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="review"
+          component={ReviewScreen}
         ></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
