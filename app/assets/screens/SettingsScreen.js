@@ -21,33 +21,75 @@ const styles = StyleSheet.create({
 
 
 import React, { useEffect,useState } from "react";
-import { StyleSheet,Text, View, Dimensions, SafeAreaView,Image,TextInput,TouchableOpacity, StatusBar, ScrollView} from "react-native";
-import { ScreenStackHeaderBackButtonImage } from "react-native-screens";
-import AppButton from "../../components/AppButton";
-import BottomSheet from 'reanimated-bottom-sheet';
+import { StyleSheet,Text, View, Dimensions, SafeAreaView,Image,TextInput,TouchableOpacity, StatusBar, ScrollView, ImagePickerIOS, Alert} from "react-native";
 import Rating from "../../components/Rating";
-
+import * as ImagePicker from 'expo-image-picker';
+import userRating from "../../components/Rating"
+import {firebase} from "../../../Firebase/firebase"
 
 
 export default function SettingScreen(){
   const [review, setReview] = useState();
+  const [imageSource, setImageSource] = useState(null);
   const rateRef = React.useRef(null);
 
+
+  const openLibrary = async()=> { //Function is triggered when "Choose From Library" button is pressed.
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync; //Awaits for user input for Permissions. 
+    if(permissionResult.granted===false){
+      alert("You've refused to allow this app to acess your photos!")
+      return;
+    }
+
+    /* Can't do this like this. Firestore isn't configured to store images like this. I only refrence the URI which does nothing in regards to cloud storage, it's a local refrence.
+    async function addReview() { //Pass in GeoHash Here. 
+      const dataRef = firebase.firestore().collection('AddedReviews');
+      await dataRef.doc('Test').set({
+        rating: userRating,
+        photo: setImageSource,
+        review: setReview,
+      })    
+    }
+    */
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+    console.log(result); 
+    if(!result.cancelled){
+      setImageSource(result.uri);
+      console.log(result.uri);
+    }
+  }
+
+  const openCamera = async()=>{ //Function is triggered when "Take Photo" button is pressed.
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync(); //Awaits for user input for Permissions. 
+    if(permissionResult.granted === false){
+      alert("You've refused to allow this app to acess your photos!");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync();
+    console.log(result);
+    if(!result.cancelled){
+      setImageSource(result.uri);
+      console.log(result.uri);
+    }
+  }
+  
   renderInner=()=>(
     <View style={styles.panel}>
       <View style={{alignItems: 'center'}}>
-        <Text style={styles.panelTitle}>Uplod Photo</Text>
+        <Text style={styles.panelTitle}>Upload Photos</Text>
         <Text style={styles.panelSubtitle}>No PooPoo Pics Plz</Text>
       </View>
-      <TouchableOpacity style={styles.panelButton} onPress={null}>
+      <TouchableOpacity style={styles.panelButton} onPress={openCamera}>
         <Text style={styles.panelButtonTitle}>Take Photo</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.panelButton} onPress={null}>
+      <TouchableOpacity style={styles.panelButton} onPress={openLibrary}>
         <Text style={styles.panelButtonTitle}>Choose From Library</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.panelButton}
-        onPress={()=> rateRef.current.snapTo(0)}>
+        onPress={()=> rateRef.current.snapTo(1)}>
         <Text style={styles.panelButtonTitle}>Cancel</Text>
       </TouchableOpacity>
     </View>
@@ -65,7 +107,7 @@ export default function SettingScreen(){
       <SafeAreaView style={styles.container}>
         <BottomSheet 
           ref={rateRef}
-          snapPoints={["50%",0]}
+          snapPoints={["43%",0]}
           renderContent={renderInner}
           renderHeader={renderHeader}
           initialSnap={1}
@@ -87,12 +129,19 @@ export default function SettingScreen(){
               />
             </View>
             <Text style={styles.title}>Rate The Restroom</Text>
-            <SafeAreaView styles={styles.ratingcontainer}>
+            <SafeAreaView style={styles.ratingcontainer}>
               <Rating></Rating>
             </SafeAreaView>
             <View style={styles.photocontainer}>
               <Text style={styles.title}>Upload Photos</Text>
-              <TouchableOpacity style={styles.panelButton}title="Upload Shit" onPress={()=>rateRef.current.snapTo(0)}/>
+              <AppButton style={styles.panelButton}title="Upload Shit" onPress={()=>rateRef.current.snapTo(0)}/>
+            </View>
+            <View style={styles.imageContainer}>{
+              imageSource !== '' && <Image 
+                source={{uri: imageSource}}
+                style={styles.image}
+              />
+            }
             </View>
           </View>
         </ScrollView>
@@ -114,6 +163,9 @@ const styles = StyleSheet.create({
       paddingHorizontal: 20,
     },
     ratingcontainer:{
+      flex: 1,
+      padding: 1,
+      justifyContent: 'center'
     },
     title: {
       fontSize: 35,
@@ -176,5 +228,12 @@ const styles = StyleSheet.create({
       backgroundColor: '#00000040',
       marginBottom: 10,
     },
+    imageContainer:{
+      padding: 30
+    },
+    image: {
+      width: 400,
+      height: 300,
+      resizeMode: 'cover'
+    },
 })
-
