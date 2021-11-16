@@ -11,7 +11,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 
-export default function MapScreen({ navigation }) {
+
+export default function MapScreen({navigation}) {
   const [markerLoaded, setMarkerLoaded] = useState(false);
   const [restrooms, setRestrooms] = useState([]);
   const reference = React.createRef();
@@ -29,45 +30,14 @@ export default function MapScreen({ navigation }) {
   };
 
   async function getRestrooms() {
-    const center = [location.latitude, location.longitude];
-    const radiusInM = 2500;
-    const bounds = geohashQueryBounds(center, radiusInM);
-    const promises = [];
-    for (const b of bounds) {
-      const q = firebase
-        .firestore()
-        .collection('Los-Angeles')
-        .orderBy('geohash')
-        .startAt(b[0])
-        .endAt(b[1]);
-
-      promises.push(q.get());
-    }
-
-    Promise.all(promises)
-      .then((snapshots) => {
-        const matchingDocs = [];
-        for (const snap of snapshots) {
-          for (const doc of snap.docs) {
-            const lat = doc.get('latitude');
-            const lng = doc.get('longitude');
-
-            const distanceInKm = distanceBetween([lat, lng], center);
-            const distanceInM = distanceInKm * 1000;
-            if (distanceInM <= radiusInM) {
-              matchingDocs.push(doc);
-            }
-          }
-        }
-
-        return matchingDocs;
-      })
-      .then((matchingDocs) => {
-        matchingDocs.forEach((matchingDoc) => {
-          setRestrooms((restrooms) => [...restrooms, matchingDoc.data()]);
-        });
-        setMarkerLoaded(true);
-      });
+    const query = firebase.firestore().collection('testing');
+    query.get().then((querySnapshot) => {
+      const docs = querySnapshot.docs;
+      for (const doc of docs) {
+        setRestrooms((restrooms) => [...restrooms, doc.data()]);
+      }
+      setMarkerLoaded(true);
+    });
   }
 
   restroomAttributes = (marker) => {
@@ -84,16 +54,14 @@ export default function MapScreen({ navigation }) {
         <Text style={styles.panelRestroomName}>{name}</Text>
         <Text style={styles.panelRestroomDescription}>{desc}</Text>
       </View>
-      <View style={{ alignContent: 'space-around' }}>
-        <TouchableOpacity
-          style={{ margin: 5 }}
-          onPress={() => openGps(lat, long)}
-        >
-          <AppButton title={'Navigate'} styles={{ width: '80%' }} />
-        </TouchableOpacity>
-        <View Style={{ height: 10, backgroundColor: colors.white }} />
-        <TouchableOpacity style={{ margin: 5 }}>
-          <AppButton title={'Rate'} styles={{ width: '80%' }} />
+
+      <View style = {{alignContent:'space-around'}}>
+        <TouchableOpacity style = {{margin: 5}} onPress={()=>  openGps(lat, long) }>
+          <AppButton title= {'Navigate'} styles={{width:"80%"}} /> 
+        </TouchableOpacity > 
+          <View Style={{height: 10, backgroundColor: colors.white}}/> 
+        <TouchableOpacity style = {{margin: 5}} onPress={() => navigation.navigate("review")}>
+          <AppButton title= {'Rate'} styles={{width:"80%"}}/>    
         </TouchableOpacity>
       </View>
     </View>
