@@ -10,9 +10,6 @@ import AppButton from '../../components/AppButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
 
-
-
-
 export default function MapScreen({navigation}) {
   const [markerLoaded, setMarkerLoaded] = useState(false);
   const [restrooms, setRestrooms] = useState([]);
@@ -30,7 +27,6 @@ export default function MapScreen({navigation}) {
 
   async function getRestrooms() {
     const query = firebase.firestore().collection('testing');
-
     query.get().then((querySnapshot) => {
       const docs = querySnapshot.docs;
       for (const doc of docs) {
@@ -59,7 +55,7 @@ export default function MapScreen({navigation}) {
           <AppButton title= {'Navigate'} styles={{width:"80%"}} /> 
         </TouchableOpacity > 
           <View Style={{height: 10, backgroundColor: colors.white}}/> 
-        <TouchableOpacity style = {{margin: 5}}>
+        <TouchableOpacity style = {{margin: 5}} onPress={() => navigation.navigate("review")}>
           <AppButton title= {'Rate'} styles={{width:"80%"}}/>    
         </TouchableOpacity>
       </View>         
@@ -219,7 +215,4 @@ const styles = StyleSheet.create({
     fontWeight:'normal',
     margin:10,
   },
-
-
-  
 });
