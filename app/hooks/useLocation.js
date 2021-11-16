@@ -1,22 +1,27 @@
-import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';
+import * as Location from 'expo-location';
 
 export default function useLocation() {
-  //Custom Hook To Get User Location.
-  const [location, setLocation] = useState();
+  //Custom Hooks
+  const [location, setLocation] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const getLocation = async () => {
     try {
       //Handle Denied Permissions.
       const { granted } = await Location.requestForegroundPermissionsAsync();
+
       if (!granted) {
         console.log('NOT GRANTED');
         return;
       }
+
       const {
         coords: { latitude, longitude },
-      } = await Location.getLastKnownPositionAsync();
+      } = await Location.getLastKnownPositionAsync({});
+
       setLocation({ latitude, longitude });
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -25,5 +30,6 @@ export default function useLocation() {
   useEffect(() => {
     getLocation();
   }, []);
-  return location;
+
+  return { location, loading };
 }
