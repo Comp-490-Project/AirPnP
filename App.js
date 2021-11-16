@@ -5,11 +5,9 @@ import {createNativeStackNavigator} from "@react-navigation/native-stack"
 import { Tabs } from './Navigation/Tabs';
 
 import RegisterScreen from './app/assets/screens/RegisterScreen';
-import MapScreen from './app/assets/screens/MapScreen';
 import LoginScreen from './app/assets/screens/LoginScreen';
 import ForgotPassword from './app/assets/screens/ForgotPassword';
 import HomeScreen from './app/assets/screens/HomeScreen';
-import SettingScreen from './app/assets/screens/SettingsScreen';
 import ReviewScreen from './app/assets/screens/ReviewScreen'
 
 const Stack = createNativeStackNavigator();
