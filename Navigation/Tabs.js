@@ -1,10 +1,9 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-
+import colors from "../app/assets/config/colors";
 import MapScreen from "../app/assets/screens/MapScreen";
 import AddScreen from "../app/assets/screens/AddScreen";
-import ProfileScreen from "../app/assets/screens/ProfileScreen";
 import SettingsScreen from "../app/assets/screens/SettingsScreen";
 import FavoritesScreen from "../app/assets/screens/FavoritesScreen";
 
@@ -32,12 +31,12 @@ export function Tabs() {
                 color={color}
               />
             );
-          } else if (route.name === "Profile") {
+          } else if (route.name === "Favorites") {
             return (
               <Ionicons
-                name={focused ? "person-circle" : "person-circle-outline"}
+                name={focused ? "star-sharp" : "star-outline"}
                 size={size}
-                color={color}
+                color = { "orange"}
               />
             );
           } else if (route.name === "Settings") {
@@ -50,14 +49,15 @@ export function Tabs() {
             );
           }
         },
-        tabBarInactiveTintColor: "gray",
-        tabBarActiveTintColor: "#99e0c8",
+        tabBarInactiveTintColor: colors.medium,
+        tabBarActiveTintColor: colors.tabs,
       })}
     >
       <Tab.Screen name="Home" options={{headerShown: false}} component={MapScreen} />
       <Tab.Screen name="Add" options={{headerShown: false}} component={AddScreen} />
-      <Tab.Screen name="Profile" options={{headerShown: false}} component={ProfileScreen} />
+      <Tab.Screen name="Favorites" options={{headerShown: false}} component={FavoritesScreen} />
       <Tab.Screen name="Settings" options={{headerShown: false}} component={SettingsScreen} />
+
     </Tab.Navigator>
   );
 }
