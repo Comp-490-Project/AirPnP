@@ -19,7 +19,7 @@ export default function MapScreen({ navigation }) {
   const [desc, setDesc] = useState('');
   const [lat, setLat] = useState(0);
   const [long, setLong] = useState(0);
-
+  const [hash, setHash] = useState('');
   const { location, loading } = useLocation();
 
   const openGps = (lati, lng) => {
@@ -75,6 +75,7 @@ export default function MapScreen({ navigation }) {
     setLong(marker.longitude);
     setName(marker.name);
     setDesc(marker.description);
+    setHash(marker.geohash);
     reference.current.snapTo(0);
   };
 
