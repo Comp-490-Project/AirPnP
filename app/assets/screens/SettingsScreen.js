@@ -93,10 +93,9 @@ useEffect(() =>{
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Settings! Welcome! </Text>
-          {restroomsLoaded && restrooms.map((restroom) => (
          
-      <Text> {restroom.name} </Text>
-                        ))}
+  
+                     
     </View>
   );
 
