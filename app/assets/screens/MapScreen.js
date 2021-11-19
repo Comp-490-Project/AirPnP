@@ -79,7 +79,7 @@ export default function MapScreen({ navigation }) {
   // Code copied from 'FavoritesScreen.js'
   async function getKeyData() {
     const query = await firebase.firestore().collection('users');
-    const favorites = query
+    query
       .doc(user.uid)
       .get()
       .then((querySnapshot) => {
