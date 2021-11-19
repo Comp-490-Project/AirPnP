@@ -13,6 +13,7 @@ import { Linking } from 'react-native';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 
 export default function MapScreen({ navigation }) {
+  const user = firebase.auth().currentUser;
   const [markerLoaded, setMarkerLoaded] = useState(false);
   const [restrooms, setRestrooms] = useState([]);
   const reference = React.useRef();
@@ -77,7 +78,6 @@ export default function MapScreen({ navigation }) {
 
   // Code copied from 'FavoritesScreen.js'
   async function getKeyData() {
-    const user = firebase.auth().currentUser;
     const query = await firebase.firestore().collection('users');
     query
       .doc(user.uid)
@@ -114,16 +114,18 @@ export default function MapScreen({ navigation }) {
 
   renderInner = () => (
     <View style={styles.bottomSheetPanel}>
-      <TouchableOpacity onPress={favoriteHandler}>
-        <Image
-          style={styles.heart}
-          source={
-            !favorite
-              ? require('../favorite/heart-thin.png')
-              : require('../favorite/red-heart.png')
-          }
-        />
-      </TouchableOpacity>
+      {user && (
+        <TouchableOpacity onPress={favoriteHandler}>
+          <Image
+            style={styles.heart}
+            source={
+              !favorite
+                ? require('../favorite/heart-thin.png')
+                : require('../favorite/red-heart.png')
+            }
+          />
+        </TouchableOpacity>
+      )}
       <View style={{ alignItems: 'center' }}>
         <Text style={styles.panelRestroomName}>{name}</Text>
         <Text style={styles.panelRestroomDescription}>{desc}</Text>
