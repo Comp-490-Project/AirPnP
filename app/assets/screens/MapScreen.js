@@ -79,14 +79,16 @@ export default function MapScreen({ navigation }) {
   // Code copied from 'FavoritesScreen.js'
   async function getKeyData() {
     const query = await firebase.firestore().collection('users');
-    query
+    const favorites = query
       .doc(user.uid)
       .get()
       .then((querySnapshot) => {
         const favs = querySnapshot.data();
-        favs.favorites.forEach((favKey) => {
-          setKeys((keys) => [...keys, favKey]);
-        });
+        if (favs.favorites) {
+          favs.favorites.forEach((favKey) => {
+            setKeys((keys) => [...keys, favKey]);
+          });
+        }
       });
     setFavoritesLoaded(true);
   }
