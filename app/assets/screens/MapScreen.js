@@ -4,6 +4,7 @@ import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import useLocation from '../../hooks/useLocation';
 import SearchBar from '../../components/SearchBar';
 import { firebase } from '../../../Firebase/firebase';
+import { auth } from '../../../Firebase/firebase';
 import colors from '../../assets/config/colors';
 import BottomSheet from 'reanimated-bottom-sheet';
 import AppButton from '../../components/AppButton';
@@ -14,11 +15,16 @@ import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 export default function MapScreen({ navigation }) {
   const [markerLoaded, setMarkerLoaded] = useState(false);
   const [restrooms, setRestrooms] = useState([]);
-  const reference = React.createRef();
-  const [name, setName] = useState('');
+  const reference = React.useRef();
   const [desc, setDesc] = useState('');
+  const [geohash, setGeohash] = useState('');
   const [lat, setLat] = useState(0);
   const [long, setLong] = useState(0);
+  const [name, setName] = useState('');
+  const [favorite, setFavorite] = useState(false);
+  // Code copied from 'FavoritesScreen.js'
+  const [favoritesLoaded, setFavoritesLoaded] = useState(false);
+  const [keys, setKeys] = useState([]);
 
   const { location, loading } = useLocation();
 
@@ -40,7 +46,6 @@ export default function MapScreen({ navigation }) {
         .orderBy('geohash')
         .startAt(b[0])
         .endAt(b[1]);
-
       promises.push(q.get());
     }
 
@@ -70,16 +75,55 @@ export default function MapScreen({ navigation }) {
       });
   }
 
+  // Code copied from 'FavoritesScreen.js'
+  async function getKeyData() {
+    const user = firebase.auth().currentUser;
+    const query = await firebase.firestore().collection('users');
+    query
+      .doc(user.uid)
+      .get()
+      .then((querySnapshot) => {
+        const favs = querySnapshot.data();
+        favs.favorites.forEach((favKey) => {
+          setKeys((keys) => [...keys, favKey]);
+        });
+      });
+    setFavoritesLoaded(true);
+  }
+
   restroomAttributes = (marker) => {
+    // Check if marker's geohash property is in favorites array
+    // Favorites
+    // 9q5dy8mr0v: Lum-Ka-Naad
+    // 9q5dwxuc38: California Chicken Cafe,
+    // 9q5dyb6cuh: Papa John's Pizza
+    setDesc(marker.description);
+    setGeohash(marker.geohash);
     setLat(marker.latitude);
     setLong(marker.longitude);
     setName(marker.name);
-    setDesc(marker.description);
+
+    if (keys.includes(marker.geohash)) {
+      setFavorite(true);
+    } else {
+      setFavorite(false);
+    }
+
     reference.current.snapTo(0);
   };
 
   renderInner = () => (
     <View style={styles.bottomSheetPanel}>
+      <TouchableOpacity onPress={favoriteHandler}>
+        <Image
+          style={styles.heart}
+          source={
+            !favorite
+              ? require('../favorite/heart-thin.png')
+              : require('../favorite/red-heart.png')
+          }
+        />
+      </TouchableOpacity>
       <View style={{ alignItems: 'center' }}>
         <Text style={styles.panelRestroomName}>{name}</Text>
         <Text style={styles.panelRestroomDescription}>{desc}</Text>
@@ -101,6 +145,7 @@ export default function MapScreen({ navigation }) {
       </View>
     </View>
   );
+
   renderHeader = () => (
     <View style={styles.bottomSheetHeader}>
       <View style={styles.bottomSheetpanelHeader}>
@@ -109,11 +154,47 @@ export default function MapScreen({ navigation }) {
     </View>
   );
 
+  const favoriteHandler = async () => {
+    const user = firebase.auth().currentUser;
+    // If already in user's favorites, remove as favorite
+    if (keys.includes(geohash)) {
+      await firebase
+        .firestore()
+        .collection('users')
+        .doc(user.uid)
+        .update({
+          favorites: firebase.firestore.FieldValue.arrayRemove(geohash),
+        });
+      setKeys(keys.filter((key) => key !== geohash));
+      setFavorite(false);
+    } else {
+      // If not in user's favorites, add as favorite
+      await firebase
+        .firestore()
+        .collection('users')
+        .doc(user.uid)
+        .update({
+          favorites: firebase.firestore.FieldValue.arrayUnion(geohash),
+        });
+      setKeys((keys) => [...keys, geohash]);
+      setFavorite(true);
+    }
+  };
+
   useEffect(() => {
     if (!markerLoaded && !loading) {
       getRestrooms();
     }
-  }, [loading]);
+
+    // Check to see if user is logged in to get favorites
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user && !favoritesLoaded) {
+        getKeyData();
+      }
+    });
+
+    return unsubscribe;
+  }, [loading, favoritesLoaded]);
 
   return (
     <>
@@ -246,5 +327,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'normal',
     margin: 10,
+  },
+  heart: {
+    height: 30,
+    width: 30,
+    resizeMode: 'contain',
+    alignSelf: 'flex-end',
+    marginHorizontal: 15,
   },
 });
