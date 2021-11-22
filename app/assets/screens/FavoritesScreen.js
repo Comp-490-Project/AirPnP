@@ -37,17 +37,18 @@ function handleNav(index){
   openGps(fv[index].latitude, fv[index].longitude)
 
 }
-async function handleRemove(index){
+async function handleRemove(id){
   const user = firebase.auth().currentUser;
   await firebase
   .firestore()
   .collection('users')
   .doc(user.uid)
   .update({
-    favorites: firebase.firestore.FieldValue.arrayRemove(fv[index].geohash),
+    favorites: firebase.firestore.FieldValue.arrayRemove(fv[id].geohash),
   });
   alert("Restroom Removed")
-  
+
+  setfv(fv.filter((index)=> index.geohash !== fv[id].geohash));
   // need to rerender the screen here
 
 }
@@ -79,7 +80,7 @@ const openGps = (lati, lng) => {
       }
     });
     return unsubscribe;
-  }, [favoritesLoaded]);
+  }, [favoritesLoaded,setfv]);
 
   return (
   
