@@ -26,7 +26,6 @@ export default function MapScreen({ navigation }) {
   // Code copied from 'FavoritesScreen.js'
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
   const [keys, setKeys] = useState([]);
-
   const { location, loading } = useLocation();
 
   const openGps = (lati, lng) => {
