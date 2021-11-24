@@ -31,7 +31,7 @@ export default function FavoritesScreen({ navigation }) {
 
 function handleRating(id){
   restroomKey = fv[id].geohash
-  navigation.navigate('review')
+  navigation.navigate('review',{restroomKey})
   
 }
 function handleNav(index){
@@ -113,7 +113,7 @@ const openGps = (lati, lng) => {
    
   );
 }
-export {restroomKey}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

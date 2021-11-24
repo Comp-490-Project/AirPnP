@@ -12,7 +12,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 
-var rRoomKey = "useFavoritesScreenValue"
+var restroomKey = "useFavoritesScreenValue"
 
 export default function MapScreen({ navigation }) {
   const user = firebase.auth().currentUser;
@@ -151,8 +151,8 @@ export default function MapScreen({ navigation }) {
     </View>
   );
   function handleRating(id){
-    rRoomKey = id
-    navigation.navigate('review')
+    restroomKey = id
+    navigation.navigate('review',{restroomKey})
     
   }
   renderHeader = () => (
@@ -263,7 +263,6 @@ export default function MapScreen({ navigation }) {
   );
 }
 
-export{rRoomKey}
 
 const styles = StyleSheet.create({
   container: {
