@@ -113,8 +113,7 @@ export default function SettingScreen({ navigation }){
               <Rating></Rating>
             </SafeAreaView>
             <View style={styles.photocontainer}>
-              <Text style={styles.title}>Upload Photos</Text>
-              <AppButton style={styles.panelButton}title="Upload Shit" onPress={()=>rateRef.current.snapTo(0)}/>
+              <AppButton style={styles.panelButton}title="Add Photo" onPress={()=>rateRef.current.snapTo(0)}/>
             </View>
             <View style={styles.imageContainer}>{
               imageSource !== '' && <Image 

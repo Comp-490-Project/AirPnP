@@ -46,7 +46,7 @@ async function handleRemove(id){
   .update({
     favorites: firebase.firestore.FieldValue.arrayRemove(fv[id].geohash),
   });
-  alert("Restroom Removed")
+  
 
   setfv(fv.filter((index)=> index.geohash !== fv[id].geohash));
   // need to rerender the screen here
