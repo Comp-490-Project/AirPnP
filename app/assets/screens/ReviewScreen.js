@@ -4,12 +4,14 @@ import Rating from "../../components/Rating";
 import * as ImagePicker from 'expo-image-picker';
 import BottomSheet from 'reanimated-bottom-sheet';
 import AppButton from '../../components/AppButton';
-import userRating from "../../components/Rating"
+import {userRating} from "../../components/Rating"
 import {firebase} from "../../../Firebase/firebase"
-
+import { geoHASH } from "./MapScreen";
+import { floor } from "react-native-reanimated";
 
 export default function SettingScreen({ navigation }){
   const [review, setReview] = useState();
+  const [ratingKey,setRatingKey] = useState([]);
   const [imageSource, setImageSource] = useState(null);
   const rateRef = React.useRef(null);
 
@@ -20,8 +22,16 @@ export default function SettingScreen({ navigation }){
       alert("You've refused to allow this app to acess your photos!")
       return;
     }
+    const result = await ImagePicker.launchImageLibraryAsync();
+    console.log(result); 
+    if(!result.cancelled){
+      setImageSource(result.uri);
+      console.log(result.uri);
+    }
+  }
 
-    /* Can't do this like this. Firestore isn't configured to store images like this. I only refrence the URI which does nothing in regards to cloud storage, it's a local refrence.
+
+      /* Can't do this like this. Firestore isn't configured to store images like this. I only refrence the URI which does nothing in regards to cloud storage, it's a local refrence.
     async function addReview() { //Pass in GeoHash Here. 
       const dataRef = firebase.firestore().collection('AddedReviews');
       await dataRef.doc('Test').set({
@@ -32,13 +42,37 @@ export default function SettingScreen({ navigation }){
     }
     */
 
-    const result = await ImagePicker.launchImageLibraryAsync();
-    console.log(result); 
-    if(!result.cancelled){
-      setImageSource(result.uri);
-      console.log(result.uri);
-    }
+
+  useEffect(()=>{
+  },[ratingKey])
+
+  const meanRating=async()=>{
+    const query = await firebase.firestore().collection('AddedRestrooms');
+    query
+      .doc(geoHASH)
+      .get()
+      .then((querySnapshot)=>{
+        const meanArray = querySnapshot.data();
+        if(meanArray.meanRating){
+          meanArray.meanRating.forEach((meanKey)=>{
+            setRatingKey((ratingKey)=>[...ratingKey,meanKey]);
+          });
+        }
+        const average = (ratingKey) => ratingKey.reduce((a,b)=>a+b)/ratingKey.length;
+        console.log(average)
+      });
   }
+
+  const updateRating=async()=>{ //Finds restroom utilizing geoHash & updates meanRating Array.
+    await firebase
+      .firestore()
+      .collection('AddedRestrooms')
+      .doc(geoHASH)
+      .update({
+        meanRating: firebase.firestore.FieldValue.arrayUnion(userRating)
+      });
+  }
+
 
   const openCamera = async()=>{ //Function is triggered when "Take Photo" button is pressed.
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync(); //Awaits for user input for Permissions. 
@@ -123,6 +157,9 @@ export default function SettingScreen({ navigation }){
               />
             }
             </View>
+            <TouchableOpacity onPress={updateRating} style={styles.btn}>
+              <Text style={styles.btnText}> Submit</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -159,6 +196,19 @@ const styles = StyleSheet.create({
       paddingTop:10,
       paddingLeft: 10,
       paddingRight: 10,
+    },
+    btn: {
+      backgroundColor: "#E2443B",
+      paddingHorizontal: 40,
+      paddingVertical: 12,
+      borderRadius: 30,
+      width: 300,
+      position: "relative",
+      alignItems: "center",
+    },
+    btnText: {
+      fontSize: 20,
+      color: "#FFF",
     },
     panel:{
       padding: 20,

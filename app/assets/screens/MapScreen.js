@@ -12,6 +12,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 
+var geoHASH = null
+
 export default function MapScreen({ navigation }) {
   const user = firebase.auth().currentUser;
   const [markerLoaded, setMarkerLoaded] = useState(false);
@@ -19,6 +21,7 @@ export default function MapScreen({ navigation }) {
   const reference = React.useRef();
   const [desc, setDesc] = useState('');
   const [geohash, setGeohash] = useState('');
+  geoHASH=geohash;
   const [lat, setLat] = useState(0);
   const [long, setLong] = useState(0);
   const [name, setName] = useState('');
@@ -42,7 +45,7 @@ export default function MapScreen({ navigation }) {
     for (const b of bounds) {
       const q = firebase
         .firestore()
-        .collection('Los-Angeles')
+        .collection('AddedRestrooms')
         .orderBy('geohash')
         .startAt(b[0])
         .endAt(b[1]);
@@ -141,7 +144,7 @@ export default function MapScreen({ navigation }) {
         <View Style={{ height: 10, backgroundColor: colors.white }} />
         <TouchableOpacity
           style={{ margin: 5 }}
-          onPress={() => navigation.navigate('review')}
+          onPress={(geohash) => navigation.navigate('review')}
         >
           <AppButton title={'Rate'} styles={{ width: '80%' }} />
         </TouchableOpacity>
@@ -339,3 +342,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
 });
+
+export {geoHASH}

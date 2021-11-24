@@ -10,6 +10,7 @@ import Rating from "../../components/Rating";
 import {geohashForLocation} from 'geofire-common'
 import { userRating } from "../../components/Rating";
 
+
 export default function AddScreen() {
   const [ mapRegion, setRegion ] = useState(null)
   const [ hasLocationPermissions, setLocationPermission ] = useState( false )
@@ -67,7 +68,8 @@ export default function AddScreen() {
       description: description,
       name: title,
       geohash: geohashForLocation([mapRegion.latitude, mapRegion.longitude]), 
-      rating: userRating
+      rating: userRating,
+      meanRating: [userRating], //Push in user rating to meanRating Array. 
     });
   }
 
