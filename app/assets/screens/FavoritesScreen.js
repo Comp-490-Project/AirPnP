@@ -7,6 +7,7 @@ import AppButton from '../../components/AppButton';
 import colors from '../config/colors';
 import { Linking } from 'react-native';
 
+var restroomKey
 
 export default function FavoritesScreen({ navigation }) {
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
@@ -28,7 +29,8 @@ export default function FavoritesScreen({ navigation }) {
       });
   }
 
-function handleRating(index){
+function handleRating(id){
+  restroomKey = fv[id].geohash
   navigation.navigate('review')
   
 }
@@ -111,7 +113,7 @@ const openGps = (lati, lng) => {
    
   );
 }
-
+export {restroomKey}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

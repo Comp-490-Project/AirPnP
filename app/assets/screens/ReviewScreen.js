@@ -4,14 +4,24 @@ import Rating from "../../components/Rating";
 import * as ImagePicker from 'expo-image-picker';
 import BottomSheet from 'reanimated-bottom-sheet';
 import AppButton from '../../components/AppButton';
-import userRating from "../../components/Rating"
+import {userRating} from "../../components/Rating"
 import {firebase} from "../../../Firebase/firebase"
+import { restroomKey } from "./FavoritesScreen";
+import { rRoomKey } from "./MapScreen";
 
+var hashKey
 
-export default function SettingScreen({ navigation }){
+export default function ReviewScreen({navigation}){
   const [review, setReview] = useState();
   const [imageSource, setImageSource] = useState(null);
   const rateRef = React.useRef(null);
+
+if(rRoomKey == "useFavoritesScreenValue"){
+  hashKey = restroomKey
+}else {
+  hashKey = rRoomKey
+}
+
 
 
   const openLibrary = async()=> { //Function is triggered when "Choose From Library" button is pressed.
@@ -115,6 +125,7 @@ export default function SettingScreen({ navigation }){
             <View style={styles.photocontainer}>
               <AppButton style={styles.panelButton}title="Add Photo" onPress={()=>rateRef.current.snapTo(0)}/>
             </View>
+            <AppButton title= "Submit Review" onPress={()=>console.log(navigation.dangerouslyGetParent().state.routes )}/>
             <View style={styles.imageContainer}>{
               imageSource !== '' && <Image 
                 source={{uri: imageSource}}
