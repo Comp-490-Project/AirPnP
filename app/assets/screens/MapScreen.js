@@ -16,6 +16,7 @@ var geoHASH = null
 
 export default function MapScreen({ navigation }) {
   const user = firebase.auth().currentUser;
+  USER=user
   const [markerLoaded, setMarkerLoaded] = useState(false);
   const [restrooms, setRestrooms] = useState([]);
   const reference = React.useRef();
@@ -45,7 +46,7 @@ export default function MapScreen({ navigation }) {
     for (const b of bounds) {
       const q = firebase
         .firestore()
-        .collection('AddedRestrooms')
+        .collection('Northridge4')
         .orderBy('geohash')
         .startAt(b[0])
         .endAt(b[1]);
@@ -271,6 +272,7 @@ const styles = StyleSheet.create({
     top: 100,
   },
   map: {
+    flex: 1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
@@ -342,5 +344,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
 });
-
+  
 export {geoHASH}

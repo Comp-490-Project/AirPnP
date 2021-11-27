@@ -10,8 +10,8 @@ import Rating from "../../components/Rating";
 import {geohashForLocation} from 'geofire-common'
 import { userRating } from "../../components/Rating";
 
-
 export default function AddScreen() {
+  const user = firebase.auth().currentUser;
   const [ mapRegion, setRegion ] = useState(null)
   const [ hasLocationPermissions, setLocationPermission ] = useState( false )
   const [ location, setLocation] = useState(null);
@@ -34,25 +34,23 @@ export default function AddScreen() {
               multiline={true}
             />
         </View>  
-        <Text style={styles.title}>Description</Text>
+        <Text style={styles.title}>Review</Text>
         <View style={styles.TextInput}>     
           <TextInput
             label="Description:"
-            onChangeText={(description) => setDescription(description)}
+            onChangeText={(description) => setDescription(description)} 
             placeholder="How Was It?."
             mode="outlined"
             multiline={true}
           />
         </View>
         <Text style={styles.title}>Rating</Text>
-        <SafeAreaView style={styles.container1}>
+        <View style={styles.container1}>
           <Rating></Rating>
-        </SafeAreaView>
-        <Text style={styles.text}></Text>
-        <View style={styles.cont1}>
-          <TouchableOpacity onPress={addRestroom} style={styles.btn}>
-            <Text style={styles.btnText}>Submit</Text>
-          </TouchableOpacity>
+        </View>
+        <View style={styles.submitButton}>
+          <AppButton title='Submit' onPress={addRestroom} style={styles.btn}>
+          </AppButton>
         </View>
       </View>
     </View>
@@ -63,13 +61,16 @@ export default function AddScreen() {
   async function addRestroom() {
     const dataRef = firebase.firestore().collection('AddedRestrooms');
     await dataRef.doc(geohashForLocation([mapRegion.latitude, mapRegion.longitude])).set({
+      geohash: geohashForLocation([mapRegion.latitude, mapRegion.longitude]),
       latitude: mapRegion.latitude,
       longitude: mapRegion.longitude,
-      description: description,
-      name: title,
-      geohash: geohashForLocation([mapRegion.latitude, mapRegion.longitude]), 
-      rating: userRating,
-      meanRating: [userRating], //Push in user rating to meanRating Array. 
+      meanRating: 4,
+      reviews:firebase.firestore.FieldValue.arrayUnion({
+        Comment: description,
+        Rating: userRating,
+        userID: user.uid
+      }),
+      name: title
     });
   }
 
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
   swipeBox:{
     backgroundColor: "white",
     padding: 16,
-    height: 900,
+    height: 800,
     alignItems: "center",
     justifyContent: "flex-end",
     borderRadius: 40
@@ -173,6 +174,7 @@ const styles = StyleSheet.create({
     top: '55%'
   },
   map: {
+    flex: 1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
@@ -190,18 +192,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 35,
-    marginTop: 30,
+    marginTop: 20,
     alignSelf: 'center'
-  },
-  subtitle: {
-    fontSize: 20,
-    color: "#474747",
-    marginTop: 10,
   },
   cont3: {
     flex: 1,
+    width: 300,
     backgroundColor: "#FFF",
-    width: "100%",
     paddingHorizontal: 20,
   },
   text: {
@@ -209,22 +206,35 @@ const styles = StyleSheet.create({
     paddingRight: 80,
     lineHeight: 25,
   },
-  
   btn: {
     backgroundColor: "#E2443B",
     paddingHorizontal: 40,
     paddingVertical: 12,
-    borderRadius: 30,
-    width: 300,
+    borderRadius: 0,
+    width: 290,
     position: "relative",
     alignItems: "center",
+  },
+  addButton:{
+    position: 'absolute',
+    bottom: 50,
+    width: 200,
+    marginBottom: 10,
+    height: 10,
+  },
+  submitButton:{
+    position: 'absolute',
+    bottom: 30,
+    width: 260,
+    height: 10,
+    alignSelf: 'center'
   },
   btnText: {
     fontSize: 20,
     color: "#FFF",
   },
   TextInput:{
-    height: 200, 
+    flex: 1,
     borderWidth: 3,
     borderRadius: 20,
     paddingTop:10,
