@@ -8,13 +8,19 @@ import MapScreen from './app/assets/screens/MapScreen';
 import LoginScreen from './app/assets/screens/LoginScreen';
 import ForgotPassword from './app/assets/screens/ForgotPassword';
 import HomeScreen from './app/assets/screens/HomeScreen';
-
+import SplashScreen from './app/assets/screens/SplashScreen';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false}}>
+        <Stack.Screen
+          name='splash'
+          component={SplashScreen}
+        ></Stack.Screen>
         <Stack.Screen
           name="login"
           component={LoginScreen} 
