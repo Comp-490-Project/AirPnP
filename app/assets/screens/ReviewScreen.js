@@ -6,6 +6,7 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import AppButton from '../../components/AppButton';
 import {userRating} from "../../components/Rating"
 import {firebase} from "../../../Firebase/firebase"
+import colors from "../config/colors";
 
 
 
@@ -14,10 +15,7 @@ export default function ReviewScreen({ route, navigation}){
   const [review, setReview] = useState();
   const [imageSource, setImageSource] = useState(null);
   const rateRef = React.useRef(null);
-
   var hashKey = route.params.restroomKey
-
-
 
   const openLibrary = async()=> { //Function is triggered when "Choose From Library" button is pressed.
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync; //Awaits for user input for Permissions. 
@@ -25,17 +23,6 @@ export default function ReviewScreen({ route, navigation}){
       alert("You've refused to allow this app to acess your photos!")
       return;
     }
-
-    /* Can't do this like this. Firestore isn't configured to store images like this. I only refrence the URI which does nothing in regards to cloud storage, it's a local refrence.
-    async function addReview() { //Pass in GeoHash Here. 
-      const dataRef = firebase.firestore().collection('AddedReviews');
-      await dataRef.doc('Test').set({
-        rating: userRating,
-        photo: setImageSource,
-        review: setReview,
-      })    
-    }
-    */
 
     const result = await ImagePicker.launchImageLibraryAsync();
     console.log(result); 
@@ -60,22 +47,29 @@ export default function ReviewScreen({ route, navigation}){
     }
   }
   
+  function handleSubmit(){
+
+    alert("Review Submitted");
+    navigation.navigate("map");
+  }
+
   renderInner=()=>(
     <View style={styles.panel}>
       <View style={{alignItems: 'center'}}>
         <Text style={styles.panelTitle}>Upload Photos</Text>
-        <Text style={styles.panelSubtitle}>No PooPoo Pics Plz</Text>
-      </View>
-      <TouchableOpacity style={styles.panelButton} onPress={openCamera}>
-        <Text style={styles.panelButtonTitle}>Take Photo</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.panelButton} onPress={openLibrary}>
-        <Text style={styles.panelButtonTitle}>Choose From Library</Text>
+        <Text style={styles.panelSubtitle}>Nothing Graphic Please</Text>
+      </View >
+      <TouchableOpacity
+          style={{ margin: 5 }} >
+        <AppButton title="Take Photo" onPress={openCamera} />
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.panelButton}
-        onPress={()=> rateRef.current.snapTo(1)}>
-        <Text style={styles.panelButtonTitle}>Cancel</Text>
+          style={{ margin: 5 }} >
+      <AppButton title="Choose From Library" onPress={openLibrary}/>
+      </TouchableOpacity>
+      <TouchableOpacity
+          style={{ margin: 5 }} >
+      <AppButton title="Cancel" onPress={()=> rateRef.current.snapTo(1)}/> 
       </TouchableOpacity>
     </View>
   );
@@ -92,7 +86,7 @@ export default function ReviewScreen({ route, navigation}){
       <SafeAreaView style={styles.container}>
         <BottomSheet 
           ref={rateRef}
-          snapPoints={["43%",0]}
+          snapPoints={["50%",0]}
           renderContent={renderInner}
           renderHeader={renderHeader}
           initialSnap={1}
@@ -101,7 +95,7 @@ export default function ReviewScreen({ route, navigation}){
           //callbackNode={this.fall}
           enableGestureInteraction={true}
         />
-        <ScrollView style={styles.scrollView}>
+        <ScrollView>
           <View style={styles.titlecontainer}>
             <Text style={styles.title}>Review</Text>
             <View style={styles.TextInput}>
@@ -113,14 +107,19 @@ export default function ReviewScreen({ route, navigation}){
                 multiline={true}
               />
             </View>
-            <Text style={styles.title}>Rate The Restroom</Text>
+            <Text style={styles.title}>Rating</Text>
             <SafeAreaView style={styles.ratingcontainer}>
               <Rating></Rating>
-            </SafeAreaView>
-            <View style={styles.photocontainer}>
-              <AppButton style={styles.panelButton}title="Add Photo" onPress={()=>rateRef.current.snapTo(0)}/>
-            </View>
-            <AppButton title= "Submit Review" onPress={()=>console.log(hashKey)}/>
+            </SafeAreaView>  
+            
+            <TouchableOpacity
+             style={{ margin: 5 }} >
+              <AppButton title="Add Photo" onPress={()=>rateRef.current.snapTo(0)}/>     
+            </TouchableOpacity>
+            <TouchableOpacity
+             style={{ margin: 5 }} >
+              <AppButton title= "Submit Review" onPress={()=>handleSubmit()}/>
+              </TouchableOpacity>
             <View style={styles.imageContainer}>{
               imageSource !== '' && <Image 
                 source={{uri: imageSource}}
@@ -137,19 +136,18 @@ export default function ReviewScreen({ route, navigation}){
 const styles = StyleSheet.create({
     container:{
         flex: 1,
+        
     },
-    scrollView:{
-        marginHorizontal: 5,
-    },
+    
     titlecontainer:{
       flex: 1,
-      backgroundColor: "#FFF",
+      backgroundColor: colors.white,
       width: "100%",
       paddingHorizontal: 20,
     },
     ratingcontainer:{
       flex: 1,
-      padding: 1,
+      padding: 20,
       justifyContent: 'center'
     },
     title: {
@@ -160,15 +158,17 @@ const styles = StyleSheet.create({
     TextInput:{
       height: 200, 
       borderWidth: 3,
-      borderRadius: 20,
+      borderRadius: 7.5,
       paddingTop:10,
       paddingLeft: 10,
       paddingRight: 10,
     },
     panel:{
       padding: 20,
-      backgroundColor: '#FFFFFF',
-      paddingTop: 20,
+      backgroundColor: colors.white,
+      paddingTop: 10,
+      justifyContent:"space-around"
+      
     },
     panelTitle:{
       fontSize: 27,
@@ -178,27 +178,26 @@ const styles = StyleSheet.create({
       fontSize: 14,
       color: 'gray',
       height: 30,
-      marginBottom: 10,
+      marginBottom: 5,
     },
-    panelButton:{
+    panelButtons:{
       padding: 13,
       borderRadius: 10,
-      backgroundColor: '#FF6347',
       alignItems: 'center',
       marginVertical: 7,
+      flex:1
     },
     panelButtonTitle:{
       fontSize: 17,
       fontWeight: 'bold',
-      color: 'white',
+      color: colors.white,
     },
     header: {
-      backgroundColor: '#FFFFFF',
-      shadowColor: '#333333',
+      backgroundColor: colors.white,
+      shadowColor: colors.lightgray,
       shadowOffset: {width: -1, height: -3},
       shadowRadius: 2,
       shadowOpacity: 0.4,
-      // elevation: 5,
       paddingTop: 20,
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
@@ -210,15 +209,17 @@ const styles = StyleSheet.create({
       width: 40,
       height: 8,
       borderRadius: 4,
-      backgroundColor: '#00000040',
+      backgroundColor: colors.lightgray,
       marginBottom: 10,
     },
     imageContainer:{
-      padding: 30
+      width:"100%",
+      marginBottom: 10,
+      marginRight:10
     },
     image: {
-      width: 400,
-      height: 300,
-      resizeMode: 'cover'
+      width:"100%",
+      height:350,
+    
     },
 })
