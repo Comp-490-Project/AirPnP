@@ -12,7 +12,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 
-var restroomKey = "useFavoritesScreenValue"
+var restroomKey = 'useFavoritesScreenValue';
 
 export default function MapScreen({ navigation }) {
   const user = firebase.auth().currentUser;
@@ -29,6 +29,9 @@ export default function MapScreen({ navigation }) {
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
   const [keys, setKeys] = useState([]);
   const { location, loading } = useLocation();
+
+  // SearchBar.js
+  const [destinationPlace, setDestinationPlace] = useState(null);
 
   const openGps = (lati, lng) => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
@@ -150,10 +153,9 @@ export default function MapScreen({ navigation }) {
       </View>
     </View>
   );
-  function handleRating(id){
-    restroomKey = id
-    navigation.navigate('review',{restroomKey})
-    
+  function handleRating(id) {
+    restroomKey = id;
+    navigation.navigate('review', { restroomKey });
   }
   renderHeader = () => (
     <View style={styles.bottomSheetHeader}>
@@ -218,8 +220,14 @@ export default function MapScreen({ navigation }) {
             showsUserLocation={true}
             showsMyLocationButton={true}
             region={{
-              latitude: location.latitude,
-              longitude: location.longitude,
+              latitude:
+                destinationPlace !== null
+                  ? destinationPlace.details.geometry.location.lat
+                  : location.latitude,
+              longitude:
+                destinationPlace !== null
+                  ? destinationPlace.details.geometry.location.lng
+                  : location.longitude,
               latitudeDelta: 0.0015,
               longitudeDelta: 0.0121,
             }}
@@ -248,7 +256,7 @@ export default function MapScreen({ navigation }) {
                 </Marker>
               ))}
           </MapView>
-          <SearchBar />
+          <SearchBar setDestinationPlace={setDestinationPlace} />
           <BottomSheet
             ref={reference}
             snapPoints={['57%', 0]}
@@ -262,7 +270,6 @@ export default function MapScreen({ navigation }) {
     </>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
