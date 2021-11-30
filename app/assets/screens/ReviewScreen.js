@@ -51,12 +51,14 @@ export default function ReviewScreen({ route, navigation}){
     const user = firebase.auth().currentUser
     const query = await firebase.firestore().collection('Los_Angeles');
     query
-      .doc(geoHASH)
+      .doc(hashKey)
       .get()
       .then((querySnapshot)=>{
-        const restroomInformation = querySnapshot.data();
-        
+        const restroomInformation = querySnapshot.data();   // restroom data obtained
       });
+
+
+    console.log(restroomInformation)
     alert("Review Submitted");
     navigation.navigate("map");
   }
