@@ -47,8 +47,16 @@ export default function ReviewScreen({ route, navigation}){
     }
   }
   
-  function handleSubmit(){
-
+  async function handleSubmit(){// submit the review  with the geohash, check if user has a current review using userID
+    const user = firebase.auth().currentUser
+    const query = await firebase.firestore().collection('Los_Angeles');
+    query
+      .doc(geoHASH)
+      .get()
+      .then((querySnapshot)=>{
+        const restroomInformation = querySnapshot.data();
+        
+      });
     alert("Review Submitted");
     navigation.navigate("map");
   }
