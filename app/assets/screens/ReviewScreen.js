@@ -25,10 +25,8 @@ export default function ReviewScreen({ route, navigation}){
     }
 
     const result = await ImagePicker.launchImageLibraryAsync();
-    console.log(result); 
     if(!result.cancelled){
       setImageSource(result.uri);
-      console.log(result.uri);
     }
   }
 
@@ -40,14 +38,15 @@ export default function ReviewScreen({ route, navigation}){
     }
 
     const result = await ImagePicker.launchCameraAsync();
-    console.log(result);
     if(!result.cancelled){
       setImageSource(result.uri);
-      console.log(result.uri);
     }
   }
   
   async function handleSubmit(){// submit the review  with the geohash, check if user has a current review using userID
+
+
+
     const user = firebase.auth().currentUser
     const query = await firebase.firestore().collection('Los-Angeles');
     var restroomInformation
@@ -65,7 +64,7 @@ export default function ReviewScreen({ route, navigation}){
     })   
        
     }else {
-      // calculate the new mean rating if this user hasnt review before
+      // calculate the new mean rating if this user hasnt reviewed before
       var newMeanRating = ((restroomInformation.reviews.length * restroomInformation.meanRating) + userRating) / (restroomInformation.reviews.length + 1);
       var oldMeanRating
       // now check if user has reviewed this restroom before
@@ -75,7 +74,7 @@ export default function ReviewScreen({ route, navigation}){
           query.doc(hashKey).update({ 
             reviews: firebase.firestore.FieldValue.arrayRemove({Comment: restroomInformation.reviews[i].Comment, Rating: restroomInformation.reviews[i].Rating, userID: restroomInformation.reviews[i].userID})         
         })  
-        // since it was reviewed by this user before we update the new mean calculationg reflecting the new rating
+        // since it was reviewed by this user before we update the new mean calculation reflecting the new rating
         newMeanRating = ((restroomInformation.reviews.length * restroomInformation.meanRating) + userRating - oldMeanRating) / (restroomInformation.reviews.length);
         }
       }  
@@ -85,7 +84,16 @@ export default function ReviewScreen({ route, navigation}){
     }) 
     }
     });
+    if(imageSource !== ''){
+    uploadImage(imageSource)
+    }
     navigation.navigate("map");
+  }
+  const uploadImage=async(uri)=>{
+    const response = await fetch(uri);
+    const blob = await response.blob() //Responsible for containing the uri's data in bytes. 
+    var ref = firebase.storage().ref().child(hashKey);
+    return ref.put(blob)
   }
 
   renderInner=()=>(
