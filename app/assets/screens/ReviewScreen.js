@@ -12,7 +12,7 @@ import colors from "../config/colors";
 
 
 export default function ReviewScreen({ route, navigation}){
-  const [review, setReview] = useState();
+  const [comment, setComment] = useState("");
   const [imageSource, setImageSource] = useState(null);
   const rateRef = React.useRef(null);
   var hashKey = route.params.restroomKey
@@ -49,17 +49,42 @@ export default function ReviewScreen({ route, navigation}){
   
   async function handleSubmit(){// submit the review  with the geohash, check if user has a current review using userID
     const user = firebase.auth().currentUser
-    const query = await firebase.firestore().collection('Los_Angeles');
+    const query = await firebase.firestore().collection('Los-Angeles');
+    var restroomInformation
+     
     query
-      .doc(hashKey)
-      .get()
-      .then((querySnapshot)=>{
-        const restroomInformation = querySnapshot.data();   // restroom data obtained
-      });
-
-
-    console.log(restroomInformation)
-    alert("Review Submitted");
+    .doc(hashKey)
+    .get()
+    .then((querySnapshot) => {
+    restroomInformation = querySnapshot.data();
+    //if it doesnt have any reviews, create review array, meanrating field and add to restroom
+    if(!restroomInformation.reviews){
+      query.doc(hashKey).update({ 
+        meanRating: userRating,
+        reviews:firebase.firestore.FieldValue.arrayUnion({Comment: comment, Rating: userRating, userID: user.uid})
+    })   
+       
+    }else {
+      // calculate the new mean rating if this user hasnt review before
+      var newMeanRating = ((restroomInformation.reviews.length * restroomInformation.meanRating) + userRating) / (restroomInformation.reviews.length + 1);
+      var oldMeanRating
+      // now check if user has reviewed this restroom before
+      for(var i = 0; i < restroomInformation.reviews.length;i++){
+        if(user.uid ==  restroomInformation.reviews[i].userID ){ 
+          oldMeanRating = restroomInformation.reviews[i].Rating
+          query.doc(hashKey).update({ 
+            reviews: firebase.firestore.FieldValue.arrayRemove({Comment: restroomInformation.reviews[i].Comment, Rating: restroomInformation.reviews[i].Rating, userID: restroomInformation.reviews[i].userID})         
+        })  
+        // since it was reviewed by this user before we update the new mean calculationg reflecting the new rating
+        newMeanRating = ((restroomInformation.reviews.length * restroomInformation.meanRating) + userRating - oldMeanRating) / (restroomInformation.reviews.length);
+        }
+      }  
+      query.doc(hashKey).update({ 
+        meanRating: newMeanRating,
+        reviews: firebase.firestore.FieldValue.arrayUnion({Comment: comment, Rating: userRating, userID: user.uid})
+    }) 
+    }
+    });
     navigation.navigate("map");
   }
 
@@ -111,7 +136,7 @@ export default function ReviewScreen({ route, navigation}){
             <View style={styles.TextInput}>
               <TextInput
                 label="Review"
-                onChangeText={(review)=>setReview(review)}
+                onChangeText={(comment)=>setComment(comment)}
                 placeholder="How Was It?"
                 mode="outlined"
                 multiline={true}
