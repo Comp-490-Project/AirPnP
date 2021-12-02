@@ -9,11 +9,11 @@ import SettingsScreen from '../app/assets/screens/SettingsScreen';
 import FavoritesScreen from '../app/assets/screens/FavoritesScreen';
 
 const Tab = createBottomTabNavigator();
-const { width, height } = Dimensions.get('window');
+
 
 export function Tabs() {
   return (
-    <View style={{ width, height }}>
+    
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -76,6 +76,6 @@ export function Tabs() {
           component={SettingsScreen}
         />
       </Tab.Navigator>
-    </View>
+   
   );
 }

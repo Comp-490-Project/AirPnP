@@ -12,6 +12,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 
+var restroomKey = "useFavoritesScreenValue"
+
 export default function MapScreen({ navigation }) {
   const user = firebase.auth().currentUser;
   const [markerLoaded, setMarkerLoaded] = useState(false);
@@ -141,14 +143,18 @@ export default function MapScreen({ navigation }) {
         <View Style={{ height: 10, backgroundColor: colors.white }} />
         <TouchableOpacity
           style={{ margin: 5 }}
-          onPress={() => navigation.navigate('review')}
+          onPress={() => handleRating(geohash)}
         >
           <AppButton title={'Rate'} styles={{ width: '80%' }} />
         </TouchableOpacity>
       </View>
     </View>
   );
-
+  function handleRating(id){
+    restroomKey = id
+    navigation.navigate('review',{restroomKey})
+    
+  }
   renderHeader = () => (
     <View style={styles.bottomSheetHeader}>
       <View style={styles.bottomSheetpanelHeader}>
@@ -256,6 +262,7 @@ export default function MapScreen({ navigation }) {
     </>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

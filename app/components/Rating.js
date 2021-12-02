@@ -2,15 +2,13 @@ import React, {useState} from 'react';
 import {SafeAreaView, StyleSheet, Text, View,Image} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-var userRating = null // TEMP SOLUTION
+var userRating = null 
 
 export default function Rating (){
     const [defaultRating, setdefaultRating] = useState(2);
     const [maxRating, setmaxRating] = useState([1,2,3,4,5])
-    userRating = defaultRating //TEMP SOLUTION
-    const starImgFilled='https://raw.githubusercontent.com/tranhonghan/images/main/star_filled.png'
-    const starImgCorner=  'https://raw.githubusercontent.com/tranhonghan/images/main/star_corner.png'
-
+    userRating = defaultRating 
+    
     const CustomRatingBar = () =>{
         return(
             <View style = {styles.customRatingBarStyle}>
@@ -26,8 +24,8 @@ export default function Rating (){
                                     style={styles.starImgStyle}
                                     source={
                                         item <= defaultRating
-                                        ? {uri: starImgFilled}
-                                        : {uri: starImgCorner}
+                                        ? require('../assets/star_filled.png')
+                                        : require('../assets/star_corner.png')
                                     }
                                 />
                             </TouchableOpacity>

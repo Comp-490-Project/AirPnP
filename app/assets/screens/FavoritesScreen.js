@@ -7,6 +7,7 @@ import AppButton from '../../components/AppButton';
 import colors from '../config/colors';
 import { Linking } from 'react-native';
 
+var restroomKey
 
 export default function FavoritesScreen({ navigation }) {
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
@@ -28,8 +29,9 @@ export default function FavoritesScreen({ navigation }) {
       });
   }
 
-function handleRating(index){
-  navigation.navigate('review')
+function handleRating(id){
+  restroomKey = fv[id].geohash
+  navigation.navigate('review',{restroomKey})
   
 }
 function handleNav(index){
@@ -46,7 +48,7 @@ async function handleRemove(id){
   .update({
     favorites: firebase.firestore.FieldValue.arrayRemove(fv[id].geohash),
   });
-  alert("Restroom Removed")
+  
 
   setfv(fv.filter((index)=> index.geohash !== fv[id].geohash));
   // need to rerender the screen here
