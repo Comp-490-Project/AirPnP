@@ -27,6 +27,7 @@ export default function ReviewScreen({ route, navigation}){
     const result = await ImagePicker.launchImageLibraryAsync();
     if(!result.cancelled){
       setImageSource(result.uri);
+      rateRef.current.snapTo(1)
     }
   }
 
@@ -40,6 +41,7 @@ export default function ReviewScreen({ route, navigation}){
     const result = await ImagePicker.launchCameraAsync();
     if(!result.cancelled){
       setImageSource(result.uri);
+      rateRef.current.snapTo(1)
     }
   }
   
