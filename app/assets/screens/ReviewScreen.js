@@ -89,7 +89,7 @@ export default function ReviewScreen({ route, navigation}){
     if(imageSource !== ''){
     uploadImage(imageSource,user.uid)
     }
-    navigation.navigate("map");
+    navigation.navigate("Home");
   }
   const uploadImage=async(uri,user)=>{
     const response = await fetch(uri);
