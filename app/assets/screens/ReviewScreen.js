@@ -87,14 +87,14 @@ export default function ReviewScreen({ route, navigation}){
     }
     });
     if(imageSource !== ''){
-    uploadImage(imageSource)
+    uploadImage(imageSource,user.uid)
     }
     navigation.navigate("map");
   }
-  const uploadImage=async(uri)=>{
+  const uploadImage=async(uri,user)=>{
     const response = await fetch(uri);
     const blob = await response.blob() //Responsible for containing the uri's data in bytes. 
-    var ref = firebase.storage().ref().child(hashKey);
+    var ref = firebase.storage().ref(hashKey).child(user);
     return ref.put(blob)
   }
 
