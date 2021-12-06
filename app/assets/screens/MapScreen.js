@@ -212,6 +212,7 @@ export default function MapScreen({ navigation }) {
       ) : (
         <View style={styles.container}>
           <MapView
+            style= {{paddingTop:500}}
             onPress={() => reference.current.snapTo(1)}
             provider={PROVIDER_GOOGLE} //Google Maps
             style={styles.map}
