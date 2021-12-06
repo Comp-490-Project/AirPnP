@@ -8,7 +8,7 @@ import { auth } from '../../../Firebase/firebase';
 import colors from '../../assets/config/colors';
 import BottomSheet from 'reanimated-bottom-sheet';
 import AppButton from '../../components/AppButton';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 
@@ -24,11 +24,13 @@ export default function MapScreen({ navigation }) {
   const [lat, setLat] = useState(0);
   const [long, setLong] = useState(0);
   const [name, setName] = useState('');
+  const [rating,setRating] = useState();
   const [favorite, setFavorite] = useState(false);
   // Code copied from 'FavoritesScreen.js'
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
   const [keys, setKeys] = useState([]);
   const { location, loading } = useLocation();
+  const [maxRating, setmaxRating] = useState([1,2,3,4,5])
 
   const openGps = (lati, lng) => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
@@ -105,6 +107,8 @@ export default function MapScreen({ navigation }) {
     setLat(marker.latitude);
     setLong(marker.longitude);
     setName(marker.name);
+    setRating(marker.meanRating);
+
 
     if (keys.includes(marker.geohash)) {
       setFavorite(true);
@@ -116,6 +120,7 @@ export default function MapScreen({ navigation }) {
   };
 
   renderInner = () => (
+  <ScrollView style= {{height: 500, backgroundColor: colors.white}}>
     <View style={styles.bottomSheetPanel}>
       {user && (
         <TouchableOpacity onPress={favoriteHandler}>
@@ -131,6 +136,26 @@ export default function MapScreen({ navigation }) {
       )}
       <View style={{ alignItems: 'center' }}>
         <Text style={styles.panelRestroomName}>{name}</Text>
+        <View style= {styles.customRatingBarStyle}>  
+            <Text>Rating:  </Text>
+          
+                {
+                    rating && maxRating.map((item,index)=>{  
+                      return(        
+                                            
+                                <Image
+                                    style={styles.starImgStyle}
+                                    key= {index}
+                                    source={
+                                        item <= rating
+                                        ? require('../star_filled.png')
+                                        : require('../star_corner.png')// could change to a blank image so it wont show
+                                    }
+                                />                      
+                      )
+                    })
+                  }
+            </View>
         <Text style={styles.panelRestroomDescription}>{desc}</Text>
       </View>
       <View style={{ alignContent: 'space-around' }}>
@@ -149,6 +174,7 @@ export default function MapScreen({ navigation }) {
         </TouchableOpacity>
       </View>
     </View>
+  </ScrollView>
   );
   function handleRating(id){
     restroomKey = id
@@ -252,7 +278,7 @@ export default function MapScreen({ navigation }) {
           <SearchBar />
           <BottomSheet
             ref={reference}
-            snapPoints={['57%', 0]}
+            snapPoints={['61%', 0]}
             initialSnap={1}
             enabledGestureInteraction={true}
             renderContent={renderInner}
@@ -346,4 +372,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     marginHorizontal: 15,
   },
+  customRatingBarStyle:{
+    
+    flexDirection:  'row',    
+},
+starImgStyle:{
+    width: 20,
+    height: 20,
+    resizeMode: 'cover'
+}
 });
