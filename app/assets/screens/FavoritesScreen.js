@@ -86,8 +86,9 @@ const openGps = (lati, lng) => {
   return (
   
     <ScrollView contentContainerstyle= {styles.container}>
-      {!fv && <Text>Data Not Available!</Text>}
+      
         <View style= {styles.topBorder}/>
+        {(fv.length == 0) && <Text style={{flex: 1, justifyContent: 'center'}}>Data Not Available!</Text>}
       {fv &&
         fv.map((restroom, index) =>
         <View style= {styles.itemView}  key={index}>
