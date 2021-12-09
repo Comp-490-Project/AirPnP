@@ -165,13 +165,17 @@ export default function MapScreen({ navigation }) {
         >
           <AppButton title={'Navigate'} styles={{ width: '80%' }} />
         </TouchableOpacity>
-        <View Style={{ height: 10, backgroundColor: colors.white }} />
-        <TouchableOpacity
-          style={{ margin: 5 }}
-          onPress={() => handleRating(geohash)}
-        >
-          <AppButton title={'Rate'} styles={{ width: '80%' }} />
-        </TouchableOpacity>
+        {user && (    //copied from conditional rate
+          <>
+            <View Style={{ height: 10, backgroundColor: colors.white }} />
+            <TouchableOpacity
+              style={{ margin: 5 }}
+              onPress={() => handleRating(geohash)}
+            >
+              <AppButton title={'Rate'} styles={{ width: '80%' }} />
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </View>
   </ScrollView>
