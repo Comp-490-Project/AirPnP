@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { firebase } from '../../../Firebase/firebase';
 import React, { useState, useEffect } from 'react';
 import { geohashForLocation, geohashQueryBounds , distanceBetween} from 'geofire-common';
+import AppButton from "../../components/AppButton";
 
 export default function SettingsScreen() {
  /* const [restrooms, setRestrooms] = useState([]);
@@ -90,10 +91,25 @@ useEffect(() =>{
 },[])
 */
 
+var reference
+ async function handledata(){
+
+
+ reference = await firebase.storage().ref("9q5dyb6cuh").listAll();// testing to get the photos path name
+
+reference.items.map((item) => (
+  console.log(item._delegate._location.path_)
+ )
+
+)}
+
+
+//9q5dyb6cuh this restroom has multiple photos
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Settings! Welcome! </Text>
-         
+      <AppButton title = "get photo data"  onPress={handledata} />
   
                      
     </View>
