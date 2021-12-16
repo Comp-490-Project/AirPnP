@@ -29,9 +29,11 @@ export default function MapScreen({ navigation }) {
   // Code copied from 'FavoritesScreen.js'
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
   const [keys, setKeys] = useState([]);
+  const [images, setImages] = useState([]);
+  const [imageUrls, setImageUrls] = useState([]);
   const { location, loading } = useLocation();
   const [maxRating, setmaxRating] = useState([1,2,3,4,5])
-
+ const rimageUrls = ["https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/9q5dyb6cuh%2FOsaenozZatP5S3yZW2uuLkWg8yz2?alt=media&token=b9af2cf5-c23a-4325-8078-002aedcaa261","https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/9q5dyb6cuh%2F9q5dyb6cuh?alt=media&token=59070a5a-4bc4-4854-aa02-52070e95c993"]
   const openGps = (lati, lng) => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
     var url = scheme + `${lati},${lng}`;
@@ -102,14 +104,17 @@ export default function MapScreen({ navigation }) {
     // 9q5dy8mr0v: Lum-Ka-Naad
     // 9q5dwxuc38: California Chicken Cafe,
     // 9q5dyb6cuh: Papa John's Pizza
+    var  tempimages;
     setDesc(marker.description);
     setGeohash(marker.geohash);
     setLat(marker.latitude);
     setLong(marker.longitude);
     setName(marker.name);
     setRating(marker.meanRating);
-
-
+    setImages(firebase.storage().ref(marker.geohash).listAll());//get the array of image references as a json object
+    images && images.forEach(im => firebase.storage().ref(im._delegate._location.path_).getDownloadURL().then((url)=> tempimages.push(url)));//get the download url using the path field of the image json object
+    setImageUrls(tempimages);//set the dowload urls
+    console.log(imageUrls);
     if (keys.includes(marker.geohash)) {
       setFavorite(true);
     } else {
@@ -118,6 +123,7 @@ export default function MapScreen({ navigation }) {
 
     reference.current.snapTo(0);
   };
+ 
 
   renderInner = () => (
   <ScrollView style= {{height: 500, backgroundColor: colors.white}}>
@@ -176,6 +182,21 @@ export default function MapScreen({ navigation }) {
             </TouchableOpacity>
           </>
         )}
+      </View>   
+      <View style= {{maginTop:10}}>
+          <ScrollView
+           pagingEnabled 
+           horizantal
+           showsHorizontalScrollIndicator = {false}>
+             style= {{width: "100%", height: 100}}
+            {rimageUrls && rimageUrls.map((image,index)=>
+            <Image
+              key = {index}
+              source = {{uri: image}}
+              require
+              style = {{width: "100%", height: 100, resizeMode:'cover'}}/>               
+            )}
+          </ScrollView>
       </View>
     </View>
   </ScrollView>
