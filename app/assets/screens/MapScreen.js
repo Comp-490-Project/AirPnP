@@ -188,14 +188,14 @@ export default function MapScreen({ navigation }) {
         <ScrollView
            style= {{width:1500, height: 200}}
            pagingEnabled= {true}
-          horizontal= {true}
-           showsHorizontalScrollIndicator= {true}
+           horizontal= {true}
+           showsHorizontalScrollIndicator= {false}
           >
             {rimageUrls.map((image,index)=>
           <Image
               key = {index}
               source = {{uri: image}}
-              style = {{width: 200, height: 200, resizeMode:'contain'}}/>               
+              style = {{width: 200, height: 200, resizeMode:'cover'}}/>               
             )}
         </ScrollView>
       </View>
