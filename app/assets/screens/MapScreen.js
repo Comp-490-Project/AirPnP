@@ -34,7 +34,7 @@ export default function MapScreen({ navigation }) {
   const { location, loading } = useLocation();
   const [maxRating, setmaxRating] = useState([1,2,3,4,5])
   // rimagesurl is a temporary item to display untill back end finished
-  const rimageUrls = ["https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/chaja.jpg?alt=media&token=72c5bd8e-8b8d-467d-9365-4f195880b714","https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/9q5dyb6cuh%2FOsaenozZatP5S3yZW2uuLkWg8yz2?alt=media&token=b9af2cf5-c23a-4325-8078-002aedcaa261","https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/9q5dyb6cuh%2F9q5dyb6cuh?alt=media&token=59070a5a-4bc4-4854-aa02-52070e95c993"]
+  const rimageUrls = ["https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/chaja.jpg?alt=media&token=72c5bd8e-8b8d-467d-9365-4f195880b714","https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/dirtyaf.jpg?alt=media&token=f4c89706-90fe-4ef6-a79e-18c561c1bdeb","https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/U2vvaLOENNQNqSF7cih8LbTpez82?alt=media&token=5495b353-e210-4d09-bb6b-6c65e4a56bdc"]
   const openGps = (lati, lng) => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
     var url = scheme + `${lati},${lng}`;
