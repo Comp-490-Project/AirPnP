@@ -34,7 +34,7 @@ export default function MapScreen({ navigation }) {
   const { location, loading } = useLocation();
   const [maxRating, setmaxRating] = useState([1,2,3,4,5])
   // rimagesurl is a temporary item to display untill back end finished
-  const rimageUrls = ["https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/9q5dyb6cuh%2FOsaenozZatP5S3yZW2uuLkWg8yz2?alt=media&token=b9af2cf5-c23a-4325-8078-002aedcaa261","https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/9q5dyb6cuh%2F9q5dyb6cuh?alt=media&token=59070a5a-4bc4-4854-aa02-52070e95c993"]
+  const rimageUrls = ["https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/chaja.jpg?alt=media&token=72c5bd8e-8b8d-467d-9365-4f195880b714","https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/9q5dyb6cuh%2FOsaenozZatP5S3yZW2uuLkWg8yz2?alt=media&token=b9af2cf5-c23a-4325-8078-002aedcaa261","https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/9q5dyb6cuh%2F9q5dyb6cuh?alt=media&token=59070a5a-4bc4-4854-aa02-52070e95c993"]
   const openGps = (lati, lng) => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
     var url = scheme + `${lati},${lng}`;
@@ -114,8 +114,8 @@ export default function MapScreen({ navigation }) {
     setRating(marker.meanRating);
     //setImages(firebase.storage().ref(marker.geohash).listAll());//get the array of image references as a json object
     //images.forEach(im => firebase.storage().ref(im._delegate._location.path_).getDownloadURL().then((url)=> tempimages.push(url)));//get the download url using the path field of the image json object first && is temporary till work is fixed
-    setImageUrls(tempimages);//set the dowload urls
-    console.log(imageUrls);
+    //setImageUrls(tempimages);//set the dowload urls
+    
     if (keys.includes(marker.geohash)) {
       setFavorite(true);
     } else {
@@ -184,20 +184,23 @@ export default function MapScreen({ navigation }) {
           </>
         )}
       </View>   
-      <View style= {{marginTop:10}} >
+      <View style= {{marginTop:10, marginRight:10}} >
         <ScrollView
-           style= {{width:1500, height: 200}}
+           style= {{width:Dimensions.get('window').width, height: 200}}
            pagingEnabled= {true}
            horizontal= {true}
-           showsHorizontalScrollIndicator= {false}
+           showsHorizontalScrollIndicator= {true}
           >
             {rimageUrls.map((image,index)=>
           <Image
               key = {index}
               source = {{uri: image}}
-              style = {{width: 200, height: 200, resizeMode:'cover'}}/>               
+              style = {{width: Dimensions.get('window').width , height: 200, resizeMode:'center'}}
+              />               
             )}
+          
         </ScrollView>
+        
       </View>
     </View>
   </ScrollView>
@@ -380,7 +383,7 @@ const styles = StyleSheet.create({
   },
   bottomSheetPanel: {
     backgroundColor: colors.white,
-    padding: 10,
+   
   },
   panelRestroomName: {
     fontSize: 18,
