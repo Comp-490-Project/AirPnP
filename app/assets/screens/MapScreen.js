@@ -112,8 +112,8 @@ export default function MapScreen({ navigation }) {
     setLong(marker.longitude);
     setName(marker.name);
     setRating(marker.meanRating);
-    setImages(firebase.storage().ref(marker.geohash).listAll());//get the array of image references as a json object
-    images && images.forEach(im => firebase.storage().ref(im._delegate._location.path_).getDownloadURL().then((url)=> tempimages.push(url)));//get the download url using the path field of the image json object first && is temporary till work is fixed
+    //setImages(firebase.storage().ref(marker.geohash).listAll());//get the array of image references as a json object
+    //images.forEach(im => firebase.storage().ref(im._delegate._location.path_).getDownloadURL().then((url)=> tempimages.push(url)));//get the download url using the path field of the image json object first && is temporary till work is fixed
     setImageUrls(tempimages);//set the dowload urls
     console.log(imageUrls);
     if (keys.includes(marker.geohash)) {
@@ -127,7 +127,7 @@ export default function MapScreen({ navigation }) {
  
 
   renderInner = () => (
-  <ScrollView style= {{height: 500, backgroundColor: colors.white}}>
+  <ScrollView style= {{height:650,width:Dimensions.get('window').width, backgroundColor: colors.white}}>
     <View style={styles.bottomSheetPanel}>
       {user && (
         <TouchableOpacity onPress={favoriteHandler}>
@@ -184,19 +184,20 @@ export default function MapScreen({ navigation }) {
           </>
         )}
       </View>   
-      <View style= {{maginTop:10}}>
-          <ScrollView
-           
-           horizantal
-           showsHorizontalScrollIndicator = {false}
-             style= {{width: "100%", height: 100}}>
-            {rimageUrls && rimageUrls.map((image,index)=>
-            <Image
+      <View style= {{marginTop:10}} >
+        <ScrollView
+           style= {{width:1500, height: 200}}
+           pagingEnabled= {true}
+          horizontal= {true}
+           showsHorizontalScrollIndicator= {true}
+          >
+            {rimageUrls.map((image,index)=>
+          <Image
               key = {index}
               source = {{uri: image}}
-              style = {{width: "100%", height: 100, resizeMode:'cover'}}/>               
+              style = {{width: 200, height: 200, resizeMode:'contain'}}/>               
             )}
-          </ScrollView>
+        </ScrollView>
       </View>
     </View>
   </ScrollView>

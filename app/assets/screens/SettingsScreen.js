@@ -114,7 +114,7 @@ reference.items.map((item) => (
       
       <ScrollView
            pagingEnabled
-           horizantal
+           horizontal
            showsHorizontalScrollIndicator = {false}>
             {rimageUrls.map((image,index)=>
               <Image
