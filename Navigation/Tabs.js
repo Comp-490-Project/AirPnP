@@ -1,81 +1,162 @@
 import * as React from 'react';
-import { Dimensions, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
 import colors from '../app/assets/config/colors';
 import MapScreen from '../app/assets/screens/MapScreen';
 import AddScreen from '../app/assets/screens/AddScreen';
 import SettingsScreen from '../app/assets/screens/SettingsScreen';
 import FavoritesScreen from '../app/assets/screens/FavoritesScreen';
+import ProfileScreen from '../app/assets/screens/ProfileScreen';
+import { Dimensions, View, Text, Image, TouchableOpacity, StyleSheet} from "react-native";
 
 const Tab = createBottomTabNavigator();
+const {width,height} = Dimensions.get("window");
+
+const CustomTabBarButton=({children, onPress})=>(
+  <TouchableOpacity
+    style={{
+      top: -20,
+      justifyContent: 'center',
+      alignItems: 'center',
+      ...styles.shadow
+    }}
+    onPress={onPress} 
+  >
+    <View style={{
+      width: 50,
+      height: 50,
+      borderRadius: 35,
+      backgroundColor: colors.tabs
+    }}>
+      {children}
+    </View>
+  </TouchableOpacity>
+)
 
 
-export function Tabs() {
-  return (
-    
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            if (route.name === 'Home') {
-              return (
-                <Ionicons
-                  name={focused ? 'home' : 'home-outline'}
-                  size={size}
-                  color={color}
-                />
-              );
-            } else if (route.name === 'Add') {
-              return (
-                <Ionicons
-                  name={focused ? 'add-circle' : 'add-circle-outline'}
-                  size={size}
-                  color={color}
-                />
-              );
-            } else if (route.name === 'Favorites') {
-              return (
-                <Ionicons
-                  name={focused ? 'star-sharp' : 'star-outline'}
-                  size={size}
-                  color={'orange'}
-                />
-              );
-            } else if (route.name === 'Settings') {
-              return (
-                <Ionicons
-                  name={focused ? 'settings' : 'settings-outline'}
-                  size={size}
-                  color={color}
-                />
-              );
-            }
-          },
-          tabBarInactiveTintColor: colors.medium,
-          tabBarActiveTintColor: colors.tabs,
-        })}
+export function Tabs(){
+  return(
+  <View style={{width,height}}>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        headerShown: false,  
+        tabBarStyle:[{
+          position:'absolute', 
+          //bottom: 25, 
+          //left: 20, 
+         // right: 20, 
+          elevation: 0, 
+          backgroundColor: '#ffffff',
+          //borderRadius: 15,
+          height: 50,
+          ...styles.shadow
+        }]
+        } 
+      }
+    >
+      <Tab.Screen name = "Home" component={MapScreen} options={{
+        tabBarIcon: ({focused})=>(
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <Image
+              source={require('../app/assets/Home.png')}
+              resizeMode='contain'
+              style={{
+                width: 25,
+                height: 25,
+                tintColor: focused ? colors.tabs : '#748c94'
+              }} 
+            />
+            <Text style={{color: focused ? colors.tabs : '#748c94', fontSize: 12}}>HOME</Text>
+          </View>
+        )
+      }}
       >
-        <Tab.Screen
-          name="Home"
-          options={{ headerShown: false }}
-          component={MapScreen}
-        />
-        <Tab.Screen
-          name="Add"
-          options={{ headerShown: false }}
-          component={AddScreen}
-        />
-        <Tab.Screen
-          name="Favorites"
-          options={{ headerShown: false }}
-          component={FavoritesScreen}
-        />
-        <Tab.Screen
-          name="Settings"
-          options={{ headerShown: false }}
-          component={SettingsScreen}
-        />
-      </Tab.Navigator>
-   
-  );
+      </Tab.Screen>
+      <Tab.Screen name = "PROFILE" component={ProfileScreen} options={{
+        tabBarIcon: ({focused})=>(
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <Image
+              source={require('../app/assets/Profile.png')}
+              resizeMode='contain'
+              style={{
+                width: 25,
+                height: 25,
+                tintColor: focused ? colors.tabs : '#748c94'
+              }}
+            />
+            <Text style={{color: focused ? colors.tabs : '#748c94', fontSize: 12}}>PROFILE</Text>
+          </View>
+        )
+      }}
+      />
+      <Tab.Screen name = "AddScreen" component={AddScreen}
+        options={{
+          tabBarIcon:({focused}) => (
+            <Image
+              source={require('../app/assets/Add.png')}
+              resizeMode="contain"
+              style={{
+                width: 25,
+                height: 25,
+                tintcolor: colors.white
+              }}
+            />  
+          ),
+          tabBarButton: (props) => (
+            <CustomTabBarButton {...props}/>
+          )
+        }}
+      />
+      <Tab.Screen name = "Favorites" component={FavoritesScreen} options={{
+        tabBarIcon: ({focused})=>(
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <Image
+              source={require('../app/assets/Favorites.png')}
+              resizeMode='contain'
+              style={{
+                width: 25,
+                height: 25,
+                tintColor: focused ? colors.tabs : '#748c94'
+              }}
+            />
+            <Text style={{color: focused ? colors.tabs: '#748c94', fontSize: 12}}>FAVORITES</Text>
+          </View>
+        )
+      }}
+      >
+      </Tab.Screen>
+      <Tab.Screen name = "Settings" component={SettingsScreen} options={{
+        tabBarIcon: ({focused})=>(
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <Image
+              source={require('../app/assets/Settings.png')}
+              resizeMode='contain'
+              style={{
+                width: 25,
+                height: 25,
+                tintColor: focused ? colors.tabs : '#748c94'
+              }}
+            />
+            <Text style={{color: focused ? colors.tabs : '#748c94', fontSize: 12}}>SETTINGS</Text>
+          </View>
+        )
+      }}
+      >
+      </Tab.Screen>
+    </Tab.Navigator>
+  </View>
+  )
 }
+
+const styles =  StyleSheet.create({
+  shadow:{
+    shadowColor: '#7F5DF0',
+    shadowOffset:{
+      width:0,
+      height: 10,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+    elevation: 5
+  }
+})
