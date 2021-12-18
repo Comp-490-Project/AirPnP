@@ -24,7 +24,7 @@ export default function MapScreen({ navigation }) {
   const [lat, setLat] = useState(0);
   const [long, setLong] = useState(0);
   const [name, setName] = useState('');
-  const [rating,setRating] = useState();
+  const [rating, setRating] = useState();
   const [favorite, setFavorite] = useState(false);
   // Code copied from 'FavoritesScreen.js'
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
@@ -32,14 +32,13 @@ export default function MapScreen({ navigation }) {
   const [images, setImages] = useState();
   const [imageUrls, setImageUrls] = useState([]);
   const { location, loading } = useLocation();
-<<<<<<< HEAD
-  const [maxRating, setmaxRating] = useState([1,2,3,4,5])
-=======
+  const [searchAlert, setSearchAlert] = useState(false);
+  const [centerLocation, setCenterLocation] = useState(null);
+  const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
 
   // SearchBar.js
   const [destinationPlace, setDestinationPlace] = useState(null);
 
->>>>>>> searchBarFix
   const openGps = (lati, lng) => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
     var url = scheme + `${lati},${lng}`;
@@ -87,6 +86,52 @@ export default function MapScreen({ navigation }) {
       });
   }
 
+  async function getRestroomsSearch() {
+    setMarkerLoaded(false);
+    const center = [
+      destinationPlace.details.geometry.location.lat,
+      destinationPlace.details.geometry.location.lng,
+    ];
+    const radiusInM = 2500;
+    const bounds = geohashQueryBounds(center, radiusInM);
+    const promises = [];
+    for (const b of bounds) {
+      const q = firebase
+        .firestore()
+        .collection('Los-Angeles')
+        .orderBy('geohash')
+        .startAt(b[0])
+        .endAt(b[1]);
+      promises.push(q.get());
+    }
+
+    Promise.all(promises)
+      .then((snapshots) => {
+        const matchingDocs = [];
+        for (const snap of snapshots) {
+          for (const doc of snap.docs) {
+            const lat = doc.get('latitude');
+            const lng = doc.get('longitude');
+
+            const distanceInKm = distanceBetween([lat, lng], center);
+            const distanceInM = distanceInKm * 1000;
+            if (distanceInM <= radiusInM) {
+              matchingDocs.push(doc);
+            }
+          }
+        }
+
+        return matchingDocs;
+      })
+      .then((matchingDocs) => {
+        matchingDocs.forEach((matchingDoc) => {
+          setRestrooms((restrooms) => [...restrooms, matchingDoc.data()]);
+        });
+        setMarkerLoaded(true);
+      });
+    setSearchAlert(false);
+  }
+
   // Code copied from 'FavoritesScreen.js'
   async function getKeyData() {
     const query = await firebase.firestore().collection('users');
@@ -111,7 +156,23 @@ export default function MapScreen({ navigation }) {
     // 9q5dwxuc38: California Chicken Cafe,
     // 9q5dyb6cuh: Papa John's Pizza
     setImageUrls([]);
-    
+
+    setDestinationPlace({
+      details: {
+        geometry: {
+          location: {
+            lat: marker.latitude,
+            lng: marker.longitude,
+          },
+        },
+      },
+    });
+
+    setCenterLocation({
+      latitude: marker.latitude,
+      longitude: marker.longitude,
+    });
+
     setDesc(marker.description);
     setGeohash(marker.geohash);
     setLat(marker.latitude);
@@ -120,9 +181,14 @@ export default function MapScreen({ navigation }) {
     setRating(marker.meanRating);
     let images = await firebase.storage().ref(marker.geohash).listAll();
     //get the array of image references as a json object
-    images.items.forEach(im => firebase.storage().ref(im._delegate._location.path_).getDownloadURL().then((url) => setImageUrls((imageUrls) => [...imageUrls, url])));//get the download url using the path field of the image json object first && is temporary till work is fixed
-    
-    
+    images.items.forEach((im) =>
+      firebase
+        .storage()
+        .ref(im._delegate._location.path_)
+        .getDownloadURL()
+        .then((url) => setImageUrls((imageUrls) => [...imageUrls, url]))
+    ); //get the download url using the path field of the image json object first && is temporary till work is fixed
+
     if (keys.includes(marker.geohash)) {
       setFavorite(true);
     } else {
@@ -131,86 +197,91 @@ export default function MapScreen({ navigation }) {
 
     reference.current.snapTo(0);
   };
- 
 
   renderInner = () => (
-  <ScrollView style= {{height:650,width:Dimensions.get('window').width, backgroundColor: colors.white}}>
-    <View style={styles.bottomSheetPanel}>
-      {user && (
-        <TouchableOpacity onPress={favoriteHandler}>
-          <Image
-            style={styles.heart}
-            source={
-              !favorite
-                ? require('../favorite/heart-thin.png')
-                : require('../favorite/red-heart.png')
-            }
-          />
-        </TouchableOpacity>
-      )}
-      <View style={{ alignItems: 'center' }}>
-        <Text style={styles.panelRestroomName}>{name}</Text>
-        <View style= {styles.customRatingBarStyle}>  
-            <Text>Rating:  </Text>
-          
-                {
-                    rating && maxRating.map((item,index)=>{  
-                      return(        
-                                            
-                                <Image
-                                    style={styles.starImgStyle}
-                                    key= {index}
-                                    source={
-                                        item <= rating
-                                        ? require('../star_filled.png')
-                                        : require('../star_corner.png')// could change to a blank image so it wont show
-                                    }
-                                />                      
-                      )
-                    })
-                  }
-            </View>
-        <Text style={styles.panelRestroomDescription}>{desc}</Text>
-      </View>
-      <View style={{ alignContent: 'space-around' }}>
-        <TouchableOpacity
-          style={{ margin: 5 }}
-          onPress={() => openGps(lat, long)}
-        >
-          <AppButton title={'Navigate'} styles={{ width: '80%' }} />
-        </TouchableOpacity>
-        {user && (    //copied from conditional rate
-          <>
-            <View Style={{ height: 10, backgroundColor: colors.white }} />
-            <TouchableOpacity
-              style={{ margin: 5 }}
-              onPress={() => handleRating(geohash)}
-            >
-              <AppButton title={'Rate'} styles={{ width: '80%' }} />
-            </TouchableOpacity>
-          </>
+    <ScrollView
+      style={{
+        height: 650,
+        width: Dimensions.get('window').width,
+        backgroundColor: colors.white,
+      }}
+    >
+      <View style={styles.bottomSheetPanel}>
+        {user && (
+          <TouchableOpacity onPress={favoriteHandler}>
+            <Image
+              style={styles.heart}
+              source={
+                !favorite
+                  ? require('../favorite/heart-thin.png')
+                  : require('../favorite/red-heart.png')
+              }
+            />
+          </TouchableOpacity>
         )}
-      </View>   
-      <View style= {{marginTop:10, marginRight:10}} >
-        <ScrollView
-           style= {{width:Dimensions.get('window').width, height: 200}}
-           pagingEnabled= {true}
-           horizontal= {true}
-           showsHorizontalScrollIndicator= {true}
+        <View style={{ alignItems: 'center' }}>
+          <Text style={styles.panelRestroomName}>{name}</Text>
+          <View style={styles.customRatingBarStyle}>
+            <Text>Rating: </Text>
+
+            {rating &&
+              maxRating.map((item, index) => {
+                return (
+                  <Image
+                    style={styles.starImgStyle}
+                    key={index}
+                    source={
+                      item <= rating
+                        ? require('../star_filled.png')
+                        : require('../star_corner.png') // could change to a blank image so it wont show
+                    }
+                  />
+                );
+              })}
+          </View>
+          <Text style={styles.panelRestroomDescription}>{desc}</Text>
+        </View>
+        <View style={{ alignContent: 'space-around' }}>
+          <TouchableOpacity
+            style={{ margin: 5 }}
+            onPress={() => openGps(lat, long)}
           >
-            {imageUrls.map((image,index)=>
-          <Image
-              key = {index}
-              source = {{uri: image}}
-              style = {{width: Dimensions.get('window').width , height: 200, resizeMode:'center'}}
-              />               
-            )}
-          
-        </ScrollView>
-        
+            <AppButton title={'Navigate'} styles={{ width: '80%' }} />
+          </TouchableOpacity>
+          {user && ( //copied from conditional rate
+            <>
+              <View Style={{ height: 10, backgroundColor: colors.white }} />
+              <TouchableOpacity
+                style={{ margin: 5 }}
+                onPress={() => handleRating(geohash)}
+              >
+                <AppButton title={'Rate'} styles={{ width: '80%' }} />
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+        <View style={{ marginTop: 10, marginRight: 10 }}>
+          <ScrollView
+            style={{ width: Dimensions.get('window').width, height: 200 }}
+            pagingEnabled={true}
+            horizontal={true}
+            showsHorizontalScrollIndicator={true}
+          >
+            {imageUrls.map((image, index) => (
+              <Image
+                key={index}
+                source={{ uri: image }}
+                style={{
+                  width: Dimensions.get('window').width,
+                  height: 200,
+                  resizeMode: 'center',
+                }}
+              />
+            ))}
+          </ScrollView>
+        </View>
       </View>
-    </View>
-  </ScrollView>
+    </ScrollView>
   );
   function handleRating(id) {
     restroomKey = id;
@@ -256,6 +327,15 @@ export default function MapScreen({ navigation }) {
       getRestrooms();
     }
 
+    if (destinationPlace !== null && searchAlert) {
+      getRestroomsSearch();
+      console.log('hi');
+    }
+
+    if (location) {
+      setCenterLocation(location);
+    }
+
     // Check to see if user is logged in to get favorites
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user && !favoritesLoaded) {
@@ -264,7 +344,7 @@ export default function MapScreen({ navigation }) {
     });
 
     return unsubscribe;
-  }, [loading, favoritesLoaded]);
+  }, [loading, favoritesLoaded, location, destinationPlace]);
 
   return (
     <>
@@ -273,7 +353,7 @@ export default function MapScreen({ navigation }) {
       ) : (
         <View style={styles.container}>
           <MapView
-            style= {{paddingTop:500}}
+            style={{ paddingTop: 500 }}
             onPress={() => reference.current.snapTo(1)}
             provider={PROVIDER_GOOGLE} //Google Maps
             style={styles.map}
@@ -283,11 +363,11 @@ export default function MapScreen({ navigation }) {
               latitude:
                 destinationPlace !== null
                   ? destinationPlace.details.geometry.location.lat
-                  : location.latitude,
+                  : centerLocation.latitude,
               longitude:
                 destinationPlace !== null
                   ? destinationPlace.details.geometry.location.lng
-                  : location.longitude,
+                  : centerLocation.longitude,
               latitudeDelta: 0.0015,
               longitudeDelta: 0.0121,
             }}
@@ -316,7 +396,10 @@ export default function MapScreen({ navigation }) {
                 </Marker>
               ))}
           </MapView>
-          <SearchBar setDestinationPlace={setDestinationPlace} />
+          <SearchBar
+            setDestinationPlace={setDestinationPlace}
+            setSearchAlert={setSearchAlert}
+          />
           <BottomSheet
             ref={reference}
             snapPoints={['61%', 0]}
@@ -394,7 +477,6 @@ const styles = StyleSheet.create({
   },
   bottomSheetPanel: {
     backgroundColor: colors.white,
-   
   },
   panelRestroomName: {
     fontSize: 18,
@@ -412,13 +494,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     marginHorizontal: 15,
   },
-  customRatingBarStyle:{
-    
-    flexDirection:  'row',    
-},
-starImgStyle:{
+  customRatingBarStyle: {
+    flexDirection: 'row',
+  },
+  starImgStyle: {
     width: 20,
     height: 20,
-    resizeMode: 'cover'
-}
+    resizeMode: 'cover',
+  },
 });

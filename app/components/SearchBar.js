@@ -1,19 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  Dimensions,
-} from 'react-native'; //Scroll
+import React from 'react';
+import { View, Text, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const WIDTH = Dimensions.get('window').width;
-export const SearchBar = function ({ setDestinationPlace }) {
-  const [input, setInput] = React.useState('');
-
+export const SearchBar = function ({ setDestinationPlace, setSearchAlert }) {
   return (
     <SafeAreaView onPress={() => {}} style={styles.container}>
       <View style={styles.leftCol}>
@@ -27,10 +18,9 @@ export const SearchBar = function ({ setDestinationPlace }) {
 
       <View style={styles.centerCol}>
         <GooglePlacesAutocomplete
-          value={input}
-          onChangeText={(text) => setInput(text)}
           placeholder="Search here"
           onPress={(data, details = null) => {
+            setSearchAlert(true);
             setDestinationPlace({ data, details });
           }}
           styles={{
