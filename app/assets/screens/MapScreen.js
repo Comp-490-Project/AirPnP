@@ -29,12 +29,10 @@ export default function MapScreen({ navigation }) {
   // Code copied from 'FavoritesScreen.js'
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
   const [keys, setKeys] = useState([]);
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState();
   const [imageUrls, setImageUrls] = useState([]);
   const { location, loading } = useLocation();
   const [maxRating, setmaxRating] = useState([1,2,3,4,5])
-  // rimagesurl is a temporary item to display untill back end finished
-  const rimageUrls = ["https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/chaja.jpg?alt=media&token=72c5bd8e-8b8d-467d-9365-4f195880b714","https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/dirtyaf.jpg?alt=media&token=f4c89706-90fe-4ef6-a79e-18c561c1bdeb","https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/U2vvaLOENNQNqSF7cih8LbTpez82?alt=media&token=5495b353-e210-4d09-bb6b-6c65e4a56bdc"]
   const openGps = (lati, lng) => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
     var url = scheme + `${lati},${lng}`;
@@ -99,22 +97,24 @@ export default function MapScreen({ navigation }) {
     setFavoritesLoaded(true);
   }
 
-  restroomAttributes = (marker) => {
+  restroomAttributes = async (marker) => {
     // Check if marker's geohash property is in favorites array
     // Favorites
     // 9q5dy8mr0v: Lum-Ka-Naad
     // 9q5dwxuc38: California Chicken Cafe,
     // 9q5dyb6cuh: Papa John's Pizza
-    var  tempimages;
+    setImageUrls([]);
+    
     setDesc(marker.description);
     setGeohash(marker.geohash);
     setLat(marker.latitude);
     setLong(marker.longitude);
     setName(marker.name);
     setRating(marker.meanRating);
-    //setImages(firebase.storage().ref(marker.geohash).listAll());//get the array of image references as a json object
-    //images.forEach(im => firebase.storage().ref(im._delegate._location.path_).getDownloadURL().then((url)=> tempimages.push(url)));//get the download url using the path field of the image json object first && is temporary till work is fixed
-    //setImageUrls(tempimages);//set the dowload urls
+    let images = await firebase.storage().ref(marker.geohash).listAll();
+    //get the array of image references as a json object
+    images.items.forEach(im => firebase.storage().ref(im._delegate._location.path_).getDownloadURL().then((url) => setImageUrls((imageUrls) => [...imageUrls, url])));//get the download url using the path field of the image json object first && is temporary till work is fixed
+    
     
     if (keys.includes(marker.geohash)) {
       setFavorite(true);
@@ -191,7 +191,7 @@ export default function MapScreen({ navigation }) {
            horizontal= {true}
            showsHorizontalScrollIndicator= {true}
           >
-            {rimageUrls.map((image,index)=>
+            {imageUrls.map((image,index)=>
           <Image
               key = {index}
               source = {{uri: image}}
