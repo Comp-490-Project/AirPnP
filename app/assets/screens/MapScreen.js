@@ -14,10 +14,16 @@ import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 
 var restroomKey = 'useFavoritesScreenValue';
 
-export default function MapScreen({ navigation }) {
+export default function MapScreen({
+  navigation,
+  keys,
+  setKeys,
+  restrooms,
+  setRestrooms,
+  addRestroom,
+}) {
   const user = firebase.auth().currentUser;
   const [markerLoaded, setMarkerLoaded] = useState(false);
-  const [restrooms, setRestrooms] = useState([]);
   const reference = React.useRef();
   const [desc, setDesc] = useState('');
   const [geohash, setGeohash] = useState('');
@@ -28,8 +34,6 @@ export default function MapScreen({ navigation }) {
   const [favorite, setFavorite] = useState(false);
   // Code copied from 'FavoritesScreen.js'
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
-  const [keys, setKeys] = useState([]);
-  const [images, setImages] = useState();
   const [imageUrls, setImageUrls] = useState([]);
   const { location, loading } = useLocation();
   const [searchAlert, setSearchAlert] = useState(false);
@@ -82,8 +86,8 @@ export default function MapScreen({ navigation }) {
         matchingDocs.forEach((matchingDoc) => {
           setRestrooms((restrooms) => [...restrooms, matchingDoc.data()]);
         });
-        setMarkerLoaded(true);
       });
+    setMarkerLoaded(true);
   }
 
   async function getRestroomsSearch() {
@@ -323,13 +327,14 @@ export default function MapScreen({ navigation }) {
   };
 
   useEffect(() => {
-    if (!markerLoaded && !loading) {
-      getRestrooms();
+    if (!loading) {
+      if (!markerLoaded) {
+        getRestrooms();
+      }
     }
 
     if (destinationPlace !== null && searchAlert) {
       getRestroomsSearch();
-      console.log('hi');
     }
 
     if (location) {
@@ -344,7 +349,7 @@ export default function MapScreen({ navigation }) {
     });
 
     return unsubscribe;
-  }, [loading, favoritesLoaded, location, destinationPlace]);
+  }, [loading, favoritesLoaded, location, addRestroom, destinationPlace]);
 
   return (
     <>
