@@ -12,7 +12,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 
-var restroomKey = "useFavoritesScreenValue"
+var restroomKey = 'useFavoritesScreenValue';
 
 export default function MapScreen({ navigation }) {
   const user = firebase.auth().currentUser;
@@ -32,7 +32,14 @@ export default function MapScreen({ navigation }) {
   const [images, setImages] = useState();
   const [imageUrls, setImageUrls] = useState([]);
   const { location, loading } = useLocation();
+<<<<<<< HEAD
   const [maxRating, setmaxRating] = useState([1,2,3,4,5])
+=======
+
+  // SearchBar.js
+  const [destinationPlace, setDestinationPlace] = useState(null);
+
+>>>>>>> searchBarFix
   const openGps = (lati, lng) => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
     var url = scheme + `${lati},${lng}`;
@@ -205,10 +212,9 @@ export default function MapScreen({ navigation }) {
     </View>
   </ScrollView>
   );
-  function handleRating(id){
-    restroomKey = id
-    navigation.navigate('review',{restroomKey})
-    
+  function handleRating(id) {
+    restroomKey = id;
+    navigation.navigate('review', { restroomKey });
   }
   renderHeader = () => (
     <View style={styles.bottomSheetHeader}>
@@ -274,8 +280,14 @@ export default function MapScreen({ navigation }) {
             showsUserLocation={true}
             showsMyLocationButton={true}
             region={{
-              latitude: location.latitude,
-              longitude: location.longitude,
+              latitude:
+                destinationPlace !== null
+                  ? destinationPlace.details.geometry.location.lat
+                  : location.latitude,
+              longitude:
+                destinationPlace !== null
+                  ? destinationPlace.details.geometry.location.lng
+                  : location.longitude,
               latitudeDelta: 0.0015,
               longitudeDelta: 0.0121,
             }}
@@ -304,7 +316,7 @@ export default function MapScreen({ navigation }) {
                 </Marker>
               ))}
           </MapView>
-          <SearchBar />
+          <SearchBar setDestinationPlace={setDestinationPlace} />
           <BottomSheet
             ref={reference}
             snapPoints={['61%', 0]}
@@ -318,7 +330,6 @@ export default function MapScreen({ navigation }) {
     </>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
