@@ -12,7 +12,7 @@ import { userRating } from "../../components/Rating";
 import * as ImagePicker from 'expo-image-picker';
 import {geoHASH} from "./MapScreen";
 import AnimationLoad from '../../components/AnimationLoad'
-import Modal from "react-native-modal"
+import CustomAlertComponent from "../../components/CustomAlertComponent";
 
 export default function AddScreen({navigation}) {
   const user = firebase.auth().currentUser;
@@ -23,6 +23,7 @@ export default function AddScreen({navigation}) {
   const [description, setDescription] = useState(null);
   const [imageSource, setImageSource] = useState(null);
   const sheetRef = React.useRef(null);
+
 
 
   const renderCont = () =>(
@@ -64,9 +65,9 @@ export default function AddScreen({navigation}) {
         }
         </View>
         <Text style={styles.title}>Rating</Text>
-        <View style={styles.container1}>
+        <SafeAreaView style={styles.container1}>
           <Rating></Rating>
-        </View>
+        </SafeAreaView>
         <View style={styles.submitButton}>
           <AppButton title='Submit' onPress={addRestroom} style={styles.btn}>
           </AppButton>
@@ -74,23 +75,7 @@ export default function AddScreen({navigation}) {
       </View>
     </View>
   );
-  
- /* const userStatus=()=>{
-    if(user){
-      sheetRef.current.snapTo(0)
-    }else{
-      console.log('here')
-      return (
-        <View>
-          <Modal isVisible={true}>
-            <View style={{ flex: 1 }}>
-              <Text>I am the modal content!</Text>
-            </View>
-          </Modal>
-        </View>
-      );
-    }
-  }*/
+
 
   //Send Restroom Data to Firestore
   async function addRestroom() {
@@ -139,7 +124,7 @@ export default function AddScreen({navigation}) {
   }
   
 
-  uploadImage=async(uri,user)=>{
+  const uploadImage=async(uri,user)=>{
     const response = await fetch(uri);
     const blob = await response.blob() //Responsible for containing the uri's data in bytes. 
     var ref = firebase.storage().ref(geoHASH).child(user);
@@ -206,10 +191,13 @@ export default function AddScreen({navigation}) {
         <AppButton title="Add"  onPress={()=>sheetRef.current.snapTo(0)}/>
       </View>
       }
-      {!user&&<Text>Must Be logged in to add</Text>}
+      {!user&&
+      <View styles={styles.alertContainer}>
+        <CustomAlertComponent  ></CustomAlertComponent>
+      </View>} 
       <BottomSheet
         ref={sheetRef}
-        snapPoints={["60%",0]}
+        snapPoints={["73.5%",0]}
         initialSnap={1}
         borderRadius={10}
         renderContent={renderCont}
@@ -223,15 +211,21 @@ const styles = StyleSheet.create({
   swipeBox:{
     backgroundColor: "white",
     padding: 16,
-    height: 960,
+    height: 1100,
     alignItems: "center",
     justifyContent: "flex-end",
-    borderRadius: 40,
     borderColor: "black",
+    borderRadius: 10,
   },
   container: {
     flex: 1,
     alignItems: "center"
+  },
+  alertContainer:{
+    justifyContent:'center',
+    alignItems:'center',
+    bottom: 300, 
+    top: 100,
   },
   addButton:{
     position: 'absolute',
@@ -319,7 +313,6 @@ const styles = StyleSheet.create({
   },
   container1:{
     flex: 1,
-    padding: 1,
     justifyContent: 'center'
   },
   image:{
