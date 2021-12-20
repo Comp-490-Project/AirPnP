@@ -113,6 +113,7 @@ export default function MapScreen({ navigation }) {
     setRating(marker.meanRating);
     let images = await firebase.storage().ref(marker.geohash).listAll();
     //get the array of image references as a json object
+    // this is to get images
     images.items.forEach(im => firebase.storage().ref(im._delegate._location.path_).getDownloadURL().then((url) => setImageUrls((imageUrls) => [...imageUrls, url])));//get the download url using the path field of the image json object first && is temporary till work is fixed
     
     
