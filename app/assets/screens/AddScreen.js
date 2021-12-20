@@ -15,13 +15,10 @@ import {geoHASH} from "./MapScreen";
 import AnimationLoad from '../../components/AnimationLoad'
 import CustomAlertComponent from "../../components/CustomAlertComponent";
 
-export default function AddScreen({navigation}) {
+export default function AddScreen({navigation, addRestroom, mapRegion, setRegion, description, setDescription, title, setTitle}) {
   const user = firebase.auth().currentUser;
-  const [ mapRegion, setRegion ] = useState(null)
   const [ hasLocationPermissions, setLocationPermission ] = useState( false )
   const [ location, setLocation] = useState(null);
-  const [title, setTitle] = useState(null);
-  const [description, setDescription] = useState(null);
   const [imageSource, setImageSource] = useState(null);
   const sheetRef = React.useRef(null);
 
@@ -78,26 +75,7 @@ export default function AddScreen({navigation}) {
   );
 
 
-  //Send Restroom Data to Firestore
-  async function addRestroom() {
-    const dataRef = firebase.firestore().collection('AddedRestrooms');
-    await dataRef.doc(geohashForLocation([mapRegion.latitude, mapRegion.longitude])).set({
-      geohash: geohashForLocation([mapRegion.latitude, mapRegion.longitude]),
-      latitude: mapRegion.latitude,
-      longitude: mapRegion.longitude,
-      meanRating: 4,
-      reviews:firebase.firestore.FieldValue.arrayUnion({
-        Comment: description,
-        Rating: userRating,
-        userID: user.uid
-      }),
-      name: title
-    });
-    if(imageSource !== ''){
-      uploadImage(imageSource,user.uid)
-    }
-    navigation.navigate("Home");
-  }
+
   
   const openLibrary = async()=> { //Function is triggered when "Choose From Library" button is pressed.
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync; //Awaits for user input for Permissions. 

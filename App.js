@@ -36,6 +36,7 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="login" component={LoginScreen}></Stack.Screen>
+        <Stack.Screen name="register" component={RegisterScreen}></Stack.Screen>
         <Stack.Screen name="map" component={HomeTabs}></Stack.Screen>
         <Stack.Screen name="forgot" component={ForgotPassword}></Stack.Screen>
         <Stack.Screen name="review" component={ReviewScreen}></Stack.Screen>
@@ -107,6 +108,7 @@ const HomeTabs = ({ navigation }) => {
         rating: userRating,
       },
     ]);
+    navigation.navigate('home')
   }
 
   return(
