@@ -11,6 +11,7 @@ import AppButton from '../../components/AppButton';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
+import AnimationLoad from '../../components/AnimationLoad';
 
 var restroomKey = 'useFavoritesScreenValue';
 
@@ -360,7 +361,7 @@ export default function MapScreen({
   return (
     <>
       {loading ? (
-        <Text>Loading</Text>
+        <AnimationLoad></AnimationLoad>
       ) : (
         <View style={styles.container}>
           <MapView
