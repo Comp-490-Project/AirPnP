@@ -1,13 +1,112 @@
-
-import { Text, View, Image } from "react-native";
-import { firebase } from '../../../Firebase/firebase';
+import {
+  Text,
+  TextInput,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  Switch,
+  Button,
+  SafeAreaView,
+  Alert,
+} from 'react-native';
+import { Auth, firebase } from '../../../Firebase/firebase';
 import React, { useState, useEffect } from 'react';
-import { geohashForLocation, geohashQueryBounds , distanceBetween} from 'geofire-common';
-import AppButton from "../../components/AppButton";
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-export default function SettingsScreen() {
-const rimageUrls = ["https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/9q5dyb6cuh%2FOsaenozZatP5S3yZW2uuLkWg8yz2?alt=media&token=b9af2cf5-c23a-4325-8078-002aedcaa261","https://firebasestorage.googleapis.com/v0/b/airpnp-327419.appspot.com/o/9q5dyb6cuh%2F9q5dyb6cuh?alt=media&token=59070a5a-4bc4-4854-aa02-52070e95c993"]
- /* const [restrooms, setRestrooms] = useState([]);
+import colors from '../../assets/config/colors';
+import AppButton from '../../components/AppButton';
+import { auth } from '../../../Firebase/firebase';
+import CustomAlertComponent from '../../components/CustomAlertComponent';
+import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
+
+export default function SettingsScreen({ navigation }) {
+  const user = firebase.auth().currentUser;
+
+  const Logout = () => {
+    if (user) {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          navigation.navigate('login');
+        });
+    } else {
+      return (
+        <CustomAlertComponent style={styles.container}></CustomAlertComponent>
+      );
+    }
+  };
+
+  //Do an onpress that  calls a function that has the custom alert component, use imbedded decision JSX to choose when to bring it up.
+
+  const [darkMode, setDarkMode] = useState(false);
+
+  return (
+    <ScrollView style={styles.LogoutButton}>
+      <View style={styles.container}>
+        <Text> {'Dark Mode'} </Text>
+        <Switch
+          trackColor={{ false: 'grey', true: 'teal' }}
+          thumbColor="white"
+          onValueChange={(value) => setDarkMode(value)}
+          value={darkMode}
+        />
+      </View>
+      {user && (
+        <View style={{ flex: 1, marginBottom: 10 }}>
+          <TouchableOpacity>
+            <AppButton title="LogOut" onPress={Logout} />
+          </TouchableOpacity>
+        </View>
+      )}
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    //backgroundColor: '#dcdcdc',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  container1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  LogoutButton: {
+    paddingTop: 90,
+    padding: 7,
+    //bottom: 100,
+    //left: 20,
+    //right: 20,
+    height: 30,
+    //marginBottom: 10,
+  },
+
+  appButtonContainer: {
+    elevation: 8,
+    //backgroundColor: "#dcdcdc",
+    //borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  appButtonText: {
+    fontSize: 18,
+    color: '#000000',
+    fontWeight: 'bold',
+    //alignSelf: "center",
+    //textTransform: "uppercase"
+  },
+});
+
+//});
+
+/* const [restrooms, setRestrooms] = useState([]);
   const [restroomsLoaded, setRestroomsLoaded] = useState(false);
 async function getRestrooms() {
   const query = firebase.firestore().collection('Los Angeles');
@@ -90,7 +189,8 @@ Promise.all(promises).then((snapshots) => {
 useEffect(() =>{
   getData()
 },[])
-*/
+
+
 
 var reference
  async function handledata(){
@@ -110,24 +210,11 @@ reference.items.map((item) => (
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Settings! Welcome! </Text>
-      <AppButton title = "get photo data"  onPress={handledata} />
-      
-      <ScrollView
-           pagingEnabled
-           horizontal
-           showsHorizontalScrollIndicator = {false}>
-            {rimageUrls.map((image,index)=>
-              <Image
-              key = {index}
-              source = {{uri: image}}
-              style = {{height: 50, width: 50, resizeMode: "cover"}}
-                />               
-            )}
-      </ScrollView>
-      
-                     
+          {restroomsLoaded && restrooms.map((restroom) => (
+         
+      <Text> {restroom.name} </Text>
+                        ))}
     </View>
   );
 
-    }
-
+*/
