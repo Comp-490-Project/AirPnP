@@ -29,10 +29,9 @@ export default function MapScreen({ navigation }) {
   // Code copied from 'FavoritesScreen.js'
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
   const [keys, setKeys] = useState([]);
-  const [images, setImages] = useState();
-  const [imageUrls, setImageUrls] = useState([]);
   const { location, loading } = useLocation();
   const [maxRating, setmaxRating] = useState([1,2,3,4,5])
+
   const openGps = (lati, lng) => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
     var url = scheme + `${lati},${lng}`;
@@ -97,25 +96,20 @@ export default function MapScreen({ navigation }) {
     setFavoritesLoaded(true);
   }
 
-  restroomAttributes = async (marker) => {
+  restroomAttributes = (marker) => {
     // Check if marker's geohash property is in favorites array
     // Favorites
     // 9q5dy8mr0v: Lum-Ka-Naad
     // 9q5dwxuc38: California Chicken Cafe,
     // 9q5dyb6cuh: Papa John's Pizza
-    setImageUrls([]);
-    
     setDesc(marker.description);
     setGeohash(marker.geohash);
     setLat(marker.latitude);
     setLong(marker.longitude);
     setName(marker.name);
     setRating(marker.meanRating);
-    let images = await firebase.storage().ref(marker.geohash).listAll();
-    //get the array of image references as a json object
-    images.items.forEach(im => firebase.storage().ref(im._delegate._location.path_).getDownloadURL().then((url) => setImageUrls((imageUrls) => [...imageUrls, url])));//get the download url using the path field of the image json object first && is temporary till work is fixed
-    
-    
+
+
     if (keys.includes(marker.geohash)) {
       setFavorite(true);
     } else {
@@ -124,10 +118,9 @@ export default function MapScreen({ navigation }) {
 
     reference.current.snapTo(0);
   };
- 
 
   renderInner = () => (
-  <ScrollView style= {{height:650,width:Dimensions.get('window').width, backgroundColor: colors.white}}>
+  <ScrollView style= {{height: 500, backgroundColor: colors.white}}>
     <View style={styles.bottomSheetPanel}>
       {user && (
         <TouchableOpacity onPress={favoriteHandler}>
@@ -147,7 +140,10 @@ export default function MapScreen({ navigation }) {
             <Text>Rating:  </Text>
           
                 {
-                    rating && maxRating.map((item,index)=>{  
+                    rating && 
+                    (rating == 1) ? 
+                      <Image style= {styles.starImgStyle} source= {require('../poopy.png')}/> :
+                       maxRating.map((item,index)=>{  
                       return(        
                                             
                                 <Image
@@ -172,35 +168,13 @@ export default function MapScreen({ navigation }) {
         >
           <AppButton title={'Navigate'} styles={{ width: '80%' }} />
         </TouchableOpacity>
-        {user && (    //copied from conditional rate
-          <>
-            <View Style={{ height: 10, backgroundColor: colors.white }} />
-            <TouchableOpacity
-              style={{ margin: 5 }}
-              onPress={() => handleRating(geohash)}
-            >
-              <AppButton title={'Rate'} styles={{ width: '80%' }} />
-            </TouchableOpacity>
-          </>
-        )}
-      </View>   
-      <View style= {{marginTop:10, marginRight:10}} >
-        <ScrollView
-           style= {{width:Dimensions.get('window').width, height: 200}}
-           pagingEnabled= {true}
-           horizontal= {true}
-           showsHorizontalScrollIndicator= {true}
-          >
-            {imageUrls.map((image,index)=>
-          <Image
-              key = {index}
-              source = {{uri: image}}
-              style = {{width: Dimensions.get('window').width , height: 200, resizeMode:'center'}}
-              />               
-            )}
-          
-        </ScrollView>
-        
+        <View Style={{ height: 10, backgroundColor: colors.white }} />
+        <TouchableOpacity
+          style={{ margin: 5 }}
+          onPress={() => handleRating(geohash)}
+        >
+          <AppButton title={'Rate'} styles={{ width: '80%' }} />
+        </TouchableOpacity>
       </View>
     </View>
   </ScrollView>
@@ -383,7 +357,7 @@ const styles = StyleSheet.create({
   },
   bottomSheetPanel: {
     backgroundColor: colors.white,
-   
+    padding: 10,
   },
   panelRestroomName: {
     fontSize: 18,
