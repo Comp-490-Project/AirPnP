@@ -129,7 +129,7 @@ const HomeTabs = ({ navigation }) => {
           } 
         }
       >
-        <Tab.Screen name = "Home" children={()=>(
+        <Tab.Screen name = "home" children={()=>(
           <MapScreen
             keys={keys}
             setKeys={setKeys}
@@ -182,6 +182,7 @@ const HomeTabs = ({ navigation }) => {
             description={description}
             setDescription={setDescription}
             addRestroom={addRestroom}
+            navigation={navigation}
           />
         )} options={{
             tabBarIcon:({focused}) => (
