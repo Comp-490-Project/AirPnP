@@ -192,7 +192,9 @@ export default function AddScreen({navigation}) {
         <AppButton title="Add" onPress={()=>sheetRef.current.snapTo(0)}/>
       </View>
       }
-
+      {!user&&
+        <CustomAlertComponent navigation={navigation}></CustomAlertComponent>
+      } 
       <BottomSheet
         ref={sheetRef}
         snapPoints={["73.5%",0]}
