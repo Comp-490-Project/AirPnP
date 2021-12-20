@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
-  Button,
   Text,
   View,
   Dimensions,
   SafeAreaView,
   Image,
   TextInput,
-  TouchableOpacity,
 } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker, Circle } from 'react-native-maps';
+import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 import AppButton from '../../components/AppButton';
+import { firebase } from '../../../Firebase/firebase';
 import markerImage from '../marker.png';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Rating from '../../components/Rating';
+import { geohashForLocation } from 'geofire-common';
+import { userRating } from '../../components/Rating';
+import * as ImagePicker from 'expo-image-picker';
+import { geoHASH } from './MapScreen';
+import AnimationLoad from '../../components/AnimationLoad';
+import CustomAlertComponent from '../../components/CustomAlertComponent';
 
 export default function AddScreen({
   mapRegion,
@@ -26,8 +31,10 @@ export default function AddScreen({
   setDescription,
   addRestroom,
 }) {
+  const user = firebase.auth().currentUser;
   const [hasLocationPermissions, setLocationPermission] = useState(false);
   const [location, setLocation] = useState(null);
+  const [imageSource, setImageSource] = useState(null);
   const sheetRef = React.useRef(null);
 
   const renderCont = () => (
@@ -44,7 +51,7 @@ export default function AddScreen({
             multiline={true}
           />
         </View>
-        <Text style={styles.title}>Description</Text>
+        <Text style={styles.title}>Review</Text>
         <View style={styles.TextInput}>
           <TextInput
             label="Description:"
@@ -54,19 +61,70 @@ export default function AddScreen({
             multiline={true}
           />
         </View>
+        <Text style={styles.title}>Add a Photo</Text>
+        <View style={{ margin: 5 }}>
+          <AppButton title="Take Photo" onPress={openCamera}></AppButton>
+        </View>
+        <View style={{ margin: 5 }}>
+          <AppButton
+            title="Choose From Library"
+            onPress={openLibrary}
+          ></AppButton>
+        </View>
+        <View style={styles.imageContainer}>
+          {imageSource !== '' && (
+            <Image source={{ uri: imageSource }} style={styles.image} />
+          )}
+        </View>
         <Text style={styles.title}>Rating</Text>
         <SafeAreaView style={styles.container1}>
           <Rating></Rating>
         </SafeAreaView>
-        <Text style={styles.text}></Text>
-        <View style={styles.cont1}>
-          <TouchableOpacity onPress={addRestroom} style={styles.btn}>
-            <Text style={styles.btnText}>Submit</Text>
-          </TouchableOpacity>
+        <View style={styles.submitButton}>
+          <AppButton
+            title="Submit"
+            onPress={addRestroom}
+            style={styles.btn}
+          ></AppButton>
         </View>
       </View>
     </View>
   );
+
+  const openLibrary = async () => {
+    //Function is triggered when "Choose From Library" button is pressed.
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync; //Awaits for user input for Permissions.
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this app to acess your photos!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+    if (!result.cancelled) {
+      setImageSource(result.uri);
+    }
+  };
+
+  const openCamera = async () => {
+    //Function is triggered when "Take Photo" button is pressed.
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync(); //Awaits for user input for Permissions.
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this app to acess your photos!");
+      return;
+    }
+    const result = await ImagePicker.launchCameraAsync();
+    if (!result.cancelled) {
+      setImageSource(result.uri, user.uid);
+    }
+  };
+
+  const uploadImage = async (uri, user) => {
+    const response = await fetch(uri);
+    const blob = await response.blob(); //Responsible for containing the uri's data in bytes.
+    var ref = firebase.storage().ref(geoHASH).child(user);
+    return ref.put(blob);
+  };
 
   useEffect(() => {
     //Must be made into a Hook (Leaving it Here For Now)
@@ -94,17 +152,16 @@ export default function AddScreen({
 
   if (location === null) {
     //Loading Animations Here
-    return <Text>Finding your current location...</Text>;
+    return <AnimationLoad />;
   }
 
   if (hasLocationPermissions === false) {
     //Loading Animations Here
-    return <Text>Location permissions are not granted.</Text>;
+    return <AnimationLoad />;
   }
 
   if (mapRegion === null) {
-    //Loading Animations Here
-    return <Text>Map region doesn't exist.</Text>;
+    return <AnimationLoad />;
   }
 
   const onRegionChange = (mapRegion) => {
@@ -123,12 +180,15 @@ export default function AddScreen({
       <View style={styles.markerFixed}>
         <Image style={styles.marker} source={markerImage} />
       </View>
-      <View style={styles.addButton}>
-        <AppButton title="Add" onPress={() => sheetRef.current.snapTo(0)} />
-      </View>
+      {user && (
+        <View style={styles.addButton}>
+          <AppButton title="Add" onPress={() => sheetRef.current.snapTo(0)} />
+        </View>
+      )}
+      {!user && <CustomAlertComponent></CustomAlertComponent>}
       <BottomSheet
         ref={sheetRef}
-        snapPoints={['57%', 0]}
+        snapPoints={['73.5%', 0]}
         initialSnap={1}
         borderRadius={10}
         renderContent={renderCont}
@@ -142,10 +202,11 @@ const styles = StyleSheet.create({
   swipeBox: {
     backgroundColor: 'white',
     padding: 16,
-    height: 900,
+    height: 1100,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    borderRadius: 40,
+    borderColor: 'black',
+    borderRadius: 10,
   },
   container: {
     flex: 1,
@@ -153,9 +214,9 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: 'absolute',
-    bottom: 50,
+    bottom: 20,
     width: 200,
-    marginBottom: 10,
+    marginBottom: 125,
     height: 10,
   },
   markerFixed: {
@@ -166,6 +227,7 @@ const styles = StyleSheet.create({
     top: '55%',
   },
   map: {
+    flex: 1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
@@ -184,18 +246,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 35,
-    marginTop: 30,
+    marginTop: 20,
     alignSelf: 'center',
-  },
-  subtitle: {
-    fontSize: 20,
-    color: '#474747',
-    marginTop: 10,
   },
   cont3: {
     flex: 1,
+    width: 300,
     backgroundColor: '#FFF',
-    width: '100%',
     paddingHorizontal: 20,
   },
   text: {
@@ -203,22 +260,28 @@ const styles = StyleSheet.create({
     paddingRight: 80,
     lineHeight: 25,
   },
-
   btn: {
     backgroundColor: '#E2443B',
     paddingHorizontal: 40,
     paddingVertical: 12,
-    borderRadius: 30,
-    width: 300,
+    borderRadius: 0,
+    width: 290,
     position: 'relative',
     alignItems: 'center',
+  },
+  submitButton: {
+    position: 'absolute',
+    bottom: 30,
+    width: 260,
+    height: 10,
+    alignSelf: 'center',
   },
   btnText: {
     fontSize: 20,
     color: '#FFF',
   },
   TextInput: {
-    height: 200,
+    flex: 1,
     borderWidth: 3,
     borderRadius: 20,
     paddingTop: 10,
@@ -236,7 +299,16 @@ const styles = StyleSheet.create({
   },
   container1: {
     flex: 1,
-    padding: 1,
     justifyContent: 'center',
+  },
+  image: {
+    width: '100%',
+    height: 50,
+    resizeMode: 'center',
+  },
+  imageContainer: {
+    width: '100%',
+    marginBottom: 10,
+    marginRight: 10,
   },
 });
