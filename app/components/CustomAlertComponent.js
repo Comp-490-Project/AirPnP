@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
         borderRadius:10,
         padding: 4,
         position: 'absolute',
+        bottom : 100,
+        
     },
     topPart:{
         flex: 0.5,

@@ -7,6 +7,7 @@ import {firebase} from "../../../Firebase/firebase"
 import markerImage from '../marker.png';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Rating from "../../components/Rating";
+import colors from "../config/colors";
 import {geohashForLocation} from 'geofire-common'
 import { userRating } from "../../components/Rating";
 import * as ImagePicker from 'expo-image-picker';
@@ -192,9 +193,8 @@ export default function AddScreen({navigation}) {
       </View>
       }
       {!user&&
-      <View styles={styles.alertContainer}>
         <CustomAlertComponent  ></CustomAlertComponent>
-      </View>} 
+      } 
       <BottomSheet
         ref={sheetRef}
         snapPoints={["73.5%",0]}
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   swipeBox:{
     backgroundColor: "white",
     padding: 16,
-    height: 1100,
+    height: 1200,
     alignItems: "center",
     justifyContent: "flex-end",
     borderColor: "black",
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   },
   submitButton:{
     position: 'absolute',
-    bottom: 30,
+    bottom: 110,
     width: 260,
     height: 10,
     alignSelf: 'center'
@@ -313,16 +313,22 @@ const styles = StyleSheet.create({
   },
   container1:{
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginBottom: 50,
+    marginTop: -50
+
   },
   image:{
     width: "100%",
-    height: 50,
+    height: 150,
     resizeMode: 'center'
   },
   imageContainer:{
     width:"100%",
     marginBottom: 10,
     marginRight: 10,
+    borderColor: colors.black,
+    borderWidth: 3,
+    borderRadius: 20,
   }
 })

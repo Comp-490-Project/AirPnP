@@ -98,7 +98,7 @@ export function Tabs(){
               style={{
                 width: 25,
                 height: 25,
-                tintcolor: colors.white
+                tintColor: colors.white
               }}
             />  
           ),
