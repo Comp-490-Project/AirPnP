@@ -153,7 +153,7 @@ export default function MapScreen({
     setFavoritesLoaded(true);
   }
 
-  restroomAttributes = (marker) => {
+  restroomAttributes = async (marker) => {
     // Check if marker's geohash property is in favorites array
     // Favorites
     // 9q5dy8mr0v: Lum-Ka-Naad
@@ -228,10 +228,13 @@ export default function MapScreen({
           <View style={styles.customRatingBarStyle}>
             <Text>Rating: </Text>
 
-            rating && 
-                    (rating == 1) ? 
-                      <Image style= {styles.starImgStyle} source= {require('../poopy.png')}/> :
-                       maxRating.map((item,index)=>{  
+            {rating && rating == 1 ? (
+              <Image
+                style={styles.starImgStyle}
+                source={require('../poopy.png')}
+              />
+            ) : (
+              maxRating.map((item, index) => {
                 return (
                   <Image
                     style={styles.starImgStyle}
@@ -243,7 +246,8 @@ export default function MapScreen({
                     }
                   />
                 );
-              })}
+              })
+            )}
           </View>
           <Text style={styles.panelRestroomDescription}>{desc}</Text>
         </View>

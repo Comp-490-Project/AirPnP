@@ -95,10 +95,13 @@ export default function FavoritesScreen({ navigation, keys, setKeys }) {
             <Text style={styles.nameText}>{restroom.name}</Text>
             <View style={styles.customRatingBarStyle}>
               <Text>Rating </Text>
-              restroom.meanRating && 
-                    (restroom.meanRating == 1) ? 
-                      <Image style= {styles.starImgStyle} source= {require('../poopy.png')}/> :
-                    maxRating.map((item,index)=>{  
+              {restroom.meanRating && restroom.meanRating == 1 ? (
+                <Image
+                  style={styles.starImgStyle}
+                  source={require('../poopy.png')}
+                />
+              ) : (
+                maxRating.map((item, index) => {
                   return (
                     <Image
                       style={styles.starImgStyle}
@@ -110,7 +113,8 @@ export default function FavoritesScreen({ navigation, keys, setKeys }) {
                       }
                     />
                   );
-                })}
+                })
+              )}
             </View>
 
             <Text>{restroom.description}</Text>
