@@ -29,11 +29,7 @@ export default function SettingsScreen({ navigation }) {
         .then(() => {
           navigation.navigate('login');
         });
-    } else {
-      return (
-        <CustomAlertComponent style={styles.container}></CustomAlertComponent>
-      );
-    }
+      }
   };
 
   //Do an onpress that  calls a function that has the custom alert component, use imbedded decision JSX to choose when to bring it up.
