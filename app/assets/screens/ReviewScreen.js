@@ -1,18 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  SafeAreaView,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  StatusBar,
-  ScrollView,
-  ImagePickerIOS,
-  Alert,
-} from 'react-native';
+import {StyleSheet,Text,View,SafeAreaView,Image,TextInput,TouchableOpacity,ScrollView} from 'react-native';
 import Rating from '../../components/Rating';
 import * as ImagePicker from 'expo-image-picker';
 import BottomSheet from 'reanimated-bottom-sheet';

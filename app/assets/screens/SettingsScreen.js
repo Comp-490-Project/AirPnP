@@ -1,22 +1,8 @@
-import {
-  Text,
-  TextInput,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  Switch,
-  Button,
-  SafeAreaView,
-  Alert,
-} from 'react-native';
-import { Auth, firebase } from '../../../Firebase/firebase';
-import React, { useState, useEffect } from 'react';
-import colors from '../../assets/config/colors';
+import {Text,View,ScrollView,TouchableOpacity,StyleSheet,Switch} from 'react-native';
+import {firebase } from '../../../Firebase/firebase';
+import React, { useState} from 'react';
 import AppButton from '../../components/AppButton';
-import { auth } from '../../../Firebase/firebase';
-import CustomAlertComponent from '../../components/CustomAlertComponent';
-import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
+
 
 export default function SettingsScreen({ navigation }) {
   const user = firebase.auth().currentUser;

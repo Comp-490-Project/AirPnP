@@ -15,14 +15,7 @@ import AnimationLoad from '../../components/AnimationLoad';
 
 var restroomKey = 'useFavoritesScreenValue';
 
-export default function MapScreen({
-  navigation,
-  keys,
-  setKeys,
-  restrooms,
-  setRestrooms,
-  addRestroom,
-}) {
+export default function MapScreen({ navigation, keys,setKeys,restrooms,setRestrooms,addRestroom,}) {
   const user = firebase.auth().currentUser;
   const [markerLoaded, setMarkerLoaded] = useState(false);
   const reference = React.useRef();

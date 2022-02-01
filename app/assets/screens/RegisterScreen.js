@@ -1,12 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  ImageBackground,
-  StyleSheet,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-} from 'react-native';
+import {ImageBackground,StyleSheet,Text,ScrollView,TouchableOpacity,SafeAreaView,} from 'react-native';
 import AppButton from '../../components/AppButton';
 import AppTextInput from '../../components/AppTextInput';
 import { Formik } from 'formik';

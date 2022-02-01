@@ -1,16 +1,10 @@
-import React, { useEffect } from 'react';
-import {
-    ImageBackground,
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-  } from 'react-native';
-  import { Formik } from 'formik';
-  import * as Yup from 'yup';
-  import AppTextInput from '../../components/AppTextInput';
-  import AppButton from '../../components/AppButton';
-  import { auth } from '../../../Firebase/firebase';
+import React from 'react';
+import {ImageBackground, StyleSheet , Text,View, TouchableOpacity,} from 'react-native';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import AppTextInput from '../../components/AppTextInput';
+import AppButton from '../../components/AppButton';
+import { auth } from '../../../Firebase/firebase';
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required().email().label('Email'),

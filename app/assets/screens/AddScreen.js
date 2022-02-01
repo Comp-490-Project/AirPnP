@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from "react";
-import { StyleSheet, Button, Text, View, Dimensions, SafeAreaView,Image,TextInput,TouchableOpacity} from "react-native";
-import MapView, { PROVIDER_GOOGLE, Marker,Circle } from "react-native-maps";
+import { StyleSheet, Text, View, Dimensions, SafeAreaView,Image,TextInput} from "react-native";
+import MapView from "react-native-maps";
 import * as Location from 'expo-location'
 import AppButton from "../../components/AppButton";
 import {firebase} from "../../../Firebase/firebase"
@@ -8,8 +8,6 @@ import markerImage from '../marker.png';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Rating from "../../components/Rating";
 import colors from "../config/colors";
-import {geohashForLocation} from 'geofire-common'
-import { userRating } from "../../components/Rating";
 import * as ImagePicker from 'expo-image-picker';
 import {geoHASH} from "./MapScreen";
 import AnimationLoad from '../../components/AnimationLoad'
