@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserLocation } from '../../actions/userActions';
 import { StyleSheet, Text, View, Dimensions, Image } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
-import useLocation from '../../hooks/useLocation';
 import SearchBar from '../../components/SearchBar';
 import { firebase } from '../../../Firebase/firebase';
 import { auth } from '../../../Firebase/firebase';
@@ -15,7 +16,14 @@ import AnimationLoad from '../../components/AnimationLoad';
 
 var restroomKey = 'useFavoritesScreenValue';
 
-export default function MapScreen({ navigation, keys,setKeys,restrooms,setRestrooms,addRestroom,}) {
+export default function MapScreen({
+  navigation,
+  keys,
+  setKeys,
+  restrooms,
+  setRestrooms,
+  addRestroom,
+}) {
   const user = firebase.auth().currentUser;
   const [markerLoaded, setMarkerLoaded] = useState(false);
   const reference = React.useRef();
@@ -29,13 +37,15 @@ export default function MapScreen({ navigation, keys,setKeys,restrooms,setRestro
   // Code copied from 'FavoritesScreen.js'
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
-  const { location, loading } = useLocation();
   const [searchAlert, setSearchAlert] = useState(false);
   const [centerLocation, setCenterLocation] = useState(null);
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
 
   // SearchBar.js
   const [destinationPlace, setDestinationPlace] = useState(null);
+
+  const dispatch = useDispatch();
+  const { location, loading } = useSelector((state) => state.userLocation);
 
   const openGps = (lati, lng) => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
@@ -327,6 +337,10 @@ export default function MapScreen({ navigation, keys,setKeys,restrooms,setRestro
   };
 
   useEffect(() => {
+    if (!location) {
+      dispatch(getUserLocation());
+    }
+
     if (!loading) {
       if (!markerLoaded) {
         getRestrooms();
@@ -335,10 +349,6 @@ export default function MapScreen({ navigation, keys,setKeys,restrooms,setRestro
 
     if (destinationPlace !== null && searchAlert) {
       getRestroomsSearch();
-    }
-
-    if (location) {
-      setCenterLocation(location);
     }
 
     // Check to see if user is logged in to get favorites
@@ -368,11 +378,11 @@ export default function MapScreen({ navigation, keys,setKeys,restrooms,setRestro
               latitude:
                 destinationPlace !== null
                   ? destinationPlace.details.geometry.location.lat
-                  : centerLocation.latitude,
+                  : location.latitude,
               longitude:
                 destinationPlace !== null
                   ? destinationPlace.details.geometry.location.lng
-                  : centerLocation.longitude,
+                  : location.longitude,
               latitudeDelta: 0.0015,
               longitudeDelta: 0.0121,
             }}

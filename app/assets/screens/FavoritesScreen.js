@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import CustomAlertComponent from '../../components/CustomAlertComponent';
 import { firebase } from '../../../Firebase/firebase';
 import { auth } from '../../../Firebase/firebase';
 import AppButton from '../../components/AppButton';
@@ -85,7 +86,7 @@ export default function FavoritesScreen({ navigation, keys, setKeys }) {
 
   return (
     <ScrollView contentContainerstyle={styles.container}>
-      <View style={styles.topBorder} /> 
+      <View style={styles.topBorder} />
       {fv.length == 0 && (
         <Text style={{ flex: 1, justifyContent: 'center' }}>
           Data Not Available!
