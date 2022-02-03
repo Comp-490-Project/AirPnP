@@ -1,31 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserLocation } from '../../actions/userActions';
+import { getRestrooms } from '../../actions/mapActions';
 import { StyleSheet, Text, View, Dimensions, Image } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
-import SearchBar from '../../components/SearchBar';
-import { firebase } from '../../../Firebase/firebase';
-import { auth } from '../../../Firebase/firebase';
-import colors from '../../assets/config/colors';
+import SearchBar from '../components/SearchBar';
+import { firebase, auth } from '../../firebase';
+import colors from '../config/colors';
 import BottomSheet from 'reanimated-bottom-sheet';
-import AppButton from '../../components/AppButton';
+import AppButton from '../components/AppButton';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
-import AnimationLoad from '../../components/AnimationLoad';
+import AnimationLoad from '../components/AnimationLoad';
 
 var restroomKey = 'useFavoritesScreenValue';
 
-export default function MapScreen({
-  navigation,
-  keys,
-  setKeys,
-  restrooms,
-  setRestrooms,
-  addRestroom,
-}) {
+export default function MapScreen({ navigation, keys, setKeys, addRestroom }) {
   const user = firebase.auth().currentUser;
-  const [markerLoaded, setMarkerLoaded] = useState(false);
   const reference = React.useRef();
   const [desc, setDesc] = useState('');
   const [geohash, setGeohash] = useState('');
@@ -46,53 +38,13 @@ export default function MapScreen({
 
   const dispatch = useDispatch();
   const { location, loading } = useSelector((state) => state.userLocation);
+  const { restrooms, markerLoaded } = useSelector((state) => state.restroom);
 
   const openGps = (lati, lng) => {
     var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
     var url = scheme + `${lati},${lng}`;
     Linking.openURL(url);
   };
-
-  async function getRestrooms() {
-    const center = [location.latitude, location.longitude];
-    const radiusInM = 2500;
-    const bounds = geohashQueryBounds(center, radiusInM);
-    const promises = [];
-    for (const b of bounds) {
-      const q = firebase
-        .firestore()
-        .collection('Los-Angeles')
-        .orderBy('geohash')
-        .startAt(b[0])
-        .endAt(b[1]);
-      promises.push(q.get());
-    }
-
-    Promise.all(promises)
-      .then((snapshots) => {
-        const matchingDocs = [];
-        for (const snap of snapshots) {
-          for (const doc of snap.docs) {
-            const lat = doc.get('latitude');
-            const lng = doc.get('longitude');
-
-            const distanceInKm = distanceBetween([lat, lng], center);
-            const distanceInM = distanceInKm * 1000;
-            if (distanceInM <= radiusInM) {
-              matchingDocs.push(doc);
-            }
-          }
-        }
-
-        return matchingDocs;
-      })
-      .then((matchingDocs) => {
-        matchingDocs.forEach((matchingDoc) => {
-          setRestrooms((restrooms) => [...restrooms, matchingDoc.data()]);
-        });
-      });
-    setMarkerLoaded(true);
-  }
 
   async function getRestroomsSearch() {
     setMarkerLoaded(false);
@@ -221,8 +173,8 @@ export default function MapScreen({
               style={styles.heart}
               source={
                 !favorite
-                  ? require('../favorite/heart-thin.png')
-                  : require('../favorite/red-heart.png')
+                  ? require('../icons/favorite-heart/heart-unfilled.png')
+                  : require('../icons/favorite-heart/heart-filled.png')
               }
             />
           </TouchableOpacity>
@@ -235,7 +187,7 @@ export default function MapScreen({
             {rating && rating == 1 ? (
               <Image
                 style={styles.starImgStyle}
-                source={require('../poopy.png')}
+                source={require('../icons/poop-emoji.png')}
               />
             ) : (
               maxRating.map((item, index) => {
@@ -245,8 +197,8 @@ export default function MapScreen({
                     key={index}
                     source={
                       item <= rating
-                        ? require('../star_filled.png')
-                        : require('../star_corner.png') // could change to a blank image so it wont show
+                        ? require('../icons/rating/star-filled.png')
+                        : require('../icons/rating/star-unfilled.png') // could change to a blank image so it wont show
                     }
                   />
                 );
@@ -341,10 +293,8 @@ export default function MapScreen({
       dispatch(getUserLocation());
     }
 
-    if (!loading) {
-      if (!markerLoaded) {
-        getRestrooms();
-      }
+    if (!loading && !markerLoaded) {
+      dispatch(getRestrooms(location.latitude, location.longitude));
     }
 
     if (destinationPlace !== null && searchAlert) {
@@ -392,7 +342,7 @@ export default function MapScreen({
               restrooms.map((marker, index) => (
                 <Marker
                   key={index}
-                  image={require('../../assets/Logo.png')}
+                  image={require('../../assets/icons/app-logo.png')}
                   coordinate={{
                     latitude: marker.latitude,
                     longitude: marker.longitude,

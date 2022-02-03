@@ -1,10 +1,17 @@
 import React, { useEffect } from 'react';
-import {ImageBackground,StyleSheet,Text,ScrollView,TouchableOpacity,SafeAreaView,} from 'react-native';
-import AppButton from '../../components/AppButton';
-import AppTextInput from '../../components/AppTextInput';
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
+import AppButton from '../components/AppButton';
+import AppTextInput from '../components/AppTextInput';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { auth, firebase } from '../../../Firebase/firebase';
+import { auth, firebase } from '../../firebase';
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -31,7 +38,7 @@ export default function RegisterScreen({ navigation }) {
     <>
       <ImageBackground
         style={styles.image}
-        source={require('../../assets/background.jpg')}
+        source={require('../../assets/icons/background.jpg')}
       >
         <SafeAreaView>
           <Formik

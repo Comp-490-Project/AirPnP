@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import CustomAlertComponent from '../../components/CustomAlertComponent';
-import { firebase } from '../../../Firebase/firebase';
-import { auth } from '../../../Firebase/firebase';
-import AppButton from '../../components/AppButton';
+import { firebase, auth } from '../../firebase';
+import AppButton from '../components/AppButton';
 import colors from '../config/colors';
 import { Linking } from 'react-native';
 var restroomKey;
@@ -101,7 +99,7 @@ export default function FavoritesScreen({ navigation, keys, setKeys }) {
               {restroom.meanRating && restroom.meanRating == 1 ? (
                 <Image
                   style={styles.starImgStyle}
-                  source={require('../poopy.png')}
+                  source={require('../icons/poop-emoji.png')}
                 />
               ) : (
                 maxRating.map((item, index) => {
@@ -111,8 +109,8 @@ export default function FavoritesScreen({ navigation, keys, setKeys }) {
                       key={index}
                       source={
                         item <= restroom.meanRating
-                          ? require('../star_filled.png')
-                          : require('../star_corner.png') // could change to a blank image so it wont show
+                          ? require('../icons/rating/star-filled.png')
+                          : require('../icons/rating/star-unfilled.png') // could change to a blank image so it wont show
                       }
                     />
                   );

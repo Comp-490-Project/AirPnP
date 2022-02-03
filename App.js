@@ -18,9 +18,9 @@ import ProfileScreen from './app/assets/screens/ProfileScreen';
 import SplashScreen from './app/assets/screens/SplashScreen';
 
 // Imports from 'AddScreen.js'
-import { firebase } from './Firebase/firebase';
+import { firebase } from './app/firebase';
 import { geohashForLocation } from 'geofire-common';
-import { userRating } from './app/components/Rating';
+import { userRating } from './app/assets/components/Rating';
 
 //Imports from 'Tabs.js'
 import {
@@ -34,7 +34,7 @@ import {
 
 //Imports from SplashScreen
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import CustomAlertComponent from './app/components/CustomAlertComponent';
+import CustomAlertComponent from './app/assets/components/CustomAlertComponent';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -162,7 +162,7 @@ const HomeTabs = ({ navigation }) => {
             tabBarIcon: ({ focused }) => (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Image
-                  source={require('./app/assets/Home.png')}
+                  source={require('./app/assets/icons/tabs/home.png')}
                   resizeMode="contain"
                   style={{
                     width: 25,
@@ -189,7 +189,7 @@ const HomeTabs = ({ navigation }) => {
             tabBarIcon: ({ focused }) => (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Image
-                  source={require('./app/assets/Profile.png')}
+                  source={require('./app/assets/icons/tabs/profile.png')}
                   resizeMode="contain"
                   style={{
                     width: 25,
@@ -226,7 +226,7 @@ const HomeTabs = ({ navigation }) => {
           options={{
             tabBarIcon: ({ focused }) => (
               <Image
-                source={require('./app/assets/Add.png')}
+                source={require('./app/assets/icons/tabs/add.png')}
                 resizeMode="contain"
                 style={{
                   width: 25,
@@ -251,7 +251,7 @@ const HomeTabs = ({ navigation }) => {
             tabBarIcon: ({ focused }) => (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Image
-                  source={require('./app/assets/Favorites.png')}
+                  source={require('./app/assets/icons/tabs/favorites.png')}
                   resizeMode="contain"
                   style={{
                     width: 25,
@@ -278,7 +278,7 @@ const HomeTabs = ({ navigation }) => {
             tabBarIcon: ({ focused }) => (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Image
-                  source={require('./app/assets/Settings.png')}
+                  source={require('./app/assets/icons/tabs/settings.png')}
                   resizeMode="contain"
                   style={{
                     width: 25,

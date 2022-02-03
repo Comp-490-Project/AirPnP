@@ -1,11 +1,17 @@
 import React, { useEffect } from 'react';
-import {ImageBackground,StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import AppButton from '../../components/AppButton';
-import AppTextInput from '../../components/AppTextInput';
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from 'react-native';
+import AppButton from '../components/AppButton';
+import AppTextInput from '../components/AppTextInput';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import colors from '../../assets/config/colors';
-import { auth } from '../../../Firebase/firebase';
+import { auth } from '../../firebase';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
@@ -25,7 +31,7 @@ export default function LoginScreen({ navigation }) {
   return (
     <ImageBackground
       style={{ flex: 1, justifyContent: 'center' }}
-      source={require('../../assets/background.jpg')}
+      source={require('../../assets/icons/background.jpg')}
     >
       <Formik
         initialValues={{ email: '', password: '' }}

@@ -23,8 +23,8 @@ export default function Rating() {
                 style={styles.starImgStyle}
                 source={
                   item <= defaultRating
-                    ? require('../assets/star_filled.png')
-                    : require('../assets/star_corner.png')
+                    ? require('../icons/rating/star-filled.png')
+                    : require('../icons/rating/star-unfilled.png')
                 }
               />
             </TouchableOpacity>

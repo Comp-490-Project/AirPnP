@@ -1,8 +1,14 @@
-import {Text,View,ScrollView,TouchableOpacity,StyleSheet,Switch} from 'react-native';
-import {firebase } from '../../../Firebase/firebase';
-import React, { useState} from 'react';
-import AppButton from '../../components/AppButton';
-
+import {
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  Switch,
+} from 'react-native';
+import { firebase } from '../../firebase';
+import React, { useState } from 'react';
+import AppButton from '../components/AppButton';
 
 export default function SettingsScreen({ navigation }) {
   const user = firebase.auth().currentUser;
@@ -15,7 +21,7 @@ export default function SettingsScreen({ navigation }) {
         .then(() => {
           navigation.navigate('login');
         });
-      }
+    }
   };
 
   //Do an onpress that  calls a function that has the custom alert component, use imbedded decision JSX to choose when to bring it up.
@@ -36,7 +42,7 @@ export default function SettingsScreen({ navigation }) {
       {user && (
         <View style={{ flex: 1, marginBottom: 10 }}>
           <TouchableOpacity>
-            <AppButton title="LogOut" onPress={Logout} />
+            <AppButton title="Logout" onPress={Logout} />
           </TouchableOpacity>
         </View>
       )}

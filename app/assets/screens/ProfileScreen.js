@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet} from 'react-native'
+import { View, Text, StyleSheet } from 'react-native';
 
 function ProfileScreen() {
-  const user = firebase.auth().currentUser;
+  // const user = firebase.auth().currentUser;
 
   return (
     <View>
@@ -13,6 +13,4 @@ function ProfileScreen() {
 
 export default ProfileScreen;
 
-const styles = StyleSheet.create({
-
-});
+const styles = StyleSheet.create({});

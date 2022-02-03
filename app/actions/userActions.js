@@ -1,3 +1,7 @@
+import {
+  USER_LOCATION_GRANTED,
+  USER_LOCATION_DENIED,
+} from '../constants/types';
 import * as Location from 'expo-location';
 
 export const getUserLocation = () => async (dispatch) => {
@@ -7,7 +11,7 @@ export const getUserLocation = () => async (dispatch) => {
 
     if (!granted) {
       dispatch({
-        type: 'USER_LOCATION_DENIED',
+        type: USER_LOCATION_DENIED,
       });
     }
 
@@ -16,7 +20,7 @@ export const getUserLocation = () => async (dispatch) => {
     } = await Location.getLastKnownPositionAsync({});
 
     dispatch({
-      type: 'USER_LOCATION_GRANTED',
+      type: USER_LOCATION_GRANTED,
       payload: {
         latitude,
         longitude,

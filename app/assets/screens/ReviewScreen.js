@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import {StyleSheet,Text,View,SafeAreaView,Image,TextInput,TouchableOpacity,ScrollView} from 'react-native';
-import Rating from '../../components/Rating';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import Rating from '../components/Rating';
 import * as ImagePicker from 'expo-image-picker';
 import BottomSheet from 'reanimated-bottom-sheet';
-import AppButton from '../../components/AppButton';
-import { userRating } from '../../components/Rating';
-import { firebase } from '../../../Firebase/firebase';
+import AppButton from '../components/AppButton';
+import { userRating } from '../components/Rating';
+import { firebase } from '../../firebase';
 import colors from '../config/colors';
 
 export default function ReviewScreen({ route, navigation }) {

@@ -1,9 +1,11 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
+import { restroomReducer } from './reducers/mapReducer';
 import { userLocationReducer } from './reducers/userReducer';
 
 const reducer = combineReducers({
   userLocation: userLocationReducer,
+  restroom: restroomReducer,
 });
 
 const initialState = {
