@@ -4,7 +4,6 @@ import store from './app/store';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
 import colors from './app/assets/config/colors';
 import LoginScreen from './app/assets/screens/LoginScreen';
 import RegisterScreen from './app/assets/screens/RegisterScreen';
@@ -15,7 +14,6 @@ import FavoritesScreen from './app/assets/screens/FavoritesScreen';
 import ReviewScreen from './app/assets/screens/ReviewScreen';
 import SettingsScreen from './app/assets/screens/SettingsScreen';
 import ProfileScreen from './app/assets/screens/ProfileScreen';
-import SplashScreen from './app/assets/screens/SplashScreen';
 
 // Imports from 'AddScreen.js'
 import { firebase } from './app/firebase';
@@ -32,12 +30,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-//Imports from SplashScreen
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import CustomAlertComponent from './app/assets/components/CustomAlertComponent';
-
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 
 const App = () => {
   return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Dimensions, Image, Text, View } from 'react-native';
+import { Animated, Dimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LoginScreen from './LoginScreen';
 import colors from '../../assets/config/colors';

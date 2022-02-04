@@ -13,21 +13,6 @@ export default function FavoritesScreen({ navigation, keys, setKeys }) {
   const [fv, setfv] = useState([]);
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
 
-  // async function getKeyData() {
-  //   const user = firebase.auth().currentUser;
-  //   const query = await firebase.firestore().collection('users');
-  //   query
-  //     .doc(user.uid)
-  //     .get()
-  //     .then((querySnapshot) => {
-  //       const favs = querySnapshot.data();
-  //       favs.favorites.forEach((favKey) => {
-  //         setKeys((keys) => [...keys, favKey]);
-  //       });
-  //       getFavoriteData();
-  //     });
-  // }
-
   function handleRating(id) {
     restroomKey = fv[id].geohash;
     navigation.navigate('review', { restroomKey });
@@ -50,7 +35,6 @@ export default function FavoritesScreen({ navigation, keys, setKeys }) {
     // Remove from keys array for 'MapScreen.js' to update
     setKeys(keys.filter((key) => key !== fv[id].geohash));
     setfv(fv.filter((index) => index.geohash !== fv[id].geohash));
-    // need to rerender the screen here
   }
 
   const openGps = (lati, lng) => {

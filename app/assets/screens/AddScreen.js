@@ -26,9 +26,7 @@ export default function AddScreen({
   addRestroom,
   mapRegion,
   setRegion,
-  description,
   setDescription,
-  title,
   setTitle,
 }) {
   const user = firebase.auth().currentUser;
