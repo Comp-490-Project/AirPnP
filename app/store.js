@@ -1,17 +1,34 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import { restroomReducer } from './reducers/mapReducer';
-import { userLocationReducer } from './reducers/userReducer';
+import { mapLocationReducer, mapMarkerReducer } from './reducers/mapReducer';
+import {
+  userFavoritesReducer,
+  userLocationReducer,
+  userStatusReducer,
+} from './reducers/userReducer';
 
 const reducer = combineReducers({
   userLocation: userLocationReducer,
-  restroom: restroomReducer,
+  userStatus: userStatusReducer,
+  userFavorites: userFavoritesReducer,
+  mapLocation: mapLocationReducer,
+  mapMarker: mapMarkerReducer,
 });
 
 const initialState = {
   userLocation: {
     location: null,
     loading: true,
+  },
+  mapMarker: {
+    description: '',
+    geohash: '',
+    latitude: null,
+    longitude: null,
+    meanRating: 0,
+    name: '',
+    images: [],
+    isFavorited: false,
   },
 };
 

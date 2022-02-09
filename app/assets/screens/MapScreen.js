@@ -1,164 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserLocation } from '../../actions/userActions';
-import { getRestrooms } from '../../actions/mapActions';
+import {
+  getUserLocation,
+  getUserStatus,
+  getUserFavorites,
+  favoriteHandler,
+} from '../../actions/userActions';
+import { getRestrooms, setMarkerAttributes } from '../../actions/mapActions';
 import { StyleSheet, Text, View, Dimensions, Image } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import SearchBar from '../components/SearchBar';
-import { firebase, auth } from '../../firebase';
+import { auth } from '../../firebase';
 import colors from '../config/colors';
 import BottomSheet from 'reanimated-bottom-sheet';
 import AppButton from '../components/AppButton';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Linking } from 'react-native';
-import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 import AnimationLoad from '../components/AnimationLoad';
 
-var restroomKey = 'useFavoritesScreenValue';
+const restroomKey = 'useFavoritesScreenValue';
 
-export default function MapScreen({ navigation, keys, setKeys, addRestroom }) {
-  const user = firebase.auth().currentUser;
+export default function MapScreen({ navigation, addRestroom }) {
   const reference = React.useRef();
-  const [desc, setDesc] = useState('');
-  const [geohash, setGeohash] = useState('');
-  const [lat, setLat] = useState(0);
-  const [long, setLong] = useState(0);
-  const [name, setName] = useState('');
-  const [rating, setRating] = useState();
-  const [favorite, setFavorite] = useState(false);
-  // Code copied from 'FavoritesScreen.js'
-  const [favoritesLoaded, setFavoritesLoaded] = useState(false);
-  const [imageUrls, setImageUrls] = useState([]);
-  const [searchAlert, setSearchAlert] = useState(false);
-  const [centerLocation, setCenterLocation] = useState(null);
+
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
 
-  // SearchBar.js
-  const [destinationPlace, setDestinationPlace] = useState(null);
-
   const dispatch = useDispatch();
+
   const { location, loading } = useSelector((state) => state.userLocation);
-  const { restrooms, markerLoaded } = useSelector((state) => state.restroom);
+  const { restrooms, markerLoaded, mapCenterLocation } = useSelector(
+    (state) => state.mapLocation
+  );
+  const { user } = useSelector((state) => state.userStatus);
+  const { description, geohash, meanRating, name, images, isFavorited } =
+    useSelector((state) => state.mapMarker);
+  const { userFavoritesLoaded } = useSelector((state) => state.userFavorites);
 
-  const openGps = (lati, lng) => {
-    var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
-    var url = scheme + `${lati},${lng}`;
-    Linking.openURL(url);
+  const handleRating = (id) => {
+    restroomKey = id;
+    navigation.navigate('review', { restroomKey });
   };
 
-  async function getRestroomsSearch() {
-    setMarkerLoaded(false);
-    const center = [
-      destinationPlace.details.geometry.location.lat,
-      destinationPlace.details.geometry.location.lng,
-    ];
-    const radiusInM = 2500;
-    const bounds = geohashQueryBounds(center, radiusInM);
-    const promises = [];
-    for (const b of bounds) {
-      const q = firebase
-        .firestore()
-        .collection('Los-Angeles')
-        .orderBy('geohash')
-        .startAt(b[0])
-        .endAt(b[1]);
-      promises.push(q.get());
-    }
+  // Bottomsheet Header
+  const renderHeader = () => (
+    <View style={styles.bottomSheetHeader}>
+      <View style={styles.bottomSheetpanelHeader}>
+        <View style={styles.bottomSheetpanelHandle} />
+      </View>
+    </View>
+  );
 
-    Promise.all(promises)
-      .then((snapshots) => {
-        const matchingDocs = [];
-        for (const snap of snapshots) {
-          for (const doc of snap.docs) {
-            const lat = doc.get('latitude');
-            const lng = doc.get('longitude');
-
-            const distanceInKm = distanceBetween([lat, lng], center);
-            const distanceInM = distanceInKm * 1000;
-            if (distanceInM <= radiusInM) {
-              matchingDocs.push(doc);
-            }
-          }
-        }
-
-        return matchingDocs;
-      })
-      .then((matchingDocs) => {
-        matchingDocs.forEach((matchingDoc) => {
-          setRestrooms((restrooms) => [...restrooms, matchingDoc.data()]);
-        });
-        setMarkerLoaded(true);
-      });
-    setSearchAlert(false);
-  }
-
-  // Code copied from 'FavoritesScreen.js'
-  async function getKeyData() {
-    const query = await firebase.firestore().collection('users');
-    query
-      .doc(user.uid)
-      .get()
-      .then((querySnapshot) => {
-        const favs = querySnapshot.data();
-        if (favs.favorites) {
-          favs.favorites.forEach((favKey) => {
-            setKeys((keys) => [...keys, favKey]);
-          });
-        }
-      });
-    setFavoritesLoaded(true);
-  }
-
-  restroomAttributes = async (marker) => {
-    // Check if marker's geohash property is in favorites array
-    // Favorites
-    // 9q5dy8mr0v: Lum-Ka-Naad
-    // 9q5dwxuc38: California Chicken Cafe,
-    // 9q5dyb6cuh: Papa John's Pizza
-    setImageUrls([]);
-
-    setDestinationPlace({
-      details: {
-        geometry: {
-          location: {
-            lat: marker.latitude,
-            lng: marker.longitude,
-          },
-        },
-      },
-    });
-
-    setCenterLocation({
-      latitude: marker.latitude,
-      longitude: marker.longitude,
-    });
-    setDesc(marker.description);
-    setGeohash(marker.geohash);
-    setLat(marker.latitude);
-    setLong(marker.longitude);
-    setName(marker.name);
-    setRating(marker.meanRating);
-
-    let images = await firebase.storage().ref(marker.geohash).listAll();
-    //get the array of image references as a json object
-    images.items.forEach((im) =>
-      firebase
-        .storage()
-        .ref(im._delegate._location.path_)
-        .getDownloadURL()
-        .then((url) => setImageUrls((imageUrls) => [...imageUrls, url]))
-    ); //get the download url using the path field of the image json object first && is temporary till work is fixed
-
-    if (keys.includes(marker.geohash)) {
-      setFavorite(true);
-    } else {
-      setFavorite(false);
-    }
-
-    reference.current.snapTo(0);
-  };
-
-  renderInner = () => (
+  // Bottomsheet Inner Content
+  const renderInner = () => (
     <ScrollView
       style={{
         height: 650,
@@ -168,11 +61,15 @@ export default function MapScreen({ navigation, keys, setKeys, addRestroom }) {
     >
       <View style={styles.bottomSheetPanel}>
         {user && (
-          <TouchableOpacity onPress={favoriteHandler}>
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(favoriteHandler(geohash));
+            }}
+          >
             <Image
               style={styles.heart}
               source={
-                !favorite
+                !isFavorited
                   ? require('../icons/favorite-heart/heart-unfilled.png')
                   : require('../icons/favorite-heart/heart-filled.png')
               }
@@ -184,7 +81,7 @@ export default function MapScreen({ navigation, keys, setKeys, addRestroom }) {
           <View style={styles.customRatingBarStyle}>
             <Text>Rating: </Text>
 
-            {rating && rating == 1 ? (
+            {meanRating && meanRating == 1 ? (
               <Image
                 style={styles.starImgStyle}
                 source={require('../icons/poop-emoji.png')}
@@ -196,25 +93,29 @@ export default function MapScreen({ navigation, keys, setKeys, addRestroom }) {
                     style={styles.starImgStyle}
                     key={index}
                     source={
-                      item <= rating
+                      item <= meanRating
                         ? require('../icons/rating/star-filled.png')
-                        : require('../icons/rating/star-unfilled.png') // could change to a blank image so it wont show
+                        : require('../icons/rating/star-unfilled.png')
                     }
                   />
                 );
               })
             )}
           </View>
-          <Text style={styles.panelRestroomDescription}>{desc}</Text>
+          <Text style={styles.panelRestroomDescription}>{description}</Text>
         </View>
         <View style={{ alignContent: 'space-around' }}>
           <TouchableOpacity
             style={{ margin: 5 }}
-            onPress={() => openGps(lat, long)}
+            onPress={() =>
+              Platform.OS === 'ios'
+                ? Linking.openURL(`maps:${lat},${long}`)
+                : Linking.openURL(`geo:0,0?q=${lat},${long}`)
+            }
           >
             <AppButton title={'Navigate'} styles={{ width: '80%' }} />
           </TouchableOpacity>
-          {user && ( //copied from conditional rate
+          {user && (
             <>
               <View Style={{ height: 10, backgroundColor: colors.white }} />
               <TouchableOpacity
@@ -233,7 +134,7 @@ export default function MapScreen({ navigation, keys, setKeys, addRestroom }) {
             horizontal={true}
             showsHorizontalScrollIndicator={true}
           >
-            {imageUrls.map((image, index) => (
+            {images.map((image, index) => (
               <Image
                 key={index}
                 source={{ uri: image }}
@@ -249,44 +150,6 @@ export default function MapScreen({ navigation, keys, setKeys, addRestroom }) {
       </View>
     </ScrollView>
   );
-  function handleRating(id) {
-    restroomKey = id;
-    navigation.navigate('review', { restroomKey });
-  }
-  renderHeader = () => (
-    <View style={styles.bottomSheetHeader}>
-      <View style={styles.bottomSheetpanelHeader}>
-        <View style={styles.bottomSheetpanelHandle} />
-      </View>
-    </View>
-  );
-
-  const favoriteHandler = async () => {
-    const user = firebase.auth().currentUser;
-    // If already in user's favorites, remove as favorite
-    if (keys.includes(geohash)) {
-      await firebase
-        .firestore()
-        .collection('users')
-        .doc(user.uid)
-        .update({
-          favorites: firebase.firestore.FieldValue.arrayRemove(geohash),
-        });
-      setKeys(keys.filter((key) => key !== geohash));
-      setFavorite(false);
-    } else {
-      // If not in user's favorites, add as favorite
-      await firebase
-        .firestore()
-        .collection('users')
-        .doc(user.uid)
-        .update({
-          favorites: firebase.firestore.FieldValue.arrayUnion(geohash),
-        });
-      setKeys((keys) => [...keys, geohash]);
-      setFavorite(true);
-    }
-  };
 
   useEffect(() => {
     if (!location) {
@@ -297,19 +160,19 @@ export default function MapScreen({ navigation, keys, setKeys, addRestroom }) {
       dispatch(getRestrooms(location.latitude, location.longitude));
     }
 
-    if (destinationPlace !== null && searchAlert) {
-      getRestroomsSearch();
-    }
-
-    // Check to see if user is logged in to get favorites
+    // Watch for change in user login status
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user && !favoritesLoaded) {
-        getKeyData();
+      // Check if user is logged in
+      dispatch(getUserStatus());
+
+      // If there is a user, load favorites once
+      if (user && !userFavoritesLoaded) {
+        dispatch(getUserFavorites());
       }
     });
 
     return unsubscribe;
-  }, [loading, favoritesLoaded, location, addRestroom, destinationPlace]);
+  }, [loading, location, userFavoritesLoaded, addRestroom]);
 
   return (
     <>
@@ -320,19 +183,17 @@ export default function MapScreen({ navigation, keys, setKeys, addRestroom }) {
           <MapView
             style={{ paddingTop: 500 }}
             onPress={() => reference.current.snapTo(1)}
-            provider={PROVIDER_GOOGLE} //Google Maps
+            provider={PROVIDER_GOOGLE}
             style={styles.map}
             showsUserLocation={true}
             showsMyLocationButton={true}
             region={{
-              latitude:
-                destinationPlace !== null
-                  ? destinationPlace.details.geometry.location.lat
-                  : location.latitude,
-              longitude:
-                destinationPlace !== null
-                  ? destinationPlace.details.geometry.location.lng
-                  : location.longitude,
+              latitude: mapCenterLocation
+                ? mapCenterLocation.latitude
+                : location.latitude,
+              longitude: mapCenterLocation
+                ? mapCenterLocation.longitude
+                : location.longitude,
               latitudeDelta: 0.0015,
               longitudeDelta: 0.0121,
             }}
@@ -348,7 +209,13 @@ export default function MapScreen({ navigation, keys, setKeys, addRestroom }) {
                     longitude: marker.longitude,
                   }}
                 >
-                  <Callout tooltip onPress={() => restroomAttributes(marker)}>
+                  <Callout
+                    tooltip
+                    onPress={() => {
+                      dispatch(setMarkerAttributes(marker));
+                      reference.current.snapTo(0);
+                    }}
+                  >
                     <View>
                       <View style={styles.calloutWindow}>
                         <Text style={styles.name}>{marker.name}</Text>
@@ -361,10 +228,7 @@ export default function MapScreen({ navigation, keys, setKeys, addRestroom }) {
                 </Marker>
               ))}
           </MapView>
-          <SearchBar
-            setDestinationPlace={setDestinationPlace}
-            setSearchAlert={setSearchAlert}
-          />
+          <SearchBar />
           <BottomSheet
             ref={reference}
             snapPoints={['61%', 0]}

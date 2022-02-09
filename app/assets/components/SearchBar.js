@@ -1,12 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import { getRestrooms, setCenterLocation } from '../../actions/mapActions';
 
-const WIDTH = Dimensions.get('window').width;
-export const SearchBar = function ({ setDestinationPlace, setSearchAlert }) {
+const width = Dimensions.get('window').width;
+export const SearchBar = function () {
+  const dispatch = useDispatch();
+
   return (
-    <SafeAreaView onPress={() => {}} style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.leftCol}>
         <MaterialIcons
           name="location-on"
@@ -20,8 +24,13 @@ export const SearchBar = function ({ setDestinationPlace, setSearchAlert }) {
         <GooglePlacesAutocomplete
           placeholder="Search here"
           onPress={(data, details = null) => {
-            setSearchAlert(true);
-            setDestinationPlace({ data, details });
+            const {
+              geometry: {
+                location: { lat, lng },
+              },
+            } = details;
+            dispatch(getRestrooms(lat, lng));
+            dispatch(setCenterLocation(lat, lng));
           }}
           styles={{
             style: styles.inputStyle,
@@ -50,7 +59,7 @@ const styles = StyleSheet.create({
     //zIndex: 5,
     position: 'absolute',
     flexDirection: 'row',
-    width: WIDTH - 40, //width of window so its dynamic
+    width: width - 40, //width of window so its dynamic
     top: 60,
     left: 20,
     //borderRadius: 2,
