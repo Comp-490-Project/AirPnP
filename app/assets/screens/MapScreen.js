@@ -28,7 +28,7 @@ export default function MapScreen({ navigation, addRestroom }) {
   const dispatch = useDispatch();
 
   const { location, loading } = useSelector((state) => state.userLocation);
-  const { restrooms, markerLoaded, mapCenterLocation } = useSelector(
+  const { restrooms, mapCenterLocation } = useSelector(
     (state) => state.mapLocation
   );
   const { user } = useSelector((state) => state.userStatus);
@@ -152,23 +152,25 @@ export default function MapScreen({ navigation, addRestroom }) {
   );
 
   useEffect(() => {
+    // Get user location
     if (!location) {
       dispatch(getUserLocation());
     }
 
-    if (!loading && !markerLoaded) {
+    // Get restrooms around user location
+    if (!loading) {
       dispatch(getRestrooms(location.latitude, location.longitude));
+    }
+
+    // If there is a user, load favorites once
+    if (user && !userFavoritesLoaded) {
+      dispatch(getUserFavorites());
     }
 
     // Watch for change in user login status
     const unsubscribe = auth.onAuthStateChanged((user) => {
       // Check if user is logged in
       dispatch(getUserStatus());
-
-      // If there is a user, load favorites once
-      if (user && !userFavoritesLoaded) {
-        dispatch(getUserFavorites());
-      }
     });
 
     return unsubscribe;
@@ -199,34 +201,33 @@ export default function MapScreen({ navigation, addRestroom }) {
             }}
             loadingEnabled={true}
           >
-            {markerLoaded &&
-              restrooms.map((marker, index) => (
-                <Marker
-                  key={index}
-                  image={require('../../assets/icons/app-logo.png')}
-                  coordinate={{
-                    latitude: marker.latitude,
-                    longitude: marker.longitude,
+            {restrooms.map((marker, index) => (
+              <Marker
+                key={index}
+                image={require('../../assets/icons/app-logo.png')}
+                coordinate={{
+                  latitude: marker.latitude,
+                  longitude: marker.longitude,
+                }}
+              >
+                <Callout
+                  tooltip
+                  onPress={() => {
+                    dispatch(setMarkerAttributes(marker));
+                    reference.current.snapTo(0);
                   }}
                 >
-                  <Callout
-                    tooltip
-                    onPress={() => {
-                      dispatch(setMarkerAttributes(marker));
-                      reference.current.snapTo(0);
-                    }}
-                  >
-                    <View>
-                      <View style={styles.calloutWindow}>
-                        <Text style={styles.name}>{marker.name}</Text>
-                        <Text>{marker.description}</Text>
-                      </View>
-                      <View style={styles.arrowBorder} />
-                      <View style={styles.arrow} />
+                  <View>
+                    <View style={styles.calloutWindow}>
+                      <Text style={styles.name}>{marker.name}</Text>
+                      <Text>{marker.description}</Text>
                     </View>
-                  </Callout>
-                </Marker>
-              ))}
+                    <View style={styles.arrowBorder} />
+                    <View style={styles.arrow} />
+                  </View>
+                </Callout>
+              </Marker>
+            ))}
           </MapView>
           <SearchBar />
           <BottomSheet

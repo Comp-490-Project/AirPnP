@@ -95,7 +95,7 @@ export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
   );
 };
 
-// Set the latitude and longitude of the searched location
+// Set the center point of the map to the new center coordinates
 export const setCenterLocation = (latitude, longitude) => (dispatch) => {
   dispatch({
     type: MAP_CENTER_CHANGE,
@@ -105,3 +105,32 @@ export const setCenterLocation = (latitude, longitude) => (dispatch) => {
     },
   });
 };
+
+// @todo
+// Add a new restroom location
+// export const addRestroom = () => async (dispatch) => {
+//   const restroomRef = firebase.firestore().collection('Los-Angeles');
+
+//   await restroomRef
+//     .doc(geohashForLocation([mapRegion.latitude, mapRegion.longitude]))
+//     .set({
+//       description: description,
+//       geohash: geohashForLocation([mapRegion.latitude, mapRegion.longitude]),
+//       latitude: mapRegion.latitude,
+//       longitude: mapRegion.longitude,
+//       name: title,
+//       rating: userRating,
+//     });
+//   setRestrooms((restrooms) => [
+//     ...restrooms,
+//     {
+//       description: description,
+//       geohash: geohashForLocation([mapRegion.latitude, mapRegion.longitude]),
+//       latitude: mapRegion.latitude,
+//       longitude: mapRegion.longitude,
+//       name: title,
+//       rating: userRating,
+//     },
+//   ]);
+//   navigation.navigate('home');
+// }

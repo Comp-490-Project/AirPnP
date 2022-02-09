@@ -15,7 +15,6 @@ export const mapLocationReducer = (state = { restrooms: [] }, action) => {
       return {
         ...state,
         restrooms: action.payload,
-        markerLoaded: true,
       };
     case MAP_CENTER_CHANGE:
       return {

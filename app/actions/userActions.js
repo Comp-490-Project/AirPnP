@@ -48,7 +48,7 @@ export const getUserLocation = () => async (dispatch) => {
 };
 
 // Check if user logged in
-export const getUserStatus = () => async (dispatch) => {
+export const getUserStatus = () => (dispatch) => {
   try {
     const user = firebase.auth().currentUser;
     //Check Auth Status

@@ -53,10 +53,6 @@ const App = () => {
 };
 
 const HomeTabs = ({ navigation }) => {
-  // State from 'MapScreen.js'
-  const [keys, setKeys] = useState([]);
-  const [restrooms, setRestrooms] = useState([]);
-
   // State from 'AddScreen.js'
   const [title, setTitle] = useState(null);
   const [description, setDescription] = useState(null);
@@ -90,8 +86,8 @@ const HomeTabs = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-  // Function from 'AddScreen.js'
-  //Send Restroom Data to Firestore
+  // @todo
+  // Delete and implement version in mapActions
   async function addRestroom() {
     const dataRef = firebase.firestore().collection('Los-Angeles');
     await dataRef
@@ -143,12 +139,8 @@ const HomeTabs = ({ navigation }) => {
           name="home"
           children={() => (
             <MapScreen
-              keys={keys}
-              setKeys={setKeys}
-              restrooms={restrooms}
-              setRestrooms={setRestrooms}
-              addRestroom={addRestroom}
               navigation={navigation}
+              addRestroom={addRestroom}
             ></MapScreen>
           )}
           options={{
