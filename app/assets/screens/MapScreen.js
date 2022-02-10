@@ -4,6 +4,7 @@ import { auth } from '../../firebase';
 import colors from '../config/colors';
 import AnimationLoad from '../components/AnimationLoad';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import MapMarker from '../components/MapMarker';
 import SearchBar from '../components/SearchBar';
 import MapBottomSheet from '../components/MapBottomSheet';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,7 +13,7 @@ import {
   getUserStatus,
   getUserFavorites,
 } from '../../actions/userActions';
-import { getRestrooms, setMarkerAttributes } from '../../actions/mapActions';
+import { getRestrooms } from '../../actions/mapActions';
 
 export default function MapScreen({ navigation, addRestroom }) {
   const reference = useRef();
@@ -86,31 +87,12 @@ export default function MapScreen({ navigation, addRestroom }) {
         loadingEnabled={true}
       >
         {restrooms.map((marker, index) => (
-          <Marker
-            key={index}
-            image={require('../../assets/icons/app-logo.png')}
-            coordinate={{
-              latitude: marker.latitude,
-              longitude: marker.longitude,
-            }}
-          >
-            <Callout
-              tooltip
-              onPress={() => {
-                dispatch(setMarkerAttributes(marker));
-                reference.current.snapTo(0);
-              }}
-            >
-              <View>
-                <View style={styles.calloutWindow}>
-                  <Text style={styles.name}>{marker.name}</Text>
-                  <Text>{marker.description}</Text>
-                </View>
-                <View style={styles.arrowBorder} />
-                <View style={styles.arrow} />
-              </View>
-            </Callout>
-          </Marker>
+          <MapMarker
+            key={marker.geohash}
+            marker={marker}
+            reference={reference}
+            index={index}
+          />
         ))}
       </MapView>
       <SearchBar />
