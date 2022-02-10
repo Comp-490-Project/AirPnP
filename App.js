@@ -53,6 +53,10 @@ const App = () => {
 };
 
 const HomeTabs = ({ navigation }) => {
+  // State from 'MapScreen.js'
+  const [keys, setKeys] = useState([]);
+  const [restrooms, setRestrooms] = useState([]);
+
   // State from 'AddScreen.js'
   const [title, setTitle] = useState(null);
   const [description, setDescription] = useState(null);
@@ -86,8 +90,8 @@ const HomeTabs = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-  // @todo
-  // Delete and implement version in mapActions
+  // Function from 'AddScreen.js'
+  // Delete and implement current version in mapActions
   async function addRestroom() {
     const dataRef = firebase.firestore().collection('Los-Angeles');
     await dataRef
