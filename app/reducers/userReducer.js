@@ -7,7 +7,9 @@ import {
   USER_FAVORITES_LOADED,
   USER_FAVORITE_ADDED,
   USER_FAVORITE_REMOVED,
-} from '../constants/userTypes';
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+} from "../constants/userTypes";
 
 export const userLocationReducer = (state = {}, action) => {
   switch (action.type) {
@@ -49,12 +51,22 @@ export const userStatusReducer = (state = {}, action) => {
         ...state,
         user: null,
       };
+    case REGISTER_SUCCESS:
+      return {
+        ...state,
+        user: action.payload,
+      };
+    case REGISTER_FAIL:
+      return {
+        ...state,
+        user: null,
+      };
     default:
       return state;
   }
 };
 
-export const userFavoritesReducer = (state = {}, action) => {
+export const userFavoritesReducer = (state = { userFavorites: [] }, action) => {
   switch (action.type) {
     case USER_FAVORITES_LOADED:
       return {

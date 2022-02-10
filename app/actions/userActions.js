@@ -9,9 +9,11 @@ import {
   USER_FAVORITE_REMOVED,
   RESTROOM_MARKER_FAVORITED,
   RESTROOM_MARKER_UNFAVORITED,
-} from '../constants/userTypes';
-import { firebase } from '../firebase';
-import * as Location from 'expo-location';
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+} from "../constants/userTypes";
+import { firebase } from "../firebase";
+import * as Location from "expo-location";
 
 // Get user location
 export const getUserLocation = () => async (dispatch) => {
@@ -47,6 +49,21 @@ export const getUserLocation = () => async (dispatch) => {
   }
 };
 
+//Register User
+export const registerUser = (user) => (dispatch) => {
+  try {
+    dispatch({
+      type: REGISTER_SUCCESS,
+      payload: user,
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: REGISTER_FAIL,
+    });
+  }
+};
+
 // Check if user logged in
 export const getUserStatus = () => (dispatch) => {
   try {
@@ -71,7 +88,7 @@ export const getUserStatus = () => (dispatch) => {
 export const getUserFavorites = () => async (dispatch) => {
   const user = firebase.auth().currentUser;
 
-  const query = await firebase.firestore().collection('users');
+  const query = await firebase.firestore().collection("users");
   query
     .doc(user.uid)
     .get()
@@ -96,41 +113,43 @@ export const favoriteHandler = (geohash) => async (dispatch, getState) => {
   const { user } = getState().userStatus;
   const { userFavorites } = getState().userFavorites;
 
-  // If not favorited, add as favorite
-  if (!userFavorites.includes(geohash)) {
-    await firebase
-      .firestore()
-      .collection('users')
-      .doc(user.uid)
-      .update({
-        favorites: firebase.firestore.FieldValue.arrayUnion(geohash),
+  if (userFavorites) {
+    // If not favorited, add as favorite
+    if (!userFavorites.includes(geohash)) {
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .update({
+          favorites: firebase.firestore.FieldValue.arrayUnion(geohash),
+        });
+
+      dispatch({
+        type: RESTROOM_MARKER_FAVORITED,
       });
 
-    dispatch({
-      type: RESTROOM_MARKER_FAVORITED,
-    });
+      dispatch({
+        type: USER_FAVORITE_ADDED,
+        payload: geohash,
+      });
+    } else {
+      // If already favorited, remove as favorite
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .update({
+          favorites: firebase.firestore.FieldValue.arrayRemove(geohash),
+        });
 
-    dispatch({
-      type: USER_FAVORITE_ADDED,
-      payload: geohash,
-    });
-  } else {
-    // If already favorited, remove as favorite
-    await firebase
-      .firestore()
-      .collection('users')
-      .doc(user.uid)
-      .update({
-        favorites: firebase.firestore.FieldValue.arrayRemove(geohash),
+      dispatch({
+        type: RESTROOM_MARKER_UNFAVORITED,
       });
 
-    dispatch({
-      type: RESTROOM_MARKER_UNFAVORITED,
-    });
-
-    dispatch({
-      type: USER_FAVORITE_REMOVED,
-      payload: geohash,
-    });
+      dispatch({
+        type: USER_FAVORITE_REMOVED,
+        payload: geohash,
+      });
+    }
   }
 };
