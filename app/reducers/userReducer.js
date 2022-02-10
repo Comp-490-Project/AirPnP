@@ -2,14 +2,16 @@ import {
   USER_LOCATION_GRANTED,
   USER_LOCATION_DENIED,
   USER_LOCATION_ERROR,
+  USER_LOGIN_SUCCESS,
+  USER_LOGIN_FAIL,
+  USER_REGISTER_SUCCESS,
+  USER_REGISTER_FAIL,
   USER_LOGGED_IN,
   USER_LOGGED_OUT,
   USER_FAVORITES_LOADED,
   USER_FAVORITE_ADDED,
   USER_FAVORITE_REMOVED,
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
-} from "../constants/userTypes";
+} from '../constants/userTypes';
 
 export const userLocationReducer = (state = {}, action) => {
   switch (action.type) {
@@ -41,22 +43,34 @@ export const userLocationReducer = (state = {}, action) => {
 
 export const userStatusReducer = (state = {}, action) => {
   switch (action.type) {
+    case USER_LOGIN_SUCCESS:
+      return {
+        ...state,
+        user: action.payload,
+      };
+    case USER_LOGIN_FAIL:
+      return {
+        ...state,
+        user: null,
+        error: action.payload,
+      };
+    case USER_REGISTER_SUCCESS:
+      return {
+        ...state,
+        user: action.payload,
+      };
+    case USER_REGISTER_FAIL:
+      return {
+        ...state,
+        user: null,
+        error: action.payload,
+      };
     case USER_LOGGED_IN:
       return {
         ...state,
         user: action.payload,
       };
     case USER_LOGGED_OUT:
-      return {
-        ...state,
-        user: null,
-      };
-    case REGISTER_SUCCESS:
-      return {
-        ...state,
-        user: action.payload,
-      };
-    case REGISTER_FAIL:
       return {
         ...state,
         user: null,

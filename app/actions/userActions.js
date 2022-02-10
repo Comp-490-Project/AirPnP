@@ -2,6 +2,10 @@ import {
   USER_LOCATION_GRANTED,
   USER_LOCATION_DENIED,
   USER_LOCATION_ERROR,
+  USER_LOGIN_SUCCESS,
+  USER_LOGIN_FAIL,
+  USER_REGISTER_SUCCESS,
+  USER_REGISTER_FAIL,
   USER_LOGGED_IN,
   USER_LOGGED_OUT,
   USER_FAVORITES_LOADED,
@@ -9,11 +13,9 @@ import {
   USER_FAVORITE_REMOVED,
   RESTROOM_MARKER_FAVORITED,
   RESTROOM_MARKER_UNFAVORITED,
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
-} from "../constants/userTypes";
-import { firebase } from "../firebase";
-import * as Location from "expo-location";
+} from '../constants/userTypes';
+import { firebase } from '../firebase';
+import * as Location from 'expo-location';
 
 // Get user location
 export const getUserLocation = () => async (dispatch) => {
@@ -49,17 +51,32 @@ export const getUserLocation = () => async (dispatch) => {
   }
 };
 
-//Register User
-export const registerUser = (user) => (dispatch) => {
+// Register User
+export const register = (user) => (dispatch) => {
   try {
     dispatch({
-      type: REGISTER_SUCCESS,
+      type: USER_REGISTER_SUCCESS,
       payload: user,
     });
   } catch (error) {
-    console.log(error);
     dispatch({
-      type: REGISTER_FAIL,
+      type: USER_REGISTER_FAIL,
+      payload: error,
+    });
+  }
+};
+
+// Login user
+export const login = (user) => (dispatch) => {
+  try {
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: user,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_LOGIN_FAIL,
+      payload: error,
     });
   }
 };
@@ -88,7 +105,7 @@ export const getUserStatus = () => (dispatch) => {
 export const getUserFavorites = () => async (dispatch) => {
   const user = firebase.auth().currentUser;
 
-  const query = await firebase.firestore().collection("users");
+  const query = await firebase.firestore().collection('users');
   query
     .doc(user.uid)
     .get()
@@ -118,7 +135,7 @@ export const favoriteHandler = (geohash) => async (dispatch, getState) => {
     if (!userFavorites.includes(geohash)) {
       await firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(user.uid)
         .update({
           favorites: firebase.firestore.FieldValue.arrayUnion(geohash),
@@ -136,7 +153,7 @@ export const favoriteHandler = (geohash) => async (dispatch, getState) => {
       // If already favorited, remove as favorite
       await firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(user.uid)
         .update({
           favorites: firebase.firestore.FieldValue.arrayRemove(geohash),

@@ -8,17 +8,21 @@ import {
 } from 'react-native';
 import AppButton from '../components/AppButton';
 import AppTextInput from '../components/AppTextInput';
+import colors from '../../assets/config/colors';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import colors from '../../assets/config/colors';
 import { auth } from '../../firebase';
-
-const validationSchema = Yup.object().shape({
-  email: Yup.string().required().email().label('Email'),
-  password: Yup.string().required().min(6).label('Password'),
-});
+import { useDispatch } from 'react-redux';
+import { login } from '../../actions/userActions';
 
 export default function LoginScreen({ navigation }) {
+  const dispatch = useDispatch();
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required().email().label('Email'),
+    password: Yup.string().required().min(6).label('Password'),
+  });
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -40,6 +44,7 @@ export default function LoginScreen({ navigation }) {
             .signInWithEmailAndPassword(values.email, values.password)
             .then((UserCredentials) => {
               const user = UserCredentials.user;
+              dispatch(login(user));
               navigation.navigate('map');
             })
             .catch((error) => alert(error.message));
