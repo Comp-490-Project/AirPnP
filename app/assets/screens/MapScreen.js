@@ -106,10 +106,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loadingText: {
-    position: 'absolute',
-    top: 100,
-  },
   map: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
