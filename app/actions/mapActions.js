@@ -132,5 +132,5 @@ export const setCenterLocation = (latitude, longitude) => (dispatch) => {
 //       rating: userRating,
 //     },
 //   ]);
-//   navigation.navigate('home');
+//   navigation.navigate('Home');
 // }

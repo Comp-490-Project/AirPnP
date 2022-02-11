@@ -57,7 +57,7 @@ const TabNavigator = ({ navigation }) => {
         rating: userRating,
       },
     ]);
-    navigation.navigate('home');
+    navigation.navigate('Home');
   }
 
   const Tab = createBottomTabNavigator();

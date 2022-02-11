@@ -15,7 +15,7 @@ function FavoritesScreen({ navigation, keys, setKeys }) {
 
   function handleRating(id) {
     restroomKey = fv[id].geohash;
-    navigation.navigate('review', { restroomKey });
+    navigation.navigate('Review', { restroomKey });
   }
 
   function handleNav(index) {

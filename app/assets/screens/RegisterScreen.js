@@ -35,7 +35,7 @@ function RegisterScreen({ navigation }) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.navigate('map');
+        navigation.navigate('Tabs');
       }
     });
     return unsubscribe;
@@ -63,7 +63,7 @@ function RegisterScreen({ navigation }) {
                     email: values.email,
                   });
                   dispatch(register(user));
-                  navigation.navigate('map');
+                  navigation.navigate('Tabs');
                 })
                 .catch((error) => alert(error.message));
             }}
@@ -130,7 +130,7 @@ function RegisterScreen({ navigation }) {
                   <AppButton title="Register" onPress={handleSubmit} />
                 </TouchableOpacity>
                 {/* Add text here for "Already have an account? Login." it would link to '/'*/}
-                <Text onPress={() => navigation.navigate('login')}>
+                <Text onPress={() => navigation.navigate('Login')}>
                   {' '}
                   Already have an account? Login.{' '}
                 </Text>

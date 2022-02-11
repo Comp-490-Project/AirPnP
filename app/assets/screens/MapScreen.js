@@ -30,7 +30,7 @@ function MapScreen({ navigation, addRestroom }) {
   let restroomKey = 'useFavoritesScreenValue';
   const handleRating = (id) => {
     restroomKey = id;
-    navigation.navigate('review', { restroomKey });
+    navigation.navigate('Review', { restroomKey });
   };
 
   useEffect(() => {

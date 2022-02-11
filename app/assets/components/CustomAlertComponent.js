@@ -26,7 +26,7 @@ function CustomAlertComponent({ navigation }) {
         <AppButton
           title="Login"
           style={styles.alertMessageButtonStyle}
-          onPress={() => navigation.navigate('login')}
+          onPress={() => navigation.navigate('Login')}
         />
       </View>
     </View>

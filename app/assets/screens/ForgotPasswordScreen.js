@@ -29,7 +29,7 @@ function ForgotPasswordScreen({ navigation }) {
             .sendPasswordResetEmail(values.email)
             .catch((error) => alert(error.message));
           alert('Email Sent');
-          navigation.navigate('login');
+          navigation.navigate('Login');
         }}
         validationSchema={validationSchema}
       >

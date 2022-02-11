@@ -19,7 +19,7 @@ function SettingsScreen({ navigation }) {
         .auth()
         .signOut()
         .then(() => {
-          navigation.navigate('login');
+          navigation.navigate('Login');
         });
     }
   };

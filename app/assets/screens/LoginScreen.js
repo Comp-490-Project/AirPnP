@@ -26,7 +26,7 @@ function LoginScreen({ navigation }) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.navigate('map');
+        navigation.navigate('Tabs');
       }
     });
     return unsubscribe;
@@ -45,7 +45,7 @@ function LoginScreen({ navigation }) {
             .then((UserCredentials) => {
               const user = UserCredentials.user;
               dispatch(login(user));
-              navigation.navigate('map');
+              navigation.navigate('Tabs');
             })
             .catch((error) => alert(error.message));
         }}
@@ -86,7 +86,7 @@ function LoginScreen({ navigation }) {
       <View style={styles.forgot}>
         <Text
           style={styles.forgot2}
-          onPress={() => navigation.navigate('forgot')}
+          onPress={() => navigation.navigate('Forgot')}
         >
           forgot password?
         </Text>
@@ -94,11 +94,11 @@ function LoginScreen({ navigation }) {
       <View style={styles.registerButton}>
         <AppButton
           title="Register"
-          onPress={() => navigation.navigate('register')}
+          onPress={() => navigation.navigate('Register')}
         />
       </View>
       <View style={styles.guestButton}>
-        <AppButton title="Guest" onPress={() => navigation.navigate('map')} />
+        <AppButton title="Guest" onPress={() => navigation.navigate('Tabs')} />
       </View>
     </ImageBackground>
   );

@@ -13,14 +13,14 @@ const RootStackNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="login" component={LoginScreen}></Stack.Screen>
-        <Stack.Screen name="register" component={RegisterScreen}></Stack.Screen>
+        <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
+        <Stack.Screen name="Register" component={RegisterScreen}></Stack.Screen>
         <Stack.Screen
-          name="forgot"
+          name="Forgot"
           component={ForgotPasswordScreen}
         ></Stack.Screen>
-        <Stack.Screen name="map" component={TabNavigator}></Stack.Screen>
-        <Stack.Screen name="review" component={ReviewScreen}></Stack.Screen>
+        <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
+        <Stack.Screen name="Review" component={ReviewScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
