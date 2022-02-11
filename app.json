@@ -21,11 +21,6 @@
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/icons/expo/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      },
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyDOeEKbcngBARFdVV8a5K75fakxbrS3Kro"
-        }
       }
     },
     "web": {
