@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { getRestrooms, setCenterLocation } from '../../actions/mapActions';
 
 const width = Dimensions.get('window').width;
-export const SearchBar = function () {
+function SearchBar() {
   const dispatch = useDispatch();
 
   return (
@@ -51,7 +51,7 @@ export const SearchBar = function () {
       </View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

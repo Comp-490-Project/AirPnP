@@ -5,9 +5,9 @@ import LoginScreen from './LoginScreen';
 import colors from '../../assets/config/colors';
 import Logo from '../../assets/icons/app-logo.png';
 
-const BGColor = colors.teal;
+function SplashScreen({}) {
+  const BGColor = colors.teal;
 
-export default function SplashScreen({}) {
   // SafeArea Value...
   const edges = useSafeAreaInsets();
 
@@ -138,3 +138,5 @@ export default function SplashScreen({}) {
     </View>
   );
 }
+
+export default SplashScreen;

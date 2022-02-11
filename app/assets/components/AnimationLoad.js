@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import LottieView from 'lottie-react-native';
 
-export default function AnimationLoad() {
+function AnimationLoad() {
   return (
     <View style={styles.main}>
       <LottieView
@@ -27,3 +27,5 @@ const styles = StyleSheet.create({
     left: 5,
   },
 });
+
+export default AnimationLoad;

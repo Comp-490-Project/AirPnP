@@ -15,13 +15,13 @@ import { firebase } from '../../firebase';
 import markerImage from '../icons/marker.png';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Rating from '../components/Rating';
-import colors from '../config/colors';
+import colors from '../theme/colors';
 import * as ImagePicker from 'expo-image-picker';
 import { geoHASH } from './MapScreen';
 import AnimationLoad from '../components/AnimationLoad';
 import CustomAlertComponent from '../components/CustomAlertComponent';
 
-export default function AddScreen({
+function AddScreen({
   navigation,
   addRestroom,
   mapRegion,
@@ -323,3 +323,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 });
+
+export default AddScreen;

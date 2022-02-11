@@ -12,11 +12,11 @@ import AppTextInput from '../components/AppTextInput';
 import AppButton from '../components/AppButton';
 import { auth } from '../../firebase';
 
-const validationSchema = Yup.object().shape({
-  email: Yup.string().required().email().label('Email'),
-});
+function ForgotPasswordScreen({ navigation }) {
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required().email().label('Email'),
+  });
 
-export default function ForgotPassword({ navigation }) {
   return (
     <ImageBackground
       style={{ flex: 1, justifyContent: 'center' }}
@@ -74,3 +74,5 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
+
+export default ForgotPasswordScreen;

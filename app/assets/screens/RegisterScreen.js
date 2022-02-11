@@ -15,7 +15,7 @@ import { firebase, auth } from '../../firebase';
 import { useDispatch } from 'react-redux';
 import { register } from '../../actions/userActions';
 
-export default function RegisterScreen({ navigation }) {
+function RegisterScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const validationSchema = Yup.object().shape({
@@ -152,3 +152,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+export default RegisterScreen;

@@ -15,9 +15,9 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import AppButton from '../components/AppButton';
 import { userRating } from '../components/Rating';
 import { firebase } from '../../firebase';
-import colors from '../config/colors';
+import colors from '../theme/colors';
 
-export default function ReviewScreen({ route, navigation }) {
+function ReviewScreen({ route, navigation }) {
   const [comment, setComment] = useState('');
   const [imageSource, setImageSource] = useState(null);
   const rateRef = React.useRef(null);
@@ -162,7 +162,6 @@ export default function ReviewScreen({ route, navigation }) {
         initialSnap={1}
         borderRadius={10}
         enabledContentTapInteraction={false}
-        //callbackNode={this.fall}
         enableGestureInteraction={true}
       />
       <ScrollView>
@@ -289,3 +288,5 @@ const styles = StyleSheet.create({
     height: 350,
   },
 });
+
+export default ReviewScreen;

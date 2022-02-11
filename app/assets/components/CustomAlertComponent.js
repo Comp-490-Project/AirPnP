@@ -4,7 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Image } from 'react-native';
 import AppButton from './AppButton';
 
-export default function CustomAlertComponent({ navigation }) {
+function CustomAlertComponent({ navigation }) {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.topPart}>
@@ -96,3 +96,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#80BFFF',
   },
 });
+
+export default CustomAlertComponent;

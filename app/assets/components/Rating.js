@@ -4,7 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 var userRating = null;
 
-export default function Rating() {
+function Rating() {
   const [defaultRating, setdefaultRating] = useState(2);
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
   userRating = defaultRating;
@@ -63,3 +63,4 @@ const styles = StyleSheet.create({
 });
 
 export { userRating };
+export default Rating;

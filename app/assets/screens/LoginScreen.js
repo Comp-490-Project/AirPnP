@@ -8,14 +8,14 @@ import {
 } from 'react-native';
 import AppButton from '../components/AppButton';
 import AppTextInput from '../components/AppTextInput';
-import colors from '../../assets/config/colors';
+import colors from '../theme/colors';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { auth } from '../../firebase';
 import { useDispatch } from 'react-redux';
 import { login } from '../../actions/userActions';
 
-export default function LoginScreen({ navigation }) {
+function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const validationSchema = Yup.object().shape({
@@ -146,3 +146,5 @@ const styles = StyleSheet.create({
     right: 20,
   },
 });
+
+export default LoginScreen;

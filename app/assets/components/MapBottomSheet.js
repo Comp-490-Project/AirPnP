@@ -8,13 +8,13 @@ import {
   StyleSheet,
 } from 'react-native';
 import AppButton from './AppButton';
-import colors from '../config/colors';
+import colors from '../theme/colors';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { useSelector, useDispatch } from 'react-redux';
 import { favoriteHandler } from '../../actions/userActions';
 
-const MapBottomSheet = ({ reference, handleRating }) => {
+function MapBottomSheet({ reference, handleRating }) {
   const dispatch = useDispatch();
 
   const maxRating = [1, 2, 3, 4, 5];
@@ -149,7 +149,7 @@ const MapBottomSheet = ({ reference, handleRating }) => {
       renderHeader={renderHeader}
     />
   );
-};
+}
 
 const styles = StyleSheet.create({
   bottomSheetHeader: {

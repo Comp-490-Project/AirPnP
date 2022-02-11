@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import colors from '../config/colors';
+import colors from '../theme/colors';
 import { Marker, Callout } from 'react-native-maps';
 import { useDispatch } from 'react-redux';
 import { setMarkerAttributes } from '../../actions/mapActions';
 
-const MapMarker = ({ marker, reference, index }) => {
+function MapMarker({ marker, reference, index }) {
   const dispatch = useDispatch();
 
   return (
@@ -35,7 +35,7 @@ const MapMarker = ({ marker, reference, index }) => {
       </Callout>
     </Marker>
   );
-};
+}
 
 const styles = StyleSheet.create({
   calloutWindow: {

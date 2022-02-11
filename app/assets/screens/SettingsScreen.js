@@ -10,7 +10,7 @@ import { firebase } from '../../firebase';
 import React, { useState } from 'react';
 import AppButton from '../components/AppButton';
 
-export default function SettingsScreen({ navigation }) {
+function SettingsScreen({ navigation }) {
   const user = firebase.auth().currentUser;
 
   const Logout = () => {
@@ -91,3 +91,5 @@ const styles = StyleSheet.create({
     //textTransform: "uppercase"
   },
 });
+
+export default SettingsScreen;

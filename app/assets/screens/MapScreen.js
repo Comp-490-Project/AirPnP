@@ -14,7 +14,7 @@ import {
 } from '../../actions/userActions';
 import { getRestrooms } from '../../actions/mapActions';
 
-export default function MapScreen({ navigation, addRestroom }) {
+function MapScreen({ navigation, addRestroom }) {
   const reference = useRef();
   const dispatch = useDispatch();
 
@@ -111,3 +111,5 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height,
   },
 });
+
+export default MapScreen;

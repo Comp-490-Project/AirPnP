@@ -3,13 +3,13 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { firebase, auth } from '../../firebase';
 import AppButton from '../components/AppButton';
-import colors from '../config/colors';
+import colors from '../theme/colors';
 import { Linking } from 'react-native';
 var restroomKey;
 
 const user2 = firebase.auth().currentUser;
 
-export default function FavoritesScreen({ navigation, keys, setKeys }) {
+function FavoritesScreen({ navigation, keys, setKeys }) {
   const [fv, setfv] = useState([]);
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
 
@@ -165,3 +165,5 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
 });
+
+export default FavoritesScreen;
