@@ -105,7 +105,7 @@ const TabNavigator = ({ navigation }) => {
         }}
       >
         <Tab.Screen
-          name="home"
+          name="Home"
           children={() => (
             <MapScreen
               navigation={navigation}
@@ -137,7 +137,7 @@ const TabNavigator = ({ navigation }) => {
           }}
         ></Tab.Screen>
         <Tab.Screen
-          name="PROFILE"
+          name="Profile"
           component={ProfileScreen}
           options={{
             tabBarIcon: ({ focused }) => (
@@ -164,7 +164,7 @@ const TabNavigator = ({ navigation }) => {
           }}
         />
         <Tab.Screen
-          name="AddScreen"
+          name="Add"
           children={() => (
             <AddScreen
               mapRegion={mapRegion}
