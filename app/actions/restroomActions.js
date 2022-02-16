@@ -3,7 +3,7 @@ import {
   MARKER_ATTRIBUTES_SET,
   MARKER_IMAGES_SET,
   MAP_CENTER_CHANGE,
-} from '../constants/mapTypes';
+} from '../constants/restroomTypes';
 import { firebase } from '../firebase';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 
@@ -70,9 +70,6 @@ export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
     },
   });
 
-  // Set the center point of the map to the current marker
-  dispatch(setCenterLocation(latitude, longitude));
-
   const { items: imagesRef } = await firebase.storage().ref(geohash).list();
 
   const images = [];
@@ -96,7 +93,7 @@ export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
 };
 
 // Set the center point of the map to the new center coordinates
-export const setCenterLocation = (latitude, longitude) => (dispatch) => {
+export const setMapCenterLocation = (latitude, longitude) => (dispatch) => {
   dispatch({
     type: MAP_CENTER_CHANGE,
     payload: {

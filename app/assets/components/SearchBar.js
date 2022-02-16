@@ -3,7 +3,10 @@ import { View, Text, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
-import { getRestrooms, setCenterLocation } from '../../actions/mapActions';
+import {
+  getRestrooms,
+  setMapCenterLocation,
+} from '../../actions/restroomActions';
 
 const width = Dimensions.get('window').width;
 function SearchBar() {
@@ -30,7 +33,7 @@ function SearchBar() {
               },
             } = details;
             dispatch(getRestrooms(lat, lng));
-            dispatch(setCenterLocation(lat, lng));
+            dispatch(setMapCenterLocation(lat, lng));
           }}
           styles={{
             style: styles.inputStyle,

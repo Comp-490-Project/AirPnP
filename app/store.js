@@ -1,18 +1,18 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import { mapLocationReducer, mapMarkerReducer } from './reducers/mapReducer';
+import { mapReducer, restroomMarkerReducer } from './reducers/restroomReducer';
 import {
   userFavoritesReducer,
   userLocationReducer,
-  userStatusReducer,
+  userAuthReducer,
 } from './reducers/userReducer';
 
 const reducer = combineReducers({
   userLocation: userLocationReducer,
-  userStatus: userStatusReducer,
+  userAuth: userAuthReducer,
   userFavorites: userFavoritesReducer,
-  mapLocation: mapLocationReducer,
-  mapMarker: mapMarkerReducer,
+  map: mapReducer,
+  restroomMarker: restroomMarkerReducer,
 });
 
 const initialState = {
@@ -20,7 +20,7 @@ const initialState = {
     location: null,
     loading: true,
   },
-  mapMarker: {
+  restroomMarker: {
     description: '',
     geohash: '',
     latitude: null,

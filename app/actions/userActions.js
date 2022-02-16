@@ -82,7 +82,7 @@ export const login = (user) => (dispatch) => {
 };
 
 // Check if user logged in
-export const getUserStatus = () => (dispatch) => {
+export const checkUserStatus = () => (dispatch) => {
   try {
     const user = firebase.auth().currentUser;
     //Check Auth Status
@@ -127,7 +127,7 @@ export const getUserFavorites = () => async (dispatch) => {
 
 // Add or remove user's favorite
 export const favoriteHandler = (geohash) => async (dispatch, getState) => {
-  const { user } = getState().userStatus;
+  const { user } = getState().userAuth;
   const { userFavorites } = getState().userFavorites;
 
   if (userFavorites) {

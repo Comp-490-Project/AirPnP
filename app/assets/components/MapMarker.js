@@ -3,7 +3,10 @@ import { View, Text, StyleSheet } from 'react-native';
 import colors from '../theme/colors';
 import { Marker, Callout } from 'react-native-maps';
 import { useDispatch } from 'react-redux';
-import { setMarkerAttributes } from '../../actions/mapActions';
+import {
+  setMarkerAttributes,
+  setMapCenterLocation,
+} from '../../actions/restroomActions';
 
 function MapMarker({ marker, reference, index }) {
   const dispatch = useDispatch();
@@ -21,6 +24,7 @@ function MapMarker({ marker, reference, index }) {
         tooltip
         onPress={() => {
           dispatch(setMarkerAttributes(marker));
+          dispatch(setMapCenterLocation(marker.latitude, marker.longitude));
           reference.current.snapTo(0);
         }}
       >

@@ -19,7 +19,7 @@ function MapBottomSheet({ reference, handleRating }) {
 
   const maxRating = [1, 2, 3, 4, 5];
 
-  const { user } = useSelector((state) => state.userStatus);
+  const { user } = useSelector((state) => state.userAuth);
   const {
     description,
     geohash,
@@ -29,7 +29,7 @@ function MapBottomSheet({ reference, handleRating }) {
     name,
     images,
     isFavorited,
-  } = useSelector((state) => state.mapMarker);
+  } = useSelector((state) => state.restroomMarker);
 
   // Bottomsheet Header
   const renderHeader = () => (

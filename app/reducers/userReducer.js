@@ -41,7 +41,7 @@ export const userLocationReducer = (state = {}, action) => {
   }
 };
 
-export const userStatusReducer = (state = {}, action) => {
+export const userAuthReducer = (state = {}, action) => {
   switch (action.type) {
     case USER_LOGIN_SUCCESS:
       return {

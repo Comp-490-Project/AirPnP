@@ -3,13 +3,13 @@ import {
   MAP_CENTER_CHANGE,
   MARKER_ATTRIBUTES_SET,
   MARKER_IMAGES_SET,
-} from '../constants/mapTypes';
+} from '../constants/restroomTypes';
 import {
   RESTROOM_MARKER_FAVORITED,
   RESTROOM_MARKER_UNFAVORITED,
 } from '../constants/userTypes';
 
-export const mapLocationReducer = (state = { restrooms: [] }, action) => {
+export const mapReducer = (state = { restrooms: [] }, action) => {
   switch (action.type) {
     case RESTROOM_MARKERS_LOADED:
       return {
@@ -26,7 +26,7 @@ export const mapLocationReducer = (state = { restrooms: [] }, action) => {
   }
 };
 
-export const mapMarkerReducer = (state = {}, action) => {
+export const restroomMarkerReducer = (state = {}, action) => {
   switch (action.type) {
     case MARKER_ATTRIBUTES_SET:
       return {

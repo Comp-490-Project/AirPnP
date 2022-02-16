@@ -9,20 +9,18 @@ import MapBottomSheet from '../components/MapBottomSheet';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getUserLocation,
-  getUserStatus,
+  checkUserStatus,
   getUserFavorites,
 } from '../../actions/userActions';
-import { getRestrooms } from '../../actions/mapActions';
+import { getRestrooms } from '../../actions/restroomActions';
 
 function MapScreen({ navigation, addRestroom }) {
   const reference = useRef();
   const dispatch = useDispatch();
 
   const { location, loading } = useSelector((state) => state.userLocation);
-  const { restrooms, mapCenterLocation } = useSelector(
-    (state) => state.mapLocation
-  );
-  const { user } = useSelector((state) => state.userStatus);
+  const { restrooms, mapCenterLocation } = useSelector((state) => state.map);
+  const { user } = useSelector((state) => state.userAuth);
   const { userFavoritesLoaded } = useSelector((state) => state.userFavorites);
 
   // @todo
@@ -52,7 +50,7 @@ function MapScreen({ navigation, addRestroom }) {
     // Watch for change in user login status
     const unsubscribe = auth.onAuthStateChanged((user) => {
       // Check if user is logged in
-      dispatch(getUserStatus());
+      dispatch(checkUserStatus());
     });
 
     return unsubscribe;
