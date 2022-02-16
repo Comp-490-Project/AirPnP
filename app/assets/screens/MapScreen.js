@@ -5,7 +5,7 @@ import AnimationLoad from '../components/AnimationLoad';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MapMarker from '../components/MapMarker';
 import SearchBar from '../components/SearchBar';
-import MapBottomSheet from '../components/MapBottomSheet';
+import MapBottomSheet from '../components/bottomSheets/MapBottomSheet';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getUserLocation,
@@ -28,6 +28,7 @@ function MapScreen({ navigation, addRestroom }) {
   let restroomKey = 'useFavoritesScreenValue';
   const handleRating = (id) => {
     restroomKey = id;
+    reference.current.snapTo(1);
     navigation.navigate('Review', { restroomKey });
   };
 

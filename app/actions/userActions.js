@@ -85,6 +85,7 @@ export const login = (user) => (dispatch) => {
 export const checkUserStatus = () => (dispatch) => {
   try {
     const user = firebase.auth().currentUser;
+
     //Check Auth Status
     if (user) {
       dispatch({
@@ -102,8 +103,8 @@ export const checkUserStatus = () => (dispatch) => {
 };
 
 // Get user favorites
-export const getUserFavorites = () => async (dispatch) => {
-  const user = firebase.auth().currentUser;
+export const getUserFavorites = () => async (dispatch, getState) => {
+  const { user } = getState().userAuth;
 
   const query = await firebase.firestore().collection('users');
   query

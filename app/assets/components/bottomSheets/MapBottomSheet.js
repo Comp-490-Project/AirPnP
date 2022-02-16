@@ -7,12 +7,12 @@ import {
   Linking,
   StyleSheet,
 } from 'react-native';
-import AppButton from './AppButton';
-import colors from '../theme/colors';
+import AppButton from '../AppButton';
+import colors from '../../theme/colors';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { useSelector, useDispatch } from 'react-redux';
-import { favoriteHandler } from '../../actions/userActions';
+import { favoriteHandler } from '../../../actions/userActions';
 
 function MapBottomSheet({ reference, handleRating }) {
   const dispatch = useDispatch();
@@ -60,8 +60,8 @@ function MapBottomSheet({ reference, handleRating }) {
               style={styles.heart}
               source={
                 !isFavorited
-                  ? require('../icons/favorite-heart/heart-unfilled.png')
-                  : require('../icons/favorite-heart/heart-filled.png')
+                  ? require('../../icons/favorite-heart/heart-unfilled.png')
+                  : require('../../icons/favorite-heart/heart-filled.png')
               }
             />
           </TouchableOpacity>
@@ -74,7 +74,7 @@ function MapBottomSheet({ reference, handleRating }) {
             {meanRating && meanRating == 1 ? (
               <Image
                 style={styles.starImgStyle}
-                source={require('../icons/poop-emoji.png')}
+                source={require('../../icons/poop-emoji.png')}
               />
             ) : (
               maxRating.map((item, index) => (
@@ -83,8 +83,8 @@ function MapBottomSheet({ reference, handleRating }) {
                   key={index}
                   source={
                     item <= meanRating
-                      ? require('../icons/rating/star-filled.png')
-                      : require('../icons/rating/star-unfilled.png')
+                      ? require('../../icons/rating/star-filled.png')
+                      : require('../../icons/rating/star-unfilled.png')
                   }
                 />
               ))

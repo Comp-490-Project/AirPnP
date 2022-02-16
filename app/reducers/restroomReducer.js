@@ -3,6 +3,10 @@ import {
   MAP_CENTER_CHANGE,
   MARKER_ATTRIBUTES_SET,
   MARKER_IMAGES_SET,
+  RESTROOM_REVIEW_STARS_CHANGED,
+  RESTROOM_REVIEW_IMAGE_UPLOADED,
+  RESTROOM_REVIEW_IMAGE_REMOVED,
+  RESTROOM_REVIEW_CLEAR,
 } from '../constants/restroomTypes';
 import {
   RESTROOM_MARKER_FAVORITED,
@@ -49,6 +53,38 @@ export const restroomMarkerReducer = (state = {}, action) => {
         ...state,
         isFavorited: false,
       };
+    default:
+      return state;
+  }
+};
+
+export const restroomReviewReducer = (
+  state = { rating: 2, image: null },
+  action
+) => {
+  switch (action.type) {
+    case RESTROOM_REVIEW_STARS_CHANGED:
+      return {
+        ...state,
+        rating: action.payload,
+      };
+    case RESTROOM_REVIEW_IMAGE_UPLOADED:
+      return {
+        ...state,
+        image: action.payload,
+      };
+    case RESTROOM_REVIEW_IMAGE_REMOVED:
+      return {
+        ...state,
+        image: null,
+      };
+    case RESTROOM_REVIEW_CLEAR: {
+      return {
+        ...state,
+        rating: 2,
+        image: null,
+      };
+    }
     default:
       return state;
   }
