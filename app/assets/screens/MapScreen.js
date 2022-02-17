@@ -14,8 +14,9 @@ import {
 } from '../../actions/userActions';
 import { getRestrooms } from '../../actions/restroomActions';
 
-function MapScreen({ navigation, addRestroom }) {
+function MapScreen({ navigation }) {
   const reference = useRef(null);
+
   const dispatch = useDispatch();
 
   const { location, loading } = useSelector((state) => state.userLocation);
@@ -25,11 +26,9 @@ function MapScreen({ navigation, addRestroom }) {
 
   // @todo
   // Find a way to do this without using restroomKey
-  let restroomKey = 'useFavoritesScreenValue';
   const handleRating = (id) => {
-    restroomKey = id;
     reference.current.snapTo(1);
-    navigation.navigate('Review', { restroomKey });
+    navigation.navigate('Review', { restroomKey: id });
   };
 
   useEffect(() => {
@@ -54,8 +53,10 @@ function MapScreen({ navigation, addRestroom }) {
       dispatch(checkUserStatus());
     });
 
+    console.log('test');
+
     return unsubscribe;
-  }, [loading, location, userFavoritesLoaded, addRestroom]);
+  }, [loading, location, userFavoritesLoaded]);
 
   if (loading) {
     return <AnimationLoad />;

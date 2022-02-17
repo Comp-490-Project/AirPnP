@@ -14,51 +14,12 @@ import AddScreen from '../assets/screens/AddScreen';
 import FavoritesScreen from '../assets/screens/FavoritesScreen';
 import SettingsScreen from '../assets/screens/SettingsScreen';
 import colors from '../assets/theme/colors';
-// @todo
-// AddScreen.js - Delete imports after moved to actions
-import { firebase } from '../firebase';
-import { geohashForLocation } from 'geofire-common';
-import { userRating } from '../assets/components/Rating';
 
-const TabNavigator = ({ navigation }) => {
+const TabNavigator = () => {
   // @todo
   // FavoritesScreen.js - Delete states after moved to actions
   const [keys, setKeys] = useState([]);
   const [restrooms, setRestrooms] = useState([]);
-
-  // @todo
-  // AddScreen.js - Delete states after moved to actions
-  const [title, setTitle] = useState(null);
-  const [description, setDescription] = useState(null);
-  const [mapRegion, setRegion] = useState(null);
-
-  // @todo
-  // AddScreen.js - Delete and implement current version in restroomActions.js
-  async function addRestroom() {
-    const dataRef = firebase.firestore().collection('testing');
-    await dataRef
-      .doc(geohashForLocation([mapRegion.latitude, mapRegion.longitude]))
-      .set({
-        description: description,
-        geohash: geohashForLocation([mapRegion.latitude, mapRegion.longitude]),
-        latitude: mapRegion.latitude,
-        longitude: mapRegion.longitude,
-        name: title,
-        rating: userRating,
-      });
-    setRestrooms((restrooms) => [
-      ...restrooms,
-      {
-        description: description,
-        geohash: geohashForLocation([mapRegion.latitude, mapRegion.longitude]),
-        latitude: mapRegion.latitude,
-        longitude: mapRegion.longitude,
-        name: title,
-        rating: userRating,
-      },
-    ]);
-    navigation.navigate('Home');
-  }
 
   const Tab = createBottomTabNavigator();
 
@@ -106,12 +67,7 @@ const TabNavigator = ({ navigation }) => {
       >
         <Tab.Screen
           name="Home"
-          children={() => (
-            <MapScreen
-              navigation={navigation}
-              addRestroom={addRestroom}
-            ></MapScreen>
-          )}
+          component={MapScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -165,18 +121,7 @@ const TabNavigator = ({ navigation }) => {
         />
         <Tab.Screen
           name="Add"
-          children={() => (
-            <AddScreen
-              mapRegion={mapRegion}
-              setRegion={setRegion}
-              title={title}
-              setTitle={setTitle}
-              description={description}
-              setDescription={setDescription}
-              addRestroom={addRestroom}
-              navigation={navigation}
-            />
-          )}
+          component={AddScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <Image
@@ -194,13 +139,7 @@ const TabNavigator = ({ navigation }) => {
         />
         <Tab.Screen
           name="Favorites"
-          children={() => (
-            <FavoritesScreen
-              keys={keys}
-              setKeys={setKeys}
-              navigation={navigation}
-            />
-          )}
+          children={() => <FavoritesScreen keys={keys} setKeys={setKeys} />}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
