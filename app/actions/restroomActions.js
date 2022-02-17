@@ -3,6 +3,7 @@ import {
   MARKER_ATTRIBUTES_SET,
   MARKER_IMAGES_SET,
   MAP_CENTER_CHANGE,
+  RESTROOM_CREATE_LOCATION_CHANGED,
   RESTROOM_REVIEW_IMAGE_UPLOADED,
   RESTROOM_REVIEW_IMAGE_REMOVED,
   RESTROOM_REVIEW_STARS_CHANGED,
@@ -108,30 +109,52 @@ export const setMapCenterLocation = (latitude, longitude) => (dispatch) => {
   });
 };
 
-// Add a new restroom location
+// Set restroom location for adding a restroom
+export const setRestroomLocation = (location) => {
+  return {
+    type: RESTROOM_CREATE_LOCATION_CHANGED,
+    payload: location,
+  };
+};
+
+// Add a new restroom
 export const addRestroom = (restroom) => async (dispatch) => {
   // @todo
   // Change this to Los-Angeles collection when ready for production
   const restroomRef = firebase.firestore().collection('testing');
 
   await restroomRef.doc(restroom.geohash).set({
-    //Add marker to firebase doc
     description: restroom.description,
     geohash: restroom.geohash,
     latitude: restroom.latitude,
     longitude: restroom.longitude,
-    name: restroom.name,
     meanRating: restroom.meanRating,
+    name: restroom.name,
     user: restroom.user,
   });
+
+  if (restroom.image) {
+    const response = await fetch(restroom.image);
+    // Responsible for containing the URI's data in bytes
+    const blob = await response.blob();
+    var ref = firebase.storage().ref(restroom.geohash).child(restroom.user);
+    ref.put(blob);
+  }
+
+  delete restroom.image;
+  delete restroom.user;
 
   dispatch({
     type: RESTROOM_MARKER_ADDED,
     payload: restroom,
   });
+
+  dispatch({
+    type: RESTROOM_REVIEW_CLEAR,
+  });
 };
 
-// Set the stars (Rating component) in review object
+// Set the stars (Rating component) in restroom object
 export const handleReviewStars = (stars) => {
   return {
     type: RESTROOM_REVIEW_STARS_CHANGED,
@@ -139,7 +162,7 @@ export const handleReviewStars = (stars) => {
   };
 };
 
-// Set or remove image in Review Screen user interface
+// Set or remove image in Review Screen or Add Screen user interface
 export const handleImageInUI = (image) => {
   if (image) {
     return {

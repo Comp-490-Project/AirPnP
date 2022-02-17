@@ -3,6 +3,7 @@ import {
   MAP_CENTER_CHANGE,
   MARKER_ATTRIBUTES_SET,
   MARKER_IMAGES_SET,
+  RESTROOM_CREATE_LOCATION_CHANGED,
   RESTROOM_REVIEW_STARS_CHANGED,
   RESTROOM_REVIEW_IMAGE_UPLOADED,
   RESTROOM_REVIEW_IMAGE_REMOVED,
@@ -64,11 +65,13 @@ export const restroomMarkerReducer = (state = {}, action) => {
   }
 };
 
-export const restroomReviewReducer = (
-  state = { rating: 2, image: null },
-  action
-) => {
+export const restroomReviewReducer = (state = {}, action) => {
   switch (action.type) {
+    case RESTROOM_CREATE_LOCATION_CHANGED:
+      return {
+        ...state,
+        region: action.payload,
+      };
     case RESTROOM_REVIEW_STARS_CHANGED:
       return {
         ...state,
@@ -87,6 +90,7 @@ export const restroomReviewReducer = (
     case RESTROOM_REVIEW_CLEAR: {
       return {
         ...state,
+        region: {},
         rating: 2,
         image: null,
       };

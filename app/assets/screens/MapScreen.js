@@ -15,7 +15,7 @@ import {
 import { getRestrooms } from '../../actions/restroomActions';
 
 function MapScreen({ navigation, addRestroom }) {
-  const reference = useRef();
+  const reference = useRef(null);
   const dispatch = useDispatch();
 
   const { location, loading } = useSelector((state) => state.userLocation);

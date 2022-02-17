@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -21,7 +21,7 @@ function ReviewScreen({ navigation, route }) {
   // Find a way to do this without using route parameters
   const hashKey = route.params.restroomKey;
 
-  const reference = React.useRef(null);
+  const reference = useRef(null);
   const dispatch = useDispatch();
 
   const [comment, setComment] = useState('');

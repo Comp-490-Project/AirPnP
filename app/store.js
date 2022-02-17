@@ -35,6 +35,11 @@ const initialState = {
     images: [],
     isFavorited: false,
   },
+  restroomReview: {
+    region: {},
+    rating: 2,
+    image: null,
+  },
 };
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk));

@@ -35,7 +35,7 @@ const TabNavigator = ({ navigation }) => {
   // @todo
   // AddScreen.js - Delete and implement current version in restroomActions.js
   async function addRestroom() {
-    const dataRef = firebase.firestore().collection('Los-Angeles');
+    const dataRef = firebase.firestore().collection('testing');
     await dataRef
       .doc(geohashForLocation([mapRegion.latitude, mapRegion.longitude]))
       .set({
