@@ -33,7 +33,7 @@ const TabNavigator = ({ navigation }) => {
   const [mapRegion, setRegion] = useState(null);
 
   // @todo
-  // AddScreen.js - Delete and implement current version in mapActions.js
+  // AddScreen.js - Delete and implement current version in restroomActions.js
   async function addRestroom() {
     const dataRef = firebase.firestore().collection('Los-Angeles');
     await dataRef

@@ -7,6 +7,7 @@ import {
   RESTROOM_REVIEW_IMAGE_UPLOADED,
   RESTROOM_REVIEW_IMAGE_REMOVED,
   RESTROOM_REVIEW_CLEAR,
+  RESTROOM_MARKER_ADDED,
 } from '../constants/restroomTypes';
 import {
   RESTROOM_MARKER_FAVORITED,
@@ -24,6 +25,11 @@ export const mapReducer = (state = { restrooms: [] }, action) => {
       return {
         ...state,
         mapCenterLocation: action.payload,
+      };
+    case RESTROOM_MARKER_ADDED:
+      return {
+        ...state,
+        restrooms: [...state.restrooms, action.payload],
       };
     default:
       return state;

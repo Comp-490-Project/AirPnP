@@ -7,6 +7,7 @@ import {
   RESTROOM_REVIEW_IMAGE_REMOVED,
   RESTROOM_REVIEW_STARS_CHANGED,
   RESTROOM_REVIEW_CLEAR,
+  RESTROOM_MARKER_ADDED,
 } from '../constants/restroomTypes';
 import { firebase } from '../firebase';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
@@ -107,34 +108,26 @@ export const setMapCenterLocation = (latitude, longitude) => (dispatch) => {
   });
 };
 
-// @todo
 // Add a new restroom location
-// export const addRestroom = () => async (dispatch) => {
-//   const restroomRef = firebase.firestore().collection('Los-Angeles');
+export const addRestroom = (restroom) => async (dispatch) => {
+  const restroomRef = firebase.firestore().collection('testing');
 
-//   await restroomRef
-//     .doc(geohashForLocation([mapRegion.latitude, mapRegion.longitude]))
-//     .set({
-//       description: description,
-//       geohash: geohashForLocation([mapRegion.latitude, mapRegion.longitude]),
-//       latitude: mapRegion.latitude,
-//       longitude: mapRegion.longitude,
-//       name: title,
-//       rating: userRating,
-//     });
-//   setRestrooms((restrooms) => [
-//     ...restrooms,
-//     {
-//       description: description,
-//       geohash: geohashForLocation([mapRegion.latitude, mapRegion.longitude]),
-//       latitude: mapRegion.latitude,
-//       longitude: mapRegion.longitude,
-//       name: title,
-//       rating: userRating,
-//     },
-//   ]);
-//   navigation.navigate('Home');
-// }
+  await restroomRef.doc(restroom.geohash).set({
+    //Add marker to firebase doc
+    description: restroom.description,
+    geohash: restroom.geohash,
+    latitude: restroom.latitude,
+    longitude: restroom.longitude,
+    name: restroom.name,
+    meanRating: restroom.meanRating,
+    user: restroom.user,
+  });
+
+  dispatch({
+    type: RESTROOM_MARKER_ADDED,
+    payload: restroom,
+  });
+};
 
 // Set the stars (Rating component) in review object
 export const handleReviewStars = (stars) => {
