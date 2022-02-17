@@ -167,7 +167,7 @@ export const submitReview = (review) => async (dispatch, getState) => {
       restroomInformation = querySnapshot.data();
       // If it doesnt have any reviews, create review array, meanRating field and add to restroom
       if (!restroomInformation.reviews) {
-        query.doc(hashKey).update({
+        query.doc(review.hashKey).update({
           meanRating: review.userRating,
           reviews: firebase.firestore.FieldValue.arrayUnion({
             Comment: review.comment,
