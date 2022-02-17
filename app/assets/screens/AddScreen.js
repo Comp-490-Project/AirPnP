@@ -9,7 +9,6 @@ import {
   TextInput,
 } from 'react-native';
 import MapView from 'react-native-maps';
-import * as Location from 'expo-location';
 import AppButton from '../components/AppButton';
 import { firebase } from '../../firebase';
 import markerImage from '../icons/marker.png';
@@ -17,23 +16,36 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import Rating from '../components/Rating';
 import colors from '../theme/colors';
 import * as ImagePicker from 'expo-image-picker';
-import { geoHASH } from './MapScreen';
 import AnimationLoad from '../components/AnimationLoad';
 import CustomAlertComponent from '../components/CustomAlertComponent';
+import { geohashForLocation } from 'geofire-common';
+import { userRating } from '../components/Rating';
 
-function AddScreen({
-  navigation,
-  addRestroom,
-  mapRegion,
-  setRegion,
-  setDescription,
-  setTitle,
-}) {
-  const user = firebase.auth().currentUser;
-  const [hasLocationPermissions, setLocationPermission] = useState(false);
-  const [location, setLocation] = useState(null);
+import {getUserLocation} from '../../actions/userActions';
+import {useSelector, useDispatch} from 'react-redux';
+import {addRestroom} from '../../actions/mapActions'
+
+function AddScreen({navigation,}) {
+  const { location } = useSelector((state) => state.userLocation);
+
+
   const [imageSource, setImageSource] = useState(null);
+  
+  const [mapRegion, setRegion] = useState({
+    latitude: location.latitude,
+    longitude: location.longitude,
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.015,
+  });
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
   const sheetRef = React.useRef(null);
+  
+  const dispatch = useDispatch();
+
+  const { user } = useSelector((state) => state.userStatus);
+
 
   const renderCont = () => (
     <View style={styles.swipeBox}>
@@ -43,20 +55,22 @@ function AddScreen({
         <View style={styles.TextInput}>
           <TextInput
             label="Title:"
-            onChangeText={(title) => setTitle(title)}
+            onChangeText={(title)=>setTitle(title)}
             placeholder="Name Your Place"
             mode="outlined"
             multiline={true}
+            value={title}
           />
         </View>
         <Text style={styles.title}>Review</Text>
         <View style={styles.TextInput}>
           <TextInput
             label="Description:"
-            onChangeText={(description) => setDescription(description)}
+            onChangeText={(description)=>setDescription(description)}
             placeholder="How Was It?."
             mode="outlined"
             multiline={true}
+            value={description}
           />
         </View>
         <Text style={styles.title}>Add a Photo</Text>
@@ -81,7 +95,29 @@ function AddScreen({
         <View style={styles.submitButton}>
           <AppButton
             title="Submit"
-            onPress={addRestroom}
+            onPress={()=> {
+              dispatch(addRestroom({
+              description: description,
+              latitude: mapRegion.longitude,
+              longitude: mapRegion.longitude,
+              geohash: geohashForLocation([mapRegion.latitude, mapRegion.longitude]),
+              meanRating: userRating,
+              name: title,
+              user: user.uid,
+            }))
+            uploadImage(imageSource, user.uid);
+            setDescription('');
+            setTitle('');
+            setImageSource(null);
+            setRegion({
+              latitude: location.latitude,
+              longitude: location.longitude,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.015,
+            });
+          
+            navigation.navigate('home');
+            }}
             style={styles.btn}
           ></AppButton>
         </View>
@@ -89,10 +125,11 @@ function AddScreen({
     </View>
   );
 
+
+
   const openLibrary = async () => {
     //Function is triggered when "Choose From Library" button is pressed.
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync; //Awaits for user input for Permissions.
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync; //Awaits for user input for Permissions.
     if (permissionResult.granted === false) {
       alert("You've refused to allow this app to acess your photos!");
       return;
@@ -120,40 +157,23 @@ function AddScreen({
   const uploadImage = async (uri, user) => {
     const response = await fetch(uri);
     const blob = await response.blob(); //Responsible for containing the uri's data in bytes.
-    var ref = firebase.storage().ref(geoHASH).child(user);
+    var ref = firebase.storage().ref(geohashForLocation([mapRegion.latitude, mapRegion.longitude])).child(user);
     return ref.put(blob);
   };
 
   useEffect(() => {
-    //Must be made into a Hook (Leaving it Here For Now)
-    const getLocationAsync = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if ('granted' !== status) {
-        setLocation('Permission to access location was denied');
-      } else {
-        setLocationPermission(true);
-      }
-      let {
-        coords: { latitude, longitude },
-      } = await Location.getLastKnownPositionAsync();
-      setLocation(JSON.stringify({ latitude, longitude }));
-
-      setRegion({
-        latitude,
-        longitude,
-        latitudeDelta: 0.0015,
-        longitudeDelta: 0.0121,
-      }); //Center Map on Location fetched above.
-    };
-    getLocationAsync();
-  }, []);
+    if (!location) {
+      dispatch(getUserLocation());
+    }
+    setRegion({
+      latitude: location.latitude,
+      longitude: location.longitude,
+      latitudeDelta: 0.015,
+      longitudeDelta: 0.015,
+    })
+  }, [location,]);
 
   if (location === null) {
-    //Loading Animations Here
-    return <AnimationLoad />;
-  }
-
-  if (hasLocationPermissions === false) {
     //Loading Animations Here
     return <AnimationLoad />;
   }
@@ -161,6 +181,7 @@ function AddScreen({
   if (mapRegion === null) {
     return <AnimationLoad />;
   }
+
 
   const onRegionChange = (mapRegion) => {
     setRegion(mapRegion);

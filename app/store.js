@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import { mapLocationReducer, mapMarkerReducer } from './reducers/mapReducer';
+import { mapLocationReducer, mapMarkerReducer, } from './reducers/mapReducer';
 import {
   userFavoritesReducer,
   userLocationReducer,
@@ -30,6 +30,7 @@ const initialState = {
     images: [],
     isFavorited: false,
   },
+
 };
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk));

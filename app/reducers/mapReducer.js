@@ -3,6 +3,8 @@ import {
   MAP_CENTER_CHANGE,
   MARKER_ATTRIBUTES_SET,
   MARKER_IMAGES_SET,
+  RESTROOM_MARKER_ADDED, 
+
 } from '../constants/mapTypes';
 import {
   RESTROOM_MARKER_FAVORITED,
@@ -21,6 +23,11 @@ export const mapLocationReducer = (state = { restrooms: [] }, action) => {
         ...state,
         mapCenterLocation: action.payload,
       };
+    case RESTROOM_MARKER_ADDED:
+      return{
+        ...state,
+        restrooms:[...state.restrooms, action.payload]
+      }
     default:
       return state;
   }
@@ -53,3 +60,4 @@ export const mapMarkerReducer = (state = {}, action) => {
       return state;
   }
 };
+

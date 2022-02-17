@@ -62,6 +62,7 @@ function MapScreen({ navigation, addRestroom }) {
     return <AnimationLoad />;
   }
 
+
   return (
     <View style={styles.container}>
       <MapView
