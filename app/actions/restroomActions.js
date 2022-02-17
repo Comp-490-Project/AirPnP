@@ -110,6 +110,8 @@ export const setMapCenterLocation = (latitude, longitude) => (dispatch) => {
 
 // Add a new restroom location
 export const addRestroom = (restroom) => async (dispatch) => {
+  // @todo
+  // Change this to Los-Angeles collection when ready for production
   const restroomRef = firebase.firestore().collection('testing');
 
   await restroomRef.doc(restroom.geohash).set({
