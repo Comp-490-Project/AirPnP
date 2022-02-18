@@ -7,7 +7,7 @@ import { handleReviewStars } from '../../actions/restroomActions';
 function Rating() {
   const dispatch = useDispatch();
 
-  const [defaultRating, setDefaultRating] = useState(2);
+  const [defaultRating, setDefaultRating] = useState(0);
   const maxRating = [1, 2, 3, 4, 5];
 
   const CustomRatingBar = () => {
