@@ -24,13 +24,6 @@ function MapScreen({ navigation }) {
   const { user } = useSelector((state) => state.userAuth);
   const { userFavoritesLoaded } = useSelector((state) => state.userFavorites);
 
-  // @todo
-  // Find a way to do this without using restroomKey
-  const handleRating = (id) => {
-    reference.current.snapTo(1);
-    navigation.navigate('Review', { restroomKey: id });
-  };
-
   useEffect(() => {
     // Get user location
     if (!location) {
@@ -93,7 +86,7 @@ function MapScreen({ navigation }) {
         ))}
       </MapView>
       <SearchBar />
-      <MapBottomSheet reference={reference} handleRating={handleRating} />
+      <MapBottomSheet reference={reference} navigation={navigation} />
     </View>
   );
 }

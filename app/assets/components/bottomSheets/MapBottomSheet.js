@@ -14,7 +14,7 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import { useSelector, useDispatch } from 'react-redux';
 import { favoriteHandler } from '../../../actions/userActions';
 
-function MapBottomSheet({ reference, handleRating }) {
+function MapBottomSheet({ reference, navigation }) {
   const dispatch = useDispatch();
 
   const maxRating = [1, 2, 3, 4, 5];
@@ -108,7 +108,7 @@ function MapBottomSheet({ reference, handleRating }) {
               <View Style={{ height: 10, backgroundColor: colors.white }} />
               <TouchableOpacity
                 style={{ margin: 5 }}
-                onPress={() => handleRating(geohash)}
+                onPress={() => navigation.navigate('Review')}
               >
                 <AppButton title={'Rate'} styles={{ width: '80%' }} />
               </TouchableOpacity>
