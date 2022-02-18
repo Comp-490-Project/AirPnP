@@ -37,7 +37,7 @@ const initialState = {
   },
   restroomReview: {
     region: {},
-    rating: 2,
+    rating: 0,
     image: null,
   },
 };
