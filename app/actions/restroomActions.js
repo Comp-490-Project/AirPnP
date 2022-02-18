@@ -137,8 +137,11 @@ export const addRestroom = (restroom) => async (dispatch) => {
     const response = await fetch(restroom.image);
     // Responsible for containing the URI's data in bytes
     const blob = await response.blob();
-    var ref = firebase.storage().ref(restroom.geohash).child(restroom.user);
-    ref.put(blob);
+    const pathRef = firebase
+      .storage()
+      .ref(restroom.geohash)
+      .child(restroom.user);
+    await pathRef.put(blob);
   }
 
   delete restroom.image;
