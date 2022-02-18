@@ -16,23 +16,20 @@ import ReviewBottomSheet from '../components/bottomSheets/ReviewBottomSheet';
 import { useSelector, useDispatch } from 'react-redux';
 import { submitReview } from '../../actions/restroomActions';
 
-function ReviewScreen({ navigation, route }) {
-  // @todo
-  // Find a way to do this without using route parameters
-  const hashKey = route.params.restroomKey;
-
+function ReviewScreen({ navigation }) {
   const reference = useRef(null);
   const dispatch = useDispatch();
 
   const [comment, setComment] = useState('');
   const { rating, image } = useSelector((state) => state.restroomReview);
+  const { geohash } = useSelector((state) => state.restroomMarker);
 
   const submitHandler = () => {
     const reviewData = {
-      hashKey,
+      geohash,
       comment,
-      userRating: rating,
-      imageSource: image,
+      rating,
+      image,
     };
 
     dispatch(submitReview(reviewData));
