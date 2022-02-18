@@ -176,76 +176,74 @@ export const handleImageInUI = (image) => {
   }
 };
 
-// Submit restroom review
+// Submit restroom review to Firebase
 export const submitReview = (review) => async (dispatch, getState) => {
-  // Submit the review  with the geohash and check if user has a current review using userID
+  // Get user from Redux auth slice
   const {
-    user: { uid },
+    user: { uid: user },
   } = getState().userAuth;
-  const query = await firebase.firestore().collection('Los-Angeles');
-  let restroomInformation;
 
-  query
-    .doc(review.hashKey)
-    .get()
-    .then((querySnapshot) => {
-      restroomInformation = querySnapshot.data();
-      // If it doesnt have any reviews, create review array, meanRating field and add to restroom
-      if (!restroomInformation.reviews) {
-        query.doc(review.hashKey).update({
-          meanRating: review.userRating,
-          reviews: firebase.firestore.FieldValue.arrayUnion({
-            Comment: review.comment,
-            Rating: review.userRating,
-            userID: uid,
-          }),
-        });
-      } else {
-        // Calculate the new meanRating if this user has not reviewed before
-        let newMeanRating =
-          (restroomInformation.reviews.length * restroomInformation.meanRating +
-            review.userRating) /
-          (restroomInformation.reviews.length + 1);
-        let oldMeanRating;
-        // Now check if user has reviewed this restroom before
-        for (let i = 0; i < restroomInformation.reviews.length; i++) {
-          if (uid === restroomInformation.reviews[i].userID) {
-            oldMeanRating = restroomInformation.reviews[i].Rating;
-            query.doc(review.hashKey).update({
-              reviews: firebase.firestore.FieldValue.arrayRemove({
-                Comment: restroomInformation.reviews[i].Comment,
-                Rating: restroomInformation.reviews[i].Rating,
-                userID: restroomInformation.reviews[i].userID,
-              }),
-            });
-            // Since it was reviewed by this user before,
-            //  we update the new mean calculation reflecting the new rating
-            newMeanRating =
-              (restroomInformation.reviews.length *
-                restroomInformation.meanRating +
-                review.userRating -
-                oldMeanRating) /
-              restroomInformation.reviews.length;
-          }
-        }
+  const { geohash, comment, rating, image } = review;
 
-        query.doc(review.hashKey).update({
-          meanRating: newMeanRating,
-          reviews: firebase.firestore.FieldValue.arrayUnion({
-            Comment: review.comment,
-            Rating: review.userRating,
-            userID: uid,
-          }),
+  // Get reference to Firebase document
+  const docRef = firebase.firestore().collection('Los-Angeles').doc(geohash);
+
+  const query = await docRef.get();
+
+  const restroomDoc = query.data();
+
+  const restroomReviews = restroomDoc.reviews;
+
+  // Calculate new meanRating assuming user has not yet reviewed
+  let newRating =
+    (restroomDoc.meanRating * restroomReviews?.length + rating) /
+    (restroomReviews?.length + 1);
+
+  if (restroomReviews) {
+    // For each review, check if user has already reviewed
+    for (const review of restroomReviews) {
+      if (review.user === user) {
+        // Remove previous review
+        await docRef.update({
+          reviews: restroomReviews.filter((review) => review.user !== user),
         });
+
+        // Calculate new meanRating according to previous user review
+        newRating =
+          (restroomDoc.meanRating * restroomReviews.length -
+            review.rating +
+            rating) /
+          restroomReviews.length;
       }
-    });
+    }
 
-  if (review.imageSource) {
-    const response = await fetch(review.imageSource);
+    // Update doc with new meanRating and add new/updated review
+    await docRef.update({
+      meanRating: newRating,
+      reviews: firebase.firestore.FieldValue.arrayUnion({
+        comment,
+        rating,
+        user,
+      }),
+    });
+  } else {
+    // First review of restroom
+    await docRef.update({
+      meanRating: rating,
+      reviews: firebase.firestore.FieldValue.arrayUnion({
+        comment,
+        rating,
+        user,
+      }),
+    });
+  }
+
+  if (image) {
+    const response = await fetch(image);
     // Responsible for containing the URI's data in bytes
     const blob = await response.blob();
-    const ref = firebase.storage().ref(review.hashKey).child(uid);
-    ref.put(blob);
+    const pathRef = firebase.storage().ref(geohash).child(user);
+    await pathRef.put(blob);
   }
 
   dispatch({
