@@ -53,8 +53,6 @@ function MapScreen({ navigation }) {
       dispatch(checkUserStatus());
     });
 
-    console.log('test');
-
     return unsubscribe;
   }, [loading, location, userFavoritesLoaded]);
 
