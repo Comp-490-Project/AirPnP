@@ -13,10 +13,10 @@ function FavoritesScreen({ navigation, keys, setKeys }) {
   const [fv, setfv] = useState([]);
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
 
-  function handleRating(id) {
-    restroomKey = fv[id].geohash;
-    navigation.navigate('Review', { restroomKey });
-  }
+  // function handleRating(id) {
+  //   restroomKey = fv[id].geohash;
+  //   navigation.navigate('Review', { restroomKey });
+  // }
 
   function handleNav(index) {
     openGps(fv[index].latitude, fv[index].longitude);
@@ -109,10 +109,10 @@ function FavoritesScreen({ navigation, keys, setKeys }) {
                 title="Navigate"
                 onPress={() => handleNav(index)}
               ></AppButton>
-              <AppButton
+              {/* <AppButton
                 title="Rate"
                 onPress={() => handleRating(index)}
-              ></AppButton>
+              ></AppButton> */}
               <AppButton
                 title="Remove"
                 onPress={() => handleRemove(index)}
