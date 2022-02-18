@@ -16,7 +16,7 @@ import colors from '../../theme/colors';
 import AppButton from '../AppButton';
 import Rating from '../Rating';
 
-function AddScreenBottomSheet({ reference, navigation }) {
+function AddBottomSheet({ reference, navigation }) {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.userAuth);
@@ -184,4 +184,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddScreenBottomSheet;
+export default AddBottomSheet;

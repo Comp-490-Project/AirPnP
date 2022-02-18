@@ -5,7 +5,7 @@ import AppButton from '../components/AppButton';
 import markerImage from '../icons/marker.png';
 import AnimationLoad from '../components/AnimationLoad';
 import CustomAlertComponent from '../components/CustomAlertComponent';
-import AddScreenBottomSheet from '../components/bottomSheets/AddScreenBottomSheet';
+import AddBottomSheet from '../components/bottomSheets/AddBottomSheet';
 
 import { getUserLocation } from '../../actions/userActions';
 import { setRestroomLocation } from '../../actions/restroomActions';
@@ -60,7 +60,7 @@ function AddScreen({ navigation }) {
       ) : (
         <CustomAlertComponent navigation={navigation} />
       )}
-      <AddScreenBottomSheet reference={reference} navigation={navigation} />
+      <AddBottomSheet reference={reference} navigation={navigation} />
     </View>
   );
 }
