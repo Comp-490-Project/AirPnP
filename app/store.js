@@ -13,6 +13,7 @@ const reducer = combineReducers({
   userFavorites: userFavoritesReducer,
   mapLocation: mapLocationReducer,
   mapMarker: mapMarkerReducer,
+  userFavoriteRestrooms: userFavoritesReducer
 });
 
 const initialState = {
