@@ -106,7 +106,6 @@ export const getUserStatus = () => (dispatch) => {
 // Get user favorites
 export const getUserFavorites = () => async (dispatch) => {
   const user = firebase.auth().currentUser;
-
   const query = await firebase.firestore().collection('users');
   query
     .doc(user.uid)
@@ -127,27 +126,28 @@ export const getUserFavorites = () => async (dispatch) => {
     });
 };
 
+
 export const  getFavoriteData = () => async (dispatch, getState) => {
   const { userFavorites } = getState().userFavorites; 
   const query = await firebase.firestore().collection('Los-Angeles'); 
   const favoriteRestrooms= []; 
-  console.log("fuck number one");
   userFavorites.forEach((key) => {
     query
       .doc(key)
       .get()
       .then((querySnapshot) => {
-        console.log("fuck number two");
+        console.log("each favorite restroom");
         const favorites = querySnapshot.data();
         favoriteRestrooms.push(favorites)
-      });
-  });
-  dispatch({
-    type: USERS_FAVORITE_RESTROOMS_LOADED,
+      })  .then(() =>
+      dispatch({
+        type: USERS_FAVORITE_RESTROOMS_LOADED,
     payload: favoriteRestrooms,
-  });
+      })
+    )
+  })
+ 
 }
-
 // Add or remove user's favorite
 export const favoriteHandler = (geohash) => async (dispatch, getState) => {
   const { user } = getState().userStatus;

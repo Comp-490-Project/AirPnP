@@ -66,17 +66,14 @@ function FavoritesScreen({ navigation}) {
   
 
   useEffect(() => {
-    //const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user && !userFavoritesLoaded ) {
         dispatch(getUserFavorites());
         dispatch(getFavoriteData());
       }else{
         dispatch(getFavoriteData());
-        
       }
-   // });
-    //return unsubscribe;
-  }, []); 
+   
+  }, [userFavorites]); 
 
   return (
     <ScrollView contentContainerstyle={styles.container}>
