@@ -16,13 +16,14 @@ import ReviewBottomSheet from '../components/bottomSheets/ReviewBottomSheet';
 import { useSelector, useDispatch } from 'react-redux';
 import { submitReview } from '../../actions/restroomActions';
 
-function ReviewScreen({ navigation }) {
+function ReviewScreen({ navigation, route }) {
   const reference = useRef(null);
   const dispatch = useDispatch();
 
+  const { geohash } = route.params;
+
   const [comment, setComment] = useState('');
   const { rating, image } = useSelector((state) => state.restroomReview);
-  const { geohash } = useSelector((state) => state.restroomMarker);
 
   const submitHandler = () => {
     const reviewData = {
@@ -55,7 +56,6 @@ function ReviewScreen({ navigation }) {
           <SafeAreaView style={styles.ratingcontainer}>
             <Rating />
           </SafeAreaView>
-
           <TouchableOpacity style={{ margin: 5 }}>
             <AppButton
               title="Add Photo"

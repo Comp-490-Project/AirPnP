@@ -108,7 +108,7 @@ function MapBottomSheet({ reference, navigation }) {
               <View Style={{ height: 10, backgroundColor: colors.white }} />
               <TouchableOpacity
                 style={{ margin: 5 }}
-                onPress={() => navigation.navigate('Review')}
+                onPress={() => navigation.navigate('Review', { geohash })}
               >
                 <AppButton title={'Rate'} styles={{ width: '80%' }} />
               </TouchableOpacity>
