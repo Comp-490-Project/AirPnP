@@ -6,53 +6,59 @@ import AppButton from '../components/AppButton';
 import colors from '../theme/colors';
 import { Linking } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { USER_FAVORITE_REMOVED, USER_FAVORITE_RESTROOM_REMOVED } from '../../constants/userTypes';
-import {getUserFavorites, getFavoriteData } from '../../actions/userActions';
+import {
+  USER_FAVORITE_REMOVED,
+  USER_FAVORITE_RESTROOM_REMOVED,
+} from '../../constants/userTypes';
+import { getUserFavorites, getFavoriteData } from '../../actions/userActions';
 var restroomKey;
 
-
-
-
-
-function FavoritesScreen({ navigation}) {
+function FavoritesScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.userStatus); // getting user status
-  const { userFavoritesLoaded } = useSelector((state) => state.userFavorites);// boolean if loaded = true
-  const { userFavorites } = useSelector((state) => state.userFavorites);  // holds the keys to the usersfavorite restrooms
-  const { userFavoriteRestrooms } = useSelector((state) => state.userFavoriteRestrooms); // array of restrooms retrieved via the favorites array of keys
+  const { userFavoritesLoaded } = useSelector((state) => state.userFavorites); // boolean if loaded = true
+  const { userFavorites } = useSelector((state) => state.userFavorites); // holds the keys to the usersfavorite restrooms
+  const { userFavoriteRestrooms } = useSelector(
+    (state) => state.userFavoriteRestrooms
+  ); // array of restrooms retrieved via the favorites array of keys
 
-
-                            // **************************************************************move this array to the store
+  // **************************************************************move this array to the store
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
 
   function handleRating(id) {
-    restroomKey = userFavoriteRestrooms.geohash;// change to userFavoriteArray
-  
+    restroomKey = userFavoriteRestrooms.geohash; // change to userFavoriteArray
+
     navigation.navigate('Review', { restroomKey });
   }
 
   function handleNav(index) {
-    openGps(userFavoriteRestrooms[index].latitude, userFavoriteRestrooms[index].longitude);// change to userFavorites
+    openGps(
+      userFavoriteRestrooms[index].latitude,
+      userFavoriteRestrooms[index].longitude
+    ); // change to userFavorites
   }
 
   async function handleRemove(id) {
-    
     await firebase
       .firestore()
       .collection('users')
       .doc(user.uid)
       .update({
-        favorites: firebase.firestore.FieldValue.arrayRemove(userFavoriteRestrooms[id].geohash),
+        favorites: firebase.firestore.FieldValue.arrayRemove(
+          userFavoriteRestrooms[id].geohash
+        ),
       });
-      dispatch({// ***************************************************************************update user favorites array in the store
-        type: USER_FAVORITE_REMOVED,
-        payload: userFavoriteRestrooms[id].geohash,
-      });
-      dispatch({// ***************************************************************************update user favorites array in the store
-        type: USER_FAVORITE_RESTROOM_REMOVED,
-        payload: userFavoriteRestrooms[id],
-      });
+    dispatch({
+      // ***************************************************************************update user favorites array in the store
+      type: USER_FAVORITE_REMOVED,
+      payload: userFavoriteRestrooms[id].geohash,
+    });
+    dispatch({
+      // ***************************************************************************update user favorites array in the store
+      type: USER_FAVORITE_RESTROOM_REMOVED,
+      payload: userFavoriteRestrooms[id],
+    });
 
     //*************payload is  sent to favoriteHandler update both arrays in favoriteHandler
   }
@@ -63,20 +69,19 @@ function FavoritesScreen({ navigation}) {
     Linking.openURL(url);
   };
 
-  
-
   useEffect(() => {
     //const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user && !userFavoritesLoaded ) {
-        dispatch(getUserFavorites());
-        dispatch(getFavoriteData());
-      }else{
-        dispatch(getFavoriteData());
-        
-      }
-   // });
+    if (user && !userFavoritesLoaded) {
+      dispatch(getUserFavorites());
+      dispatch(getFavoriteData());
+    } else {
+      dispatch(getFavoriteData());
+    }
+
+    console.log('test');
+    // });
     //return unsubscribe;
-  }, []); 
+  }, [userFavorites]);
 
   return (
     <ScrollView contentContainerstyle={styles.container}>
@@ -87,7 +92,7 @@ function FavoritesScreen({ navigation}) {
         </Text>
       )}
       {userFavoriteRestrooms &&
-        userFavoriteRestrooms.map((restroom, index) => ( 
+        userFavoriteRestrooms.map((restroom, index) => (
           <View style={styles.itemView} key={index}>
             <Text style={styles.nameText}>{restroom.name}</Text>
             <View style={styles.customRatingBarStyle}>
