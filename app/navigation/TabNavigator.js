@@ -139,7 +139,7 @@ const TabNavigator = () => {
         />
         <Tab.Screen
           name="Favorites"
-          children={() => <FavoritesScreen keys={keys} setKeys={setKeys} />}
+          component={FavoritesScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>

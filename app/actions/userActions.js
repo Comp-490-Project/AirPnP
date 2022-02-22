@@ -13,6 +13,8 @@ import {
   USER_FAVORITE_REMOVED,
   RESTROOM_MARKER_FAVORITED,
   RESTROOM_MARKER_UNFAVORITED,
+  USERS_FAVORITE_RESTROOMS_LOADED,
+  USER_FAVORITE_RESTROOM_REMOVED,
 } from '../constants/userTypes';
 import { firebase } from '../firebase';
 import * as Location from 'expo-location';
@@ -102,7 +104,7 @@ export const checkUserStatus = () => (dispatch) => {
   }
 };
 
-// Get user favorites
+// Get user favorites (geohashes)
 export const getUserFavorites = () => async (dispatch, getState) => {
   const { user } = getState().userAuth;
 
@@ -124,6 +126,29 @@ export const getUserFavorites = () => async (dispatch, getState) => {
         });
       }
     });
+};
+
+// Get user favorites (all data) from geohashes
+export const getFavoriteData = () => async (dispatch, getState) => {
+  const { userFavorites } = getState().userFavorites;
+  const query = await firebase.firestore().collection('Los-Angeles');
+  const favoriteRestrooms = [];
+
+  userFavorites.forEach((key) => {
+    query
+      .doc(key)
+      .get()
+      .then((querySnapshot) => {
+        const favorites = querySnapshot.data();
+        favoriteRestrooms.push(favorites);
+      })
+      .then(() =>
+        dispatch({
+          type: USERS_FAVORITE_RESTROOMS_LOADED,
+          payload: favoriteRestrooms,
+        })
+      );
+  });
 };
 
 // Add or remove user's favorite
@@ -168,6 +193,17 @@ export const favoriteHandler = (geohash) => async (dispatch, getState) => {
         type: USER_FAVORITE_REMOVED,
         payload: geohash,
       });
+      const query = await firebase.firestore().collection('Los-Angeles');
+      query
+        .doc(geohash)
+        .get()
+        .then((querySnapshot) => {
+          const restroomToRemove = querySnapshot.data();
+          dispatch({
+            type: USER_FAVORITE_RESTROOM_REMOVED,
+            payload: restroomToRemove,
+          });
+        });
     }
   }
 };
