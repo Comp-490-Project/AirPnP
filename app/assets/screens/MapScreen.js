@@ -30,12 +30,13 @@ function MapScreen({ navigation }) {
       // Get restrooms around user location
       dispatch(getRestrooms(location.latitude, location.longitude));
     }
+  }, [location, dispatch]);
 
+  useEffect(() => {
     // Watch for change in user login status
     const unsubscribe = auth.onAuthStateChanged((user) => {
       // Check if user is logged in
       dispatch(checkUserStatus());
-
       // If current exist exists, get user favorites
       if (user) {
         dispatch(getUserFavorites());
@@ -43,7 +44,7 @@ function MapScreen({ navigation }) {
     });
 
     return unsubscribe;
-  }, [location]);
+  }, []);
 
   if (!location) {
     return <AnimationLoad />;
