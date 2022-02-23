@@ -23,7 +23,6 @@ const reducer = combineReducers({
 const initialState = {
   userLocation: {
     location: null,
-    loading: true,
   },
   restroomMarker: {
     description: '',

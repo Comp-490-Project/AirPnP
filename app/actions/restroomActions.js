@@ -60,8 +60,11 @@ export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
   const { userFavorites } = getState().userFavorites;
 
   // Check if restroom is favorited by the user
-  const isFavorited =
-    userFavorites && userFavorites.includes(geohash) ? true : false;
+  const isFavorited = userFavorites.find(
+    (userFavorite) => userFavorite.geohash == geohash
+  )
+    ? true
+    : false;
 
   dispatch({
     type: MARKER_ATTRIBUTES_SET,

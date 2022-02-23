@@ -19,44 +19,39 @@ function MapScreen({ navigation }) {
 
   const dispatch = useDispatch();
 
-  const { location, loading } = useSelector((state) => state.userLocation);
+  const { location } = useSelector((state) => state.userLocation);
   const { restrooms, mapCenterLocation } = useSelector((state) => state.map);
-  const { user } = useSelector((state) => state.userAuth);
-  const { userFavoritesLoaded } = useSelector((state) => state.userFavorites);
 
   useEffect(() => {
-    // Get user location
     if (!location) {
+      // Get user location
       dispatch(getUserLocation());
-    }
-
-    // Get restrooms around user location
-    if (!loading) {
+    } else {
+      // Get restrooms around user location
       dispatch(getRestrooms(location.latitude, location.longitude));
-    }
-
-    // If there is a user, load favorites once
-    if (user && !userFavoritesLoaded) {
-      dispatch(getUserFavorites());
     }
 
     // Watch for change in user login status
     const unsubscribe = auth.onAuthStateChanged((user) => {
       // Check if user is logged in
       dispatch(checkUserStatus());
+
+      // If current exist exists, get user favorites
+      if (user) {
+        dispatch(getUserFavorites());
+      }
     });
 
     return unsubscribe;
-  }, [loading, location, userFavoritesLoaded]);
+  }, [location]);
 
-  if (loading) {
+  if (!location) {
     return <AnimationLoad />;
   }
 
   return (
     <View style={styles.container}>
       <MapView
-        style={{ paddingTop: 500 }}
         onPress={() => {
           reference.current.snapTo(1);
         }}
