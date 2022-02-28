@@ -13,6 +13,7 @@ import {
   getUserFavorites,
 } from '../../actions/userActions';
 import { getRestrooms } from '../../actions/restroomActions';
+import { useDirections } from '../../hooks/useDirections';
 
 function MapScreen({ navigation }) {
   const reference = useRef(null);
@@ -20,7 +21,9 @@ function MapScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const { location } = useSelector((state) => state.userLocation);
-  const { restrooms, mapCenterLocation } = useSelector((state) => state.map);
+  const { restrooms, restroomWithDirections, mapCenterLocation } = useSelector(
+    (state) => state.map
+  );
 
   useEffect(() => {
     if (!location) {
@@ -80,6 +83,7 @@ function MapScreen({ navigation }) {
             index={index}
           />
         ))}
+        {useDirections(location, restroomWithDirections)}
       </MapView>
       <SearchBar />
       <MapBottomSheet reference={reference} navigation={navigation} />

@@ -19,15 +19,12 @@ function MapMarker({ marker, reference, index }) {
         latitude: marker.latitude,
         longitude: marker.longitude,
       }}
+      onPress={() => {
+        dispatch(setMarkerAttributes(marker));
+        dispatch(setMapCenterLocation(marker.latitude, marker.longitude));
+      }}
     >
-      <Callout
-        tooltip
-        onPress={() => {
-          dispatch(setMarkerAttributes(marker));
-          dispatch(setMapCenterLocation(marker.latitude, marker.longitude));
-          reference.current.snapTo(0);
-        }}
-      >
+      <Callout tooltip onPress={() => reference.current.snapTo(0)}>
         <View>
           <View style={styles.calloutWindow}>
             <Text style={styles.name}>{marker.name}</Text>

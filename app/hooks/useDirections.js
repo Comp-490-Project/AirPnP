@@ -1,21 +1,14 @@
-import MapViewDirections from "react-native-maps-directions";
-import useLocation from "./useLocation";
+import React from 'react';
+import MapViewDirections from 'react-native-maps-directions';
 
-
-export default function  useDirections(destination){ //Pass in destionation as prop w/ coords.
-    const Location = useLocation();
-    const [destination, setDestionation] = useState({
-        destination={
-            latitude: destination.latitude,
-            longitude: destination.longitude
-        }
-    });
-    return(
-        <MapViewDirections
-            origin={location}
-            destination={destination}
-            apikey={'AIzaSyB65lV0eONvq5_rGwaZm7pMHOJZYM4gVMk'}
-            strokeWidth={5} 
-       ></MapViewDirections>
-    );
-}
+export const useDirections = (location, destination) => {
+  return (
+    <MapViewDirections
+      origin={location}
+      destination={destination}
+      apikey={'AIzaSyB65lV0eONvq5_rGwaZm7pMHOJZYM4gVMk'}
+      strokeColor={'hotpink'}
+      strokeWidth={4}
+    />
+  );
+};

@@ -1,5 +1,6 @@
 import {
   RESTROOM_MARKERS_LOADED,
+  RESTROOM_DIRECTIONS_CHANGED,
   MAP_CENTER_CHANGE,
   MARKER_ATTRIBUTES_SET,
   MARKER_IMAGES_SET,
@@ -21,6 +22,11 @@ export const mapReducer = (state = { restrooms: [] }, action) => {
       return {
         ...state,
         restrooms: action.payload,
+      };
+    case RESTROOM_DIRECTIONS_CHANGED:
+      return {
+        ...state,
+        restroomWithDirections: action.payload,
       };
     case MAP_CENTER_CHANGE:
       return {

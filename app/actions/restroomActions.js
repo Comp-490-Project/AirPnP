@@ -1,5 +1,6 @@
 import {
   RESTROOM_MARKERS_LOADED,
+  RESTROOM_DIRECTIONS_CHANGED,
   MARKER_ATTRIBUTES_SET,
   MARKER_IMAGES_SET,
   MAP_CENTER_CHANGE,
@@ -32,16 +33,26 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
 
   const snapshots = await Promise.all(promises);
   const restrooms = [];
+  let closestRestroom;
 
   for (const snap of snapshots) {
     for (const doc of snap.docs) {
       const lat = doc.get('latitude');
       const lng = doc.get('longitude');
 
+      if (!closestRestroom) {
+        closestRestroom = [lat, lng];
+      }
+
       const distanceInM = distanceBetween([lat, lng], center) * 1000;
+      const closestDistance = distanceBetween(closestRestroom, center) * 1000;
 
       if (distanceInM <= radiusInM) {
         restrooms.push(doc.data());
+      }
+
+      if (distanceInM < closestDistance) {
+        closestRestroom = [lat, lng];
       }
     }
   }
@@ -49,6 +60,11 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
   dispatch({
     type: RESTROOM_MARKERS_LOADED,
     payload: restrooms,
+  });
+
+  dispatch({
+    type: RESTROOM_DIRECTIONS_CHANGED,
+    payload: closestRestroom.join(', '),
   });
 };
 
@@ -77,6 +93,11 @@ export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
       name,
       isFavorited,
     },
+  });
+
+  dispatch({
+    type: RESTROOM_DIRECTIONS_CHANGED,
+    payload: [latitude, longitude].join(', '),
   });
 
   const { items: imagesRef } = await firebase.storage().ref(geohash).list();
