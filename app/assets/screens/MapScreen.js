@@ -5,7 +5,7 @@ import AnimationLoad from '../components/AnimationLoad';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MapMarker from '../components/MapMarker';
 import SearchBar from '../components/SearchBar';
-import MapBottomSheet from '../components/bottomSheets/MapBottomSheet';
+import MapBottomCard from '../components/MapBottomCard';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getUserLocation,
@@ -86,7 +86,7 @@ function MapScreen({ navigation }) {
         {useDirections(location, restroomWithDirections)}
       </MapView>
       <SearchBar />
-      <MapBottomSheet reference={reference} navigation={navigation} />
+      <MapBottomCard reference={reference} navigation={navigation} />
     </View>
   );
 }
