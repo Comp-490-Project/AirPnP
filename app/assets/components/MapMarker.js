@@ -24,7 +24,7 @@ function MapMarker({ marker, reference, index }) {
         dispatch(setMapCenterLocation(marker.latitude, marker.longitude));
       }}
     >
-      <Callout tooltip onPress={() => reference.current.snapTo(0)}>
+      <Callout tooltip onPress={() => {/* display the current car here*/ }}>
         <View>
           <View style={styles.calloutWindow}>
             <Text style={styles.name}>{marker.name}</Text>

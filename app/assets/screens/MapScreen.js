@@ -57,7 +57,7 @@ function MapScreen({ navigation }) {
     <View style={styles.container}>
       <MapView
         onPress={() => {
-          reference.current.snapTo(1);
+          /*reference.current.snapTo(1) this is not needed anymore without sheet*/;
         }}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
@@ -86,7 +86,7 @@ function MapScreen({ navigation }) {
         {useDirections(location, restroomWithDirections)}
       </MapView>
       <SearchBar />
-      <MapBottomCard reference={reference} navigation={navigation} />
+      <MapBottomCard  navigation={navigation} />
     </View>
   );
 }

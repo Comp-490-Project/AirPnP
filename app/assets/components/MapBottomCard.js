@@ -13,7 +13,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 import { favoriteHandler } from '../../actions/userActions';
 
-function MapBottomCard({ reference, navigation }) {
+function MapBottomCard({  navigation }) {
   const dispatch = useDispatch();
 
   const maxRating = [1, 2, 3, 4, 5];
@@ -64,7 +64,7 @@ function MapBottomCard({ reference, navigation }) {
             {meanRating && meanRating == 1 ? (
               <Image
                 style={styles.starImgStyle}
-                source={require('../../icons/poop-emoji.png')}
+                source={require('../icons/poop-emoji.png')}
               />
             ) : (
               maxRating.map((item, index) => (
@@ -73,8 +73,8 @@ function MapBottomCard({ reference, navigation }) {
                   key={index}
                   source={
                     item <= meanRating
-                      ? require('../../icons/rating/star-filled.png')
-                      : require('../../icons/rating/star-unfilled.png')
+                      ? require('../icons/rating/star-filled.png')
+                      : require('../icons/rating/star-unfilled.png')
                   }
                 />
               ))
