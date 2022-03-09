@@ -34,12 +34,12 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
   const snapshots = await Promise.all(promises);
   const restrooms = [];
   let closestRestroom;
-
+  let closestMarker;
   for (const snap of snapshots) {
     for (const doc of snap.docs) {
       const lat = doc.get('latitude');
       const lng = doc.get('longitude');
-
+      
       if (!closestRestroom) {
         closestRestroom = [lat, lng];
       }
@@ -53,9 +53,12 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
 
       if (distanceInM < closestDistance) {
         closestRestroom = [lat, lng];
+        closestMarker = doc.data();
+        setMarkerAttributes(closestMarker);
       }
     }
   }
+  
 
   dispatch({
     type: RESTROOM_MARKERS_LOADED,
@@ -66,6 +69,8 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
     type: RESTROOM_DIRECTIONS_CHANGED,
     payload: closestRestroom.join(', '),
   });
+  
+  
 };
 
 // Set current marker attributes
