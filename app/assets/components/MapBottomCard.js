@@ -35,7 +35,7 @@ function MapBottomCard({  navigation }) {
     <ScrollView
       style={{
         position : 'absolute',
-        top: 500,
+        top: 200,
         height: 650,
         width: Dimensions.get('window').width,
         backgroundColor: colors.white,

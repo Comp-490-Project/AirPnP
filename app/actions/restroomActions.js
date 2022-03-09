@@ -54,12 +54,10 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
       if (distanceInM < closestDistance) {
         closestRestroom = [lat, lng];
         closestMarker = doc.data();
-        setMarkerAttributes(closestMarker);
       }
     }
   }
-  
-
+  dispatch(setMarkerAttributes(closestMarker));
   dispatch({
     type: RESTROOM_MARKERS_LOADED,
     payload: restrooms,
