@@ -1,99 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import CustomAlertComponent from '../../components/CustomAlertComponent';
-import { firebase } from '../../../Firebase/firebase';
-import { auth } from '../../../Firebase/firebase';
-import AppButton from '../../components/AppButton';
-import colors from '../config/colors';
+import AppButton from '../components/AppButton';
+import colors from '../theme/colors';
 import { Linking } from 'react-native';
-var restroomKey;
+import { useDispatch, useSelector } from 'react-redux';
+import { favoriteHandler } from '../../actions/userActions';
 
-const user2 = firebase.auth().currentUser;
+function FavoritesScreen({ navigation }) {
+  const dispatch = useDispatch();
 
-export default function FavoritesScreen({ navigation, keys, setKeys }) {
-  const [fv, setfv] = useState([]);
-  const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
+  const { userFavorites } = useSelector((state) => state.userFavorites);
 
-  // async function getKeyData() {
-  //   const user = firebase.auth().currentUser;
-  //   const query = await firebase.firestore().collection('users');
-  //   query
-  //     .doc(user.uid)
-  //     .get()
-  //     .then((querySnapshot) => {
-  //       const favs = querySnapshot.data();
-  //       favs.favorites.forEach((favKey) => {
-  //         setKeys((keys) => [...keys, favKey]);
-  //       });
-  //       getFavoriteData();
-  //     });
-  // }
-
-  function handleRating(id) {
-    restroomKey = fv[id].geohash;
-    navigation.navigate('review', { restroomKey });
-  }
-
-  function handleNav(index) {
-    openGps(fv[index].latitude, fv[index].longitude);
-  }
-
-  async function handleRemove(id) {
-    const user = firebase.auth().currentUser;
-    await firebase
-      .firestore()
-      .collection('users')
-      .doc(user.uid)
-      .update({
-        favorites: firebase.firestore.FieldValue.arrayRemove(fv[id].geohash),
-      });
-
-    // Remove from keys array for 'MapScreen.js' to update
-    setKeys(keys.filter((key) => key !== fv[id].geohash));
-    setfv(fv.filter((index) => index.geohash !== fv[id].geohash));
-    // need to rerender the screen here
-  }
-
-  const openGps = (lati, lng) => {
-    var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:0,0?q=';
-    var url = scheme + `${lati},${lng}`;
-    Linking.openURL(url);
-  };
-
-  async function getFavoriteData() {
-    setfv([]);
-    const query = await firebase.firestore().collection('Los-Angeles');
-    keys.forEach((key) => {
-      query
-        .doc(key)
-        .get()
-        .then((querySnapshot) => {
-          setfv((fv) => [...fv, querySnapshot.data()]);
-        });
-    });
-  }
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        getFavoriteData();
-      }
-    });
-
-    return unsubscribe;
-  }, [keys]);
+  const maxRating = [1, 2, 3, 4, 5];
 
   return (
     <ScrollView contentContainerstyle={styles.container}>
-      <View style={styles.topBorder} /> 
-      {fv.length == 0 && (
+      <View style={styles.topBorder} />
+      {userFavorites.length == 0 ? (
         <Text style={{ flex: 1, justifyContent: 'center' }}>
           Data Not Available!
         </Text>
-      )}
-      {fv &&
-        fv.map((restroom, index) => (
+      ) : (
+        userFavorites.map((restroom, index) => (
           <View style={styles.itemView} key={index}>
             <Text style={styles.nameText}>{restroom.name}</Text>
             <View style={styles.customRatingBarStyle}>
@@ -101,22 +30,20 @@ export default function FavoritesScreen({ navigation, keys, setKeys }) {
               {restroom.meanRating && restroom.meanRating == 1 ? (
                 <Image
                   style={styles.starImgStyle}
-                  source={require('../poopy.png')}
+                  source={require('../icons/poop-emoji.png')}
                 />
               ) : (
-                maxRating.map((item, index) => {
-                  return (
-                    <Image
-                      style={styles.starImgStyle}
-                      key={index}
-                      source={
-                        item <= restroom.meanRating
-                          ? require('../star_filled.png')
-                          : require('../star_corner.png') // could change to a blank image so it wont show
-                      }
-                    />
-                  );
-                })
+                maxRating.map((item, index) => (
+                  <Image
+                    style={styles.starImgStyle}
+                    key={index}
+                    source={
+                      item <= restroom.meanRating
+                        ? require('../icons/rating/star-filled.png')
+                        : require('../icons/rating/star-unfilled.png')
+                    }
+                  />
+                ))
               )}
             </View>
 
@@ -125,19 +52,30 @@ export default function FavoritesScreen({ navigation, keys, setKeys }) {
               <AppButton
                 style={styles.navButton}
                 title="Navigate"
-                onPress={() => handleNav(index)}
+                onPress={() => {
+                  const { latitude, longitude } = userFavorites[index];
+
+                  Platform.OS === 'ios'
+                    ? Linking.openURL(`maps:${latitude},${longitude}`)
+                    : Linking.openURL(`geo:0,0?q=${latitude},${longitude}`);
+                }}
               ></AppButton>
               <AppButton
                 title="Rate"
-                onPress={() => handleRating(index)}
+                onPress={() => {
+                  navigation.navigate('Review', {
+                    geohash: userFavorites[index].geohash,
+                  });
+                }}
               ></AppButton>
               <AppButton
                 title="Remove"
-                onPress={() => handleRemove(index)}
+                onPress={() => dispatch(favoriteHandler(restroom.geohash))}
               ></AppButton>
             </View>
           </View>
-        ))}
+        ))
+      )}
     </ScrollView>
   );
 }
@@ -183,3 +121,5 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
 });
+
+export default FavoritesScreen;

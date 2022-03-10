@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, TextInput, View, Platform } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import colors from '../assets/config/colors';
+import colors from '../theme/colors';
 
-export default function AppTextInput({ icon, ...otherProps }) {
+function AppTextInput({ icon, ...otherProps }) {
   return (
     <View style={styles.container}>
       {icon && (
@@ -37,3 +37,5 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
 });
+
+export default AppTextInput;

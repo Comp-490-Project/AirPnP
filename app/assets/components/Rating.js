@@ -1,30 +1,34 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Image } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useDispatch } from 'react-redux';
+import { handleReviewStars } from '../../actions/restroomActions';
 
-var userRating = null;
+function Rating() {
+  const dispatch = useDispatch();
 
-export default function Rating() {
-  const [defaultRating, setdefaultRating] = useState(2);
-  const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
-  userRating = defaultRating;
+  const [defaultRating, setDefaultRating] = useState(0);
+  const maxRating = [1, 2, 3, 4, 5];
 
   const CustomRatingBar = () => {
     return (
       <View style={styles.customRatingBarStyle}>
-        {maxRating.map((item, key) => {
+        {maxRating.map((item) => {
           return (
             <TouchableOpacity
               activeOpacity={0.7}
               key={item}
-              onPress={() => setdefaultRating(item)}
+              onPress={() => {
+                setDefaultRating(item);
+                dispatch(handleReviewStars(item));
+              }}
             >
               <Image
                 style={styles.starImgStyle}
                 source={
                   item <= defaultRating
-                    ? require('../assets/star_filled.png')
-                    : require('../assets/star_corner.png')
+                    ? require('../icons/rating/star-filled.png')
+                    : require('../icons/rating/star-unfilled.png')
                 }
               />
             </TouchableOpacity>
@@ -62,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { userRating };
+export default Rating;

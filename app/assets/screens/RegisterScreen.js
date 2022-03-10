@@ -7,28 +7,35 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
-import AppButton from '../../components/AppButton';
-import AppTextInput from '../../components/AppTextInput';
+import AppButton from '../components/AppButton';
+import AppTextInput from '../components/AppTextInput';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { auth, firebase } from '../../../Firebase/firebase';
+import { firebase, auth } from '../../firebase';
+import { useDispatch } from 'react-redux';
+import { register } from '../../actions/userActions';
 
-const validationSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .max(50, 'Too Long!')
-    .required('First Name is required'),
-  lastName: Yup.string().max(50, 'Too Long!').required('Last Name is required'),
-  email: Yup.string().required().email().label('Email'),
-  password: Yup.string().required().min(6).label('Password'),
-  passwordConfirmation: Yup.string()
-    .required('Confirm Password is required')
-    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
-});
-export default function RegisterScreen({ navigation }) {
+function RegisterScreen({ navigation }) {
+  const dispatch = useDispatch();
+
+  const validationSchema = Yup.object().shape({
+    firstName: Yup.string()
+      .max(50, 'Too Long!')
+      .required('First Name is required'),
+    lastName: Yup.string()
+      .max(50, 'Too Long!')
+      .required('Last Name is required'),
+    email: Yup.string().required().email().label('Email'),
+    password: Yup.string().required().min(6).label('Password'),
+    passwordConfirmation: Yup.string()
+      .required('Confirm Password is required')
+      .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+  });
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.navigate('map');
+        navigation.navigate('Tabs');
       }
     });
     return unsubscribe;
@@ -38,7 +45,7 @@ export default function RegisterScreen({ navigation }) {
     <>
       <ImageBackground
         style={styles.image}
-        source={require('../../assets/background.jpg')}
+        source={require('../icons/background.jpg')}
       >
         <SafeAreaView>
           <Formik
@@ -55,7 +62,8 @@ export default function RegisterScreen({ navigation }) {
                     lastName: values.lastName,
                     email: values.email,
                   });
-                  navigation.navigate('map');
+                  dispatch(register(user));
+                  navigation.navigate('Tabs');
                 })
                 .catch((error) => alert(error.message));
             }}
@@ -122,7 +130,7 @@ export default function RegisterScreen({ navigation }) {
                   <AppButton title="Register" onPress={handleSubmit} />
                 </TouchableOpacity>
                 {/* Add text here for "Already have an account? Login." it would link to '/'*/}
-                <Text onPress={() => navigation.navigate('login')}>
+                <Text onPress={() => navigation.navigate('Login')}>
                   {' '}
                   Already have an account? Login.{' '}
                 </Text>
@@ -144,3 +152,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+export default RegisterScreen;

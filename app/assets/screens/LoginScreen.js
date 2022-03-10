@@ -6,23 +6,27 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import AppButton from '../../components/AppButton';
-import AppTextInput from '../../components/AppTextInput';
+import AppButton from '../components/AppButton';
+import AppTextInput from '../components/AppTextInput';
+import colors from '../theme/colors';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import colors from '../../assets/config/colors';
-import { auth } from '../../../Firebase/firebase';
+import { auth } from '../../firebase';
+import { useDispatch } from 'react-redux';
+import { login } from '../../actions/userActions';
 
-const validationSchema = Yup.object().shape({
-  email: Yup.string().required().email().label('Email'),
-  password: Yup.string().required().min(6).label('Password'),
-});
+function LoginScreen({ navigation }) {
+  const dispatch = useDispatch();
 
-export default function LoginScreen({ navigation }) {
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required().email().label('Email'),
+    password: Yup.string().required().min(6).label('Password'),
+  });
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.navigate('map');
+        navigation.navigate('Tabs');
       }
     });
     return unsubscribe;
@@ -31,7 +35,7 @@ export default function LoginScreen({ navigation }) {
   return (
     <ImageBackground
       style={{ flex: 1, justifyContent: 'center' }}
-      source={require('../../assets/background.jpg')}
+      source={require('../../assets/icons/background.jpg')}
     >
       <Formik
         initialValues={{ email: '', password: '' }}
@@ -40,7 +44,8 @@ export default function LoginScreen({ navigation }) {
             .signInWithEmailAndPassword(values.email, values.password)
             .then((UserCredentials) => {
               const user = UserCredentials.user;
-              navigation.navigate('map');
+              dispatch(login(user));
+              navigation.navigate('Tabs');
             })
             .catch((error) => alert(error.message));
         }}
@@ -81,7 +86,7 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.forgot}>
         <Text
           style={styles.forgot2}
-          onPress={() => navigation.navigate('forgot')}
+          onPress={() => navigation.navigate('Forgot')}
         >
           forgot password?
         </Text>
@@ -89,11 +94,11 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.registerButton}>
         <AppButton
           title="Register"
-          onPress={() => navigation.navigate('register')}
+          onPress={() => navigation.navigate('Register')}
         />
       </View>
       <View style={styles.guestButton}>
-        <AppButton title="Guest" onPress={() => navigation.navigate('map')} />
+        <AppButton title="Guest" onPress={() => navigation.navigate('Tabs')} />
       </View>
     </ImageBackground>
   );
@@ -141,3 +146,5 @@ const styles = StyleSheet.create({
     right: 20,
   },
 });
+
+export default LoginScreen;
