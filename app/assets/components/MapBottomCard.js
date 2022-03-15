@@ -30,18 +30,10 @@ function MapBottomCard({  navigation }) {
     isFavorited,
   } = useSelector((state) => state.restroomMarker);
 
-  const marker = {
-    description: description,
-    geohash: geohash,
-    latitude: latitude,
-    longitude: longitude,
-    meanRating: meanRating,
-    name: name,
-    images: images,
-    isFavorited: isFavorited
-  }
+  
   return (
-    <View
+  
+  <View 
       style={{
         position : "absolute",
         top: 400,
@@ -52,6 +44,7 @@ function MapBottomCard({  navigation }) {
         borderColor: colors.medium
       }}
     >
+    
       <View style={styles.bottomSheetPanel}>
         {user && (
           <TouchableOpacity
@@ -69,6 +62,8 @@ function MapBottomCard({  navigation }) {
             />
           </TouchableOpacity>
         )}
+      <TouchableOpacity onPress={() => {navigation.navigate('RestroomInfo', navigation)        
+        }}>
         <View style={{ alignItems: 'center' }}>
           <Text style={styles.panelRestroomName}>{name}</Text>
           <View style={styles.customRatingBarStyle}>
@@ -95,6 +90,8 @@ function MapBottomCard({  navigation }) {
           </View>
           <Text style={styles.panelRestroomDescription}>{description}</Text>
         </View>
+      </TouchableOpacity>
+
         <View style={{ alignContent: 'space-around', justifyContent: "space-evenly", flexDirection: 'row' }}>
           <View style={{ width: "45%" }}>
             <TouchableOpacity
@@ -122,7 +119,9 @@ function MapBottomCard({  navigation }) {
           )}
         </View>
       </View>
-    </View>
+    
+</View>
+  
   );
 }
 
@@ -162,6 +161,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     alignSelf: 'flex-end',
     marginHorizontal: 15,
+    borderRadius: 15
   },
   customRatingBarStyle: {
     flexDirection: 'row',
