@@ -30,15 +30,26 @@ function MapBottomCard({  navigation }) {
     isFavorited,
   } = useSelector((state) => state.restroomMarker);
 
-
+  const marker = {
+    description: description,
+    geohash: geohash,
+    latitude: latitude,
+    longitude: longitude,
+    meanRating: meanRating,
+    name: name,
+    images: images,
+    isFavorited: isFavorited
+  }
   return (
-    <ScrollView
+    <View
       style={{
-        position : 'absolute',
-        top: 200,
-        height: 650,
-        width: Dimensions.get('window').width,
+        position : "absolute",
+        top: 400,
+        height: 200,
+        width: Dimensions.get('window').width - 20,
         backgroundColor: colors.white,
+        borderRadius:15,
+        borderColor: colors.medium
       }}
     >
       <View style={styles.bottomSheetPanel}>
@@ -84,51 +95,34 @@ function MapBottomCard({  navigation }) {
           </View>
           <Text style={styles.panelRestroomDescription}>{description}</Text>
         </View>
-        <View style={{ alignContent: 'space-around' }}>
-          <TouchableOpacity
+        <View style={{ alignContent: 'space-around', justifyContent: "space-evenly", flexDirection: 'row' }}>
+          <View style={{ width: "45%" }}>
+            <TouchableOpacity
             style={{ margin: 5 }}
             onPress={() =>
               Platform.OS === 'ios'
                 ? Linking.openURL(`maps:${latitude},${longitude}`)
                 : Linking.openURL(`geo:0,0?q=${latitude},${longitude}`)
             }
-          >
-            <AppButton title={'Navigate'} styles={{ width: '80%' }} />
-          </TouchableOpacity>
+            >
+            <AppButton title={'Navigate'} styles={{ width: '100%' }} />           
+            </TouchableOpacity>
+          </View>
           {user && (
-            <>
-              <View Style={{ height: 10, backgroundColor: colors.white }} />
+            
+            <View style={{ width: "45%" }}>
               <TouchableOpacity
                 style={{ margin: 5 }}
                 onPress={() => navigation.navigate('Review', { geohash })}
               >
-                <AppButton title={'Rate'} styles={{ width: '80%' }} />
+                <AppButton title={'Rate'} styles={{ width: '100%' }} />
               </TouchableOpacity>
-            </>
+            </View>
+            
           )}
         </View>
-        <View style={{ marginTop: 10, marginRight: 10 }}>
-          <ScrollView
-            style={{ width: Dimensions.get('window').width, height: 200 }}
-            pagingEnabled={true}
-            horizontal={true}
-            showsHorizontalScrollIndicator={true}
-          >
-            {images.map((image, index) => (
-              <Image
-                key={index}
-                source={{ uri: image }}
-                style={{
-                  width: Dimensions.get('window').width,
-                  height: 200,
-                  resizeMode: 'center',
-                }}
-              />
-            ))}
-          </ScrollView>
-        </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
