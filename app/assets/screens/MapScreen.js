@@ -14,6 +14,7 @@ import {
 } from '../../actions/userActions';
 import { getRestrooms } from '../../actions/restroomActions';
 import { useDirections } from '../../hooks/useDirections';
+
 function MapScreen({ navigation }) {
   const reference = useRef(null);
 
@@ -55,9 +56,6 @@ function MapScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <MapView
-        onPress={() => {
-          /*reference.current.snapTo(1) this is not needed anymore without sheet*/;
-        }}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         showsUserLocation={true}
@@ -85,7 +83,7 @@ function MapScreen({ navigation }) {
         {useDirections(location, restroomWithDirections)}
       </MapView>
       <SearchBar />
-      <MapBottomCard  navigation={navigation} />
+      <MapBottomCard navigation={navigation} />
     </View>
   );
 }
@@ -100,10 +98,10 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
-  texty:{
-    position : 'absolute',
-    top: 500
-  }
+  texty: {
+    position: 'absolute',
+    top: 500,
+  },
 });
 
 export default MapScreen;

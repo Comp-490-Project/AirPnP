@@ -16,11 +16,6 @@ import SettingsScreen from '../assets/screens/SettingsScreen';
 import colors from '../assets/theme/colors';
 
 const TabNavigator = () => {
-  // @todo
-  // FavoritesScreen.js - Delete states after moved to actions
-  const [keys, setKeys] = useState([]);
-  const [restrooms, setRestrooms] = useState([]);
-
   const Tab = createBottomTabNavigator();
 
   const { width, height } = Dimensions.get('window');
@@ -123,7 +118,7 @@ const TabNavigator = () => {
           name="Add"
           component={AddScreen}
           options={{
-            tabBarIcon: ({ focused }) => (
+            tabBarIcon: () => (
               <Image
                 source={require('../assets/icons/tabs/add.png')}
                 resizeMode="contain"

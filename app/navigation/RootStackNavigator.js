@@ -20,9 +20,12 @@ const RootStackNavigator = () => {
           name="Forgot"
           component={ForgotPasswordScreen}
         ></Stack.Screen>
-        <Stack.Screen name="RestroomInfo" component={RestroomInfo}></Stack.Screen>
         <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
         <Stack.Screen name="Review" component={ReviewScreen}></Stack.Screen>
+        <Stack.Screen
+          name="RestroomInfo"
+          component={RestroomInfo}
+        ></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

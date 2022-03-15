@@ -1,24 +1,22 @@
-import React, { useEffect, useRef } from 'react';
-import { ScrollView, StyleSheet, View, Dimensions, Text ,TouchableOpacity, Image} from 'react-native';
-import AppButton from '../components/AppButton';
-import { auth } from '../../firebase';
-import AnimationLoad from '../components/AnimationLoad';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import MapMarker from '../components/MapMarker';
-import SearchBar from '../components/SearchBar';
-import MapBottomCard from '../components/MapBottomCard';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import {
-  getUserLocation,
-  checkUserStatus,
-  getUserFavorites,
-} from '../../actions/userActions';
-import { getRestrooms } from '../../actions/restroomActions';
-import { useDirections } from '../../hooks/useDirections';
+  ScrollView,
+  StyleSheet,
+  View,
+  Dimensions,
+  Text,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import colors from '../theme/colors';
+import AppButton from '../components/AppButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { favoriteHandler } from '../../actions/userActions';
 
+function RestroomInfo({ navigation }) {
+  const dispatch = useDispatch();
 
-function RestroomInfo({ navigation}) {
+  const { user } = useSelector((state) => state.userAuth);
   const {
     description,
     geohash,
@@ -29,102 +27,98 @@ function RestroomInfo({ navigation}) {
     images,
     isFavorited,
   } = useSelector((state) => state.restroomMarker);
-    const dispatch = useDispatch();
-    const maxRating = [1, 2, 3, 4, 5];
-    const { user } = useSelector((state) => state.userAuth);
 
-return (
+  const maxRating = [1, 2, 3, 4, 5];
+
+  return (
     <View style={styles.bottomSheetPanel}>
-    {user && (
-      <TouchableOpacity
-        onPress={() => {
-          dispatch(favoriteHandler(geohash));
-        }}
-      >
-        <Image
-          style={styles.heart}
-          source={
-            !isFavorited
-              ? require('../icons/favorite-heart/heart-unfilled.png')
-              : require('../icons/favorite-heart/heart-filled.png')
-          }
-        />
-      </TouchableOpacity>
-    )}
-    <View style={{ alignItems: 'center' }}>
-      <Text style={styles.panelRestroomName}>{name}</Text>
-      <View style={styles.customRatingBarStyle}>
-        <Text>Rating: </Text>
-
-        {meanRating && meanRating == 1 ? (
+      {user && (
+        <TouchableOpacity
+          onPress={() => {
+            dispatch(favoriteHandler(geohash));
+          }}
+        >
           <Image
-            style={styles.starImgStyle}
-            source={require('../icons/poop-emoji.png')}
+            style={styles.heart}
+            source={
+              !isFavorited
+                ? require('../icons/favorite-heart/heart-unfilled.png')
+                : require('../icons/favorite-heart/heart-filled.png')
+            }
           />
-        ) : (
-          maxRating.map((item, index) => (
+        </TouchableOpacity>
+      )}
+      <View style={{ alignItems: 'center' }}>
+        <Text style={styles.panelRestroomName}>{name}</Text>
+        <View style={styles.customRatingBarStyle}>
+          <Text>Rating: </Text>
+
+          {meanRating && meanRating == 1 ? (
             <Image
               style={styles.starImgStyle}
-              key={index}
-              source={
-                item <= meanRating
-                  ? require('../icons/rating/star-filled.png')
-                  : require('../icons/rating/star-unfilled.png')
-              }
+              source={require('../icons/poop-emoji.png')}
             />
-          ))
+          ) : (
+            maxRating.map((item, index) => (
+              <Image
+                style={styles.starImgStyle}
+                key={index}
+                source={
+                  item <= meanRating
+                    ? require('../icons/rating/star-filled.png')
+                    : require('../icons/rating/star-unfilled.png')
+                }
+              />
+            ))
+          )}
+        </View>
+        <Text style={styles.panelRestroomDescription}>{description}</Text>
+      </View>
+      <View style={{ alignContent: 'space-around' }}>
+        <TouchableOpacity
+          style={{ margin: 5 }}
+          onPress={() =>
+            Platform.OS === 'ios'
+              ? Linking.openURL(`maps:${latitude},${longitude}`)
+              : Linking.openURL(`geo:0,0?q=${latitude},${longitude}`)
+          }
+        >
+          <AppButton title={'Navigate'} styles={{ width: '80%' }} />
+        </TouchableOpacity>
+        {user && (
+          <>
+            <View Style={{ height: 10, backgroundColor: colors.white }} />
+            <TouchableOpacity
+              style={{ margin: 5 }}
+              onPress={() => navigation.navigate('Review', geohash)}
+            >
+              <AppButton title={'Rate'} styles={{ width: '80%' }} />
+            </TouchableOpacity>
+          </>
         )}
       </View>
-      <Text style={styles.panelRestroomDescription}>{description}</Text>
+      <View style={{ marginTop: 10, marginRight: 10 }}>
+        <ScrollView
+          style={{ width: Dimensions.get('window').width, height: 200 }}
+          pagingEnabled={true}
+          horizontal={true}
+          showsHorizontalScrollIndicator={true}
+        >
+          {images.map((image, index) => (
+            <Image
+              key={index}
+              source={{ uri: image }}
+              style={{
+                width: Dimensions.get('window').width,
+                height: 200,
+                resizeMode: 'center',
+              }}
+            />
+          ))}
+        </ScrollView>
+      </View>
     </View>
-    <View style={{ alignContent: 'space-around' }}>
-      <TouchableOpacity
-        style={{ margin: 5 }}
-        onPress={() =>
-          Platform.OS === 'ios'
-            ? Linking.openURL(`maps:${latitude},${longitude}`)
-            : Linking.openURL(`geo:0,0?q=${latitude},${longitude}`)
-        }
-      >
-        <AppButton title={'Navigate'} styles={{ width: '80%' }} />
-      </TouchableOpacity>
-      {user && (
-        <>
-          <View Style={{ height: 10, backgroundColor: colors.white }} />
-          <TouchableOpacity
-            style={{ margin: 5 }}
-            onPress={() => navigation.navigate('Review',  geohash )}
-          >
-            <AppButton title={'Rate'} styles={{ width: '80%' }} />
-          </TouchableOpacity>
-        </>
-      )}
-    </View>
-    <View style={{ marginTop: 10, marginRight: 10 }}>
-      <ScrollView
-        style={{ width: Dimensions.get('window').width, height: 200 }}
-        pagingEnabled={true}
-        horizontal={true}
-        showsHorizontalScrollIndicator={true}
-      >
-        {images.map((image, index) => (
-          <Image
-            key={index}
-            source={{ uri: image }}
-            style={{
-              width: Dimensions.get('window').width,
-              height: 200,
-              resizeMode: 'center',
-            }}
-          />
-        ))}
-      </ScrollView>
-    </View>
-  </View>
-
-
-
-);
+  );
 }
 const styles = StyleSheet.create({
   bottomSheetHeader: {
