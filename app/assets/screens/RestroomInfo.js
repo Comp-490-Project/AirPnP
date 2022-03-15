@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import { firebase } from '../../firebase';
 import colors from '../theme/colors';
 import AppButton from '../components/AppButton';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,6 +30,18 @@ function RestroomInfo({ navigation }) {
   } = useSelector((state) => state.restroomMarker);
 
   const maxRating = [1, 2, 3, 4, 5];
+
+  // @todo
+  // Move this function to actions folder
+  const visitHandler = async () => {
+    const docRef = firebase.firestore().collection('users').doc(user.uid);
+    await docRef.update({
+      visited: firebase.firestore.FieldValue.arrayUnion(geohash),
+    });
+
+    // Temporary alert
+    alert('Restroom marked as visited!');
+  };
 
   return (
     <View style={styles.bottomSheetPanel}>
@@ -117,6 +130,9 @@ function RestroomInfo({ navigation }) {
           ))}
         </ScrollView>
       </View>
+
+      {/* Visited button should be restyled */}
+      <AppButton title={'Mark As Visited'} onPress={visitHandler} />
     </View>
   );
 }
