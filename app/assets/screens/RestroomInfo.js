@@ -1,20 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { ScrollView, StyleSheet, View, Dimensions, Text ,TouchableOpacity, Image} from 'react-native';
+import { ScrollView, StyleSheet, Linking, View, Dimensions, Text ,TouchableOpacity, Image} from 'react-native';
 import AppButton from '../components/AppButton';
-import { auth } from '../../firebase';
-import AnimationLoad from '../components/AnimationLoad';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import MapMarker from '../components/MapMarker';
-import SearchBar from '../components/SearchBar';
-import MapBottomCard from '../components/MapBottomCard';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getUserLocation,
-  checkUserStatus,
-  getUserFavorites,
-} from '../../actions/userActions';
-import { getRestrooms } from '../../actions/restroomActions';
-import { useDirections } from '../../hooks/useDirections';
 import colors from '../theme/colors';
 
 
@@ -34,6 +21,7 @@ function RestroomInfo({ navigation}) {
     const { user } = useSelector((state) => state.userAuth);
 
 return (
+  <View style = {{flex: 1}}>
     <View style={styles.bottomSheetPanel}>
     {user && (
       <TouchableOpacity
@@ -93,7 +81,7 @@ return (
           <View Style={{ height: 10, backgroundColor: colors.white }} />
           <TouchableOpacity
             style={{ margin: 5 }}
-            onPress={() => navigation.navigate('Review',  geohash )}
+            onPress={() => navigation.navigate('Review', {geohash})}
           >
             <AppButton title={'Rate'} styles={{ width: '80%' }} />
           </TouchableOpacity>
@@ -121,7 +109,7 @@ return (
       </ScrollView>
     </View>
   </View>
-
+</View>
 
 
 );

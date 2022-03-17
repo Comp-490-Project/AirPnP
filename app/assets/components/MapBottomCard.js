@@ -36,7 +36,7 @@ function MapBottomCard({  navigation }) {
   <View 
       style={{
         position : "absolute",
-        top: 400,
+        top: 450,
         height: 200,
         width: Dimensions.get('window').width - 20,
         backgroundColor: colors.white,
@@ -62,7 +62,7 @@ function MapBottomCard({  navigation }) {
             />
           </TouchableOpacity>
         )}
-      <TouchableOpacity onPress={() => {navigation.navigate('RestroomInfo', navigation)        
+      <TouchableOpacity onPress={() => {navigation.navigate('RestroomInfo')        
         }}>
         <View style={{ alignItems: 'center' }}>
           <Text style={styles.panelRestroomName}>{name}</Text>
