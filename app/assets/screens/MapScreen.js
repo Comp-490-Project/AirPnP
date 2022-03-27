@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Text } from 'react-native';
 import { auth } from '../../firebase';
 import AnimationLoad from '../components/AnimationLoad';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MapMarker from '../components/MapMarker';
 import SearchBar from '../components/SearchBar';
-import MapBottomSheet from '../components/bottomSheets/MapBottomSheet';
+import MapBottomCard from '../components/MapBottomCard';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getUserLocation,
@@ -14,7 +14,6 @@ import {
 } from '../../actions/userActions';
 import { getRestrooms } from '../../actions/restroomActions';
 import { useDirections } from '../../hooks/useDirections';
-
 function MapScreen({ navigation }) {
   const reference = useRef(null);
 
@@ -57,7 +56,7 @@ function MapScreen({ navigation }) {
     <View style={styles.container}>
       <MapView
         onPress={() => {
-          reference.current.snapTo(1);
+          /*reference.current.snapTo(1) this is not needed anymore without sheet*/;
         }}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
@@ -86,7 +85,7 @@ function MapScreen({ navigation }) {
         {useDirections(location, restroomWithDirections)}
       </MapView>
       <SearchBar />
-      <MapBottomSheet reference={reference} navigation={navigation} />
+      <MapBottomCard  navigation={navigation} />
     </View>
   );
 }
@@ -101,6 +100,10 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
+  texty:{
+    position : 'absolute',
+    top: 500
+  }
 });
 
 export default MapScreen;

@@ -24,15 +24,8 @@ function MapMarker({ marker, reference, index }) {
         dispatch(setMapCenterLocation(marker.latitude, marker.longitude));
       }}
     >
-      <Callout tooltip onPress={() => reference.current.snapTo(0)}>
-        <View>
-          <View style={styles.calloutWindow}>
-            <Text style={styles.name}>{marker.name}</Text>
-            <Text>{marker.description}</Text>
-          </View>
-          <View style={styles.arrowBorder} />
-          <View style={styles.arrow} />
-        </View>
+      <Callout tooltip onPress={() => {}}>
+        
       </Callout>
     </Marker>
   );
@@ -73,3 +66,11 @@ const styles = StyleSheet.create({
 });
 
 export default MapMarker;
+/*<View>
+          <View style={styles.calloutWindow}>
+            <Text style={styles.name}>{marker.name}</Text>
+            <Text>{marker.description}</Text>
+          </View>
+          <View style={styles.arrowBorder} />
+          <View style={styles.arrow} />
+        </View>*/
