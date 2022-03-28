@@ -13,24 +13,47 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { firebase, auth } from '../../firebase';
 import { useDispatch } from 'react-redux';
-import { register } from '../../actions/userActions';
+import { register as registerRedux } from '../../actions/userActions';
 
 function RegisterScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string()
+    username: Yup.string()
       .max(50, 'Too Long!')
-      .required('First Name is required'),
-    lastName: Yup.string()
-      .max(50, 'Too Long!')
-      .required('Last Name is required'),
+      .required('Username is required'),
     email: Yup.string().required().email().label('Email'),
     password: Yup.string().required().min(6).label('Password'),
     passwordConfirmation: Yup.string()
       .required('Confirm Password is required')
       .oneOf([Yup.ref('password'), null], 'Passwords must match'),
   });
+
+  const register = async (values) => {
+    try {
+      const userCredentials = await auth.createUserWithEmailAndPassword(
+        values.email,
+        values.password
+      );
+      const user = userCredentials.user;
+      const uid = user.uid;
+      user.updateProfile({
+        displayName: values.username,
+      });
+
+      const dataRef = firebase.firestore().collection('users');
+      await dataRef.doc(uid).set({
+        username: values.username,
+        email: values.email,
+      });
+
+      dispatch(registerRedux(user));
+
+      navigation.navigate('Tabs');
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -50,47 +73,21 @@ function RegisterScreen({ navigation }) {
         <SafeAreaView>
           <Formik
             initialValues={{ email: '', password: '' }}
-            onSubmit={(values) => {
-              auth
-                .createUserWithEmailAndPassword(values.email, values.password)
-                .then(async (UserCredentials) => {
-                  const user = UserCredentials.user;
-                  const uid = user.uid;
-                  const dataRef = firebase.firestore().collection('users');
-                  await dataRef.doc(uid).set({
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    email: values.email,
-                  });
-                  dispatch(register(user));
-                  navigation.navigate('Tabs');
-                })
-                .catch((error) => alert(error.message));
-            }}
+            onSubmit={(values) => register(values)}
             validationSchema={validationSchema}
           >
             {({ handleChange, handleSubmit, errors }) => (
               <ScrollView style={styles.ViewContainer}>
-                <Text>First Name</Text>
+                <Text>Username</Text>
                 <AppTextInput
                   autoCapitalize="none"
                   autoCorrect={false}
                   icon="account"
-                  onChangeText={handleChange('firstName')}
-                  placeholder="First Name"
-                  textContentType="name"
+                  onChangeText={handleChange('username')}
+                  placeholder="Username"
+                  textContentType="username"
                 />
-                <Text style={{ color: 'red' }}>{errors.firstName}</Text>
-                <Text>Last Name</Text>
-                <AppTextInput
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  icon="account"
-                  onChangeText={handleChange('lastName')}
-                  placeholder="Last Name"
-                  textContentType="name"
-                />
-                <Text style={{ color: 'red' }}>{errors.lastName}</Text>
+                <Text style={{ color: 'red' }}>{errors.username}</Text>
                 <Text>Email</Text>
                 <AppTextInput
                   autoCapitalize="none"
