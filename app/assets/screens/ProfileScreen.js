@@ -11,23 +11,8 @@ function ProfileScreen({ navigation }) {
 
   const { user } = useSelector((state) => state.userAuth);
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [addedRestrooms, setAddedRestrooms] = useState([]);
   const [visitedRestrooms, setVisitedRestrooms] = useState([]);
-
-  // Get user email and name
-  const getUserProfile = async () => {
-    const docRef = firebase.firestore().collection('users').doc(user.uid);
-    const query = await docRef.get();
-    const userData = query.data();
-
-    const email = userData.email;
-    setEmail(email);
-
-    const fullName = `${userData.firstName} ${userData.lastName}`;
-    setName(fullName);
-  };
 
   // Get user added restrooms (development: testing, production: Los-Angeles)
   const getUserAddedRestrooms = async () => {
@@ -54,15 +39,16 @@ function ProfileScreen({ navigation }) {
     // Clear array
     setVisitedRestrooms([]);
 
-    visited.forEach(async (restroom) => {
-      const docRef = await collectionRef.doc(restroom).get();
-      const restroomData = docRef.data();
+    visited &&
+      visited.forEach(async (restroom) => {
+        const docRef = await collectionRef.doc(restroom).get();
+        const restroomData = docRef.data();
 
-      setVisitedRestrooms((visitedRestrooms) => [
-        ...visitedRestrooms,
-        restroomData,
-      ]);
-    });
+        setVisitedRestrooms((visitedRestrooms) => [
+          ...visitedRestrooms,
+          restroomData,
+        ]);
+      });
   };
 
   // @todo
@@ -83,7 +69,6 @@ function ProfileScreen({ navigation }) {
 
   useEffect(() => {
     if (user) {
-      getUserProfile();
       getUserAddedRestrooms();
       getUserVisitedRestrooms();
     }
@@ -134,9 +119,9 @@ function ProfileScreen({ navigation }) {
                 })
               }
             >
-              {name}
+              {user.displayName}
             </Title>
-            <Caption style={styles.caption}>{email}</Caption>
+            <Caption style={styles.caption}>{user.email}</Caption>
           </View>
         </View>
       </View>
