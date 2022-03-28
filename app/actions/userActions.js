@@ -8,6 +8,7 @@ import {
   USER_REGISTER_FAIL,
   USER_LOGGED_IN,
   USER_LOGGED_OUT,
+  USER_LOGOUT_FAIL,
   USER_FAVORITES_LOADED,
   USER_FAVORITE_ADDED,
   USER_FAVORITE_REMOVED,
@@ -76,6 +77,20 @@ export const login = (user) => (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
+      payload: error,
+    });
+  }
+};
+
+// Logout user
+export const logout = (user) => (dispatch) => {
+  try {
+    dispatch({
+      type: USER_LOGGED_OUT,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_LOGOUT_FAIL,
       payload: error,
     });
   }
