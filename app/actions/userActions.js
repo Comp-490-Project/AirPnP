@@ -13,6 +13,7 @@ import {
   USER_FAVORITE_REMOVED,
   RESTROOM_MARKER_FAVORITED,
   RESTROOM_MARKER_UNFAVORITED,
+  USER_FEED_STATE_CHANGED,
 } from '../constants/userTypes';
 import { firebase } from '../firebase';
 import * as Location from 'expo-location';
@@ -101,6 +102,19 @@ export const checkUserStatus = () => (dispatch) => {
     console.log(error);
   }
 };
+
+//Get all posts posted at a specified restroom
+export const getUserFeed = (geohash) => async (dispatch) =>{ //Action to obtain feed for a specific restroom utilzing the geohash prop.
+  const postsDocRef = firebase.firestore().collection('posts').doc(geohash);
+  const query = await postsDocRef.get();
+  const docData = query.data();
+  const userPosts = docData.userPosts; //Reference array fieldValue in doc & set it to userPosts
+
+  dispatch({ //Dispatch posts array 
+      type: USER_FEED_STATE_CHANGED,
+      payload: userPosts
+    })
+}
 
 // Get user favorites
 export const getUserFavorites = () => async (dispatch, getState) => {
@@ -199,6 +213,7 @@ export const favoriteHandler = (geohash) => async (dispatch, getState) => {
     dispatch({
       type: USER_FAVORITE_REMOVED,
       payload: geohash,
+      loading: false,
     });
   }
 };
