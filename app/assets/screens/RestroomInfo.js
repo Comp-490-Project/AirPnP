@@ -91,7 +91,9 @@ return (
             onPress={() => navigation.navigate('Feed', {geohash})}
             />
       </TouchableOpacity>
-      <TouchableOpacity
+      {user &&(
+        <>
+          <TouchableOpacity
             style={{ margin: 5 }}
           >
             <AppButton 
@@ -99,13 +101,15 @@ return (
             styles={{ width: '80%' }}  
             onPress={() => navigation.navigate('Camera', {geohash})}
             />
-      </TouchableOpacity>
+          </TouchableOpacity>
+        </>
+      )}
+     
       {user && (
         <>
           <View Style={{ height: 10, backgroundColor: colors.white }} />
           <TouchableOpacity
             style={{ margin: 5 }}
-
           >
             <AppButton title={'Rate'} styles={{ width: '80%' }} onPress={() => navigation.navigate('Review', {geohash})} />
           </TouchableOpacity>
