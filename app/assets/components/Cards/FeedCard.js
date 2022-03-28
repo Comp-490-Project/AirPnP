@@ -1,28 +1,47 @@
 import React from 'react'
-import { Image, Text, View, StyleSheet } from 'react-native'
-import Animated from 'react-native-reanimated'
-import {CARD} from '../../../constants/Dimensions'
-function FeedCard({ userName, caption, source, isFirst, ...rest }) {
-    return (
-        <Animated.View style={styles.container} {...rest}>
-            <Image source={source} style={styles.image} />
+import {Image, Text, StyleSheet, Animated} from 'react-native'
+import { CARD } from '../../../constants/Dimensions'
+import { ACTION_OFFSET } from '../../../constants/Dimensions';
 
-            <Text style={styles.userName}>{userName}</Text>
-            <Text style={styles.caption}>{caption}</Text>
-        </Animated.View>
-    )
+function FeedCard({userName, caption, source, swipe ,isFirst, ...rest}) {
+
+    const rotate = swipe.x.interpolate({
+        inputRange: [-ACTION_OFFSET, 0, ACTION_OFFSET],
+        outputRange: ['8deg', '0deg', '-8deg'],
+    });
+
+    const animatedCardStyle = {
+        transform: [...swipe.getTranslateTransform(), {rotate}],
+    }
+
+  return (
+    <Animated.View style={[styles.container, isFirst && animatedCardStyle]} {...rest}>
+        <Image source={{uri:source}} style={styles.image}/>
+        {/* TODO: FRONTEND: Gradient looks weird, fix the stylings so it looks 'blended'
+        <LinearGradient
+            colors={['rgba(0,0,0,0.9)', 'transparent']}
+            style={styles.gradient}
+        >
+        </LinearGradient>
+        */}
+        <Text style={styles.userName}>{userName}</Text>
+        <Text style={styles.caption}>{caption}</Text>
+    </Animated.View>
+  )
 }
 
+
+
 const styles = StyleSheet.create({
-    container: {
+    container:{
         position: 'absolute',
         top: 45,
     },
-
-    image: {
+    
+    image:{
         width: CARD.WIDTH,
         height: CARD.HEIGHT,
-        borderRadius: CARD.BORDER_RADIUS,
+        borderRadius: CARD.BORDER_RADIUS, 
     },
 
     gradient: {
@@ -34,14 +53,14 @@ const styles = StyleSheet.create({
         borderRadius: CARD.BORDER_RADIUS,
     },
 
-    userName: {
+    userName:{
         position: 'absolute',
         top: 22,
         left: 22,
         fontSize: 36,
     },
 
-    caption: {
+    caption:{
         position: 'absolute',
         bottom: 22,
         textAlign: 'center',
@@ -49,4 +68,5 @@ const styles = StyleSheet.create({
     },
 })
 
-export default FeedCard;
+export default FeedCard
+
