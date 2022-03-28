@@ -19,7 +19,7 @@ function RestroomInfo({ navigation}) {
     const dispatch = useDispatch();
     const maxRating = [1, 2, 3, 4, 5];
     const { user } = useSelector((state) => state.userAuth);
-
+ 
 return (
   <View style = {{flex: 1}}>
     <View style={styles.bottomSheetPanel}>
@@ -76,14 +76,32 @@ return (
       >
         <AppButton title={'Navigate'} styles={{ width: '80%' }} />
       </TouchableOpacity>
+      <TouchableOpacity
+            style={{ margin: 5 }}
+          >
+            <AppButton 
+            title={'Feed'} 
+            styles={{ width: '80%' }}  
+            onPress={() => navigation.navigate('Feed', {geohash})}
+            />
+      </TouchableOpacity>
+      <TouchableOpacity
+            style={{ margin: 5 }}
+          >
+            <AppButton 
+            title={'Camera'}
+            styles={{ width: '80%' }}  
+            onPress={() => navigation.navigate('Camera', {geohash})}
+            />
+      </TouchableOpacity>
       {user && (
         <>
           <View Style={{ height: 10, backgroundColor: colors.white }} />
           <TouchableOpacity
             style={{ margin: 5 }}
-            onPress={() => navigation.navigate('Review', {geohash})}
+
           >
-            <AppButton title={'Rate'} styles={{ width: '80%' }} />
+            <AppButton title={'Rate'} styles={{ width: '80%' }} onPress={() => navigation.navigate('Review', {geohash})} />
           </TouchableOpacity>
         </>
       )}
