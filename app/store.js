@@ -4,6 +4,7 @@ import {
   userFavoritesReducer,
   userLocationReducer,
   userAuthReducer,
+  userFeedReducer,
 } from './reducers/userReducer';
 import {
   mapReducer,
@@ -18,6 +19,7 @@ const reducer = combineReducers({
   map: mapReducer,
   restroomMarker: restroomMarkerReducer,
   restroomReview: restroomReviewReducer,
+  feed: userFeedReducer
 });
 
 const initialState = {
@@ -39,6 +41,9 @@ const initialState = {
     rating: 0,
     image: null,
   },
+  feed:{
+    userPosts: [],
+  }
 };
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk));
