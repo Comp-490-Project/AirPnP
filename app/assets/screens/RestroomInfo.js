@@ -74,7 +74,13 @@ return (
             : Linking.openURL(`geo:0,0?q=${latitude},${longitude}`)
         }
       >
-        <AppButton title={'Navigate'} styles={{ width: '80%' }} />
+        <AppButton title={'Navigate'} styles={{ width: '80%' }}
+         onPress={() =>
+              Platform.OS === 'ios'
+                ? Linking.openURL(`maps:${latitude},${longitude}`)
+                : Linking.openURL(`geo:0,0?q=${latitude},${longitude}`)
+            }
+        />
       </TouchableOpacity>
       <TouchableOpacity
             style={{ margin: 5 }}
