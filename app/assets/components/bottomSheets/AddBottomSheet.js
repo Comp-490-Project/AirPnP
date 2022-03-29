@@ -38,6 +38,8 @@ function AddBottomSheet({ reference, navigation }) {
   };
 
   const handleSubmit = () => {
+    const distanceInM = distanceBetween([region.latitude, region.longitude], [userLocation.location.latitude, userLocation.location.longitude]) * 1000;
+    if(distanceInM < 1500){
     dispatch(
       addRestroom({
         description,
@@ -50,7 +52,10 @@ function AddBottomSheet({ reference, navigation }) {
         image,
       })
     );
+    }else{
+      return alert("must be within 1500 meters of restroom!");
 
+    }
     setName('');
     setDescription('');
 
