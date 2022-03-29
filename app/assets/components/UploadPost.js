@@ -5,11 +5,8 @@ import {useSelector} from 'react-redux';
 require("firebase/firestore")
 require("firebase/firebase-storage")
 
-export default function UploadPost({route}){
-    const {geohash} = route.params
-    const {image} = route.params
-    console.log(image);
-    console.log(geohash);
+export default function UploadPost({navigation,route}){
+    const {image,geohash} = route.params
 
     const { user } = useSelector((state) => state.userAuth);
     const [caption, setCaption] = useState('');
@@ -47,7 +44,7 @@ export default function UploadPost({route}){
             console.log(snapshot);
         }
 
-        task.on("shate_changed",uploadProgress,taskError,taskCompleted);
+        task.on("state_changed",uploadProgress,taskError,taskCompleted);
 
     }
     
@@ -55,7 +52,7 @@ export default function UploadPost({route}){
          firebase
          .firestore()
          .collection('posts')
-         .doc(geohash).set({
+         .doc(geohash).update({
             userPosts: firebase.firestore.FieldValue.arrayUnion({
                 user: user.uid,
                 downloadURL,
@@ -63,8 +60,8 @@ export default function UploadPost({route}){
                 creation: firebase.firestore.Timestamp.now(), //Firestore places a timestamp for creation date. Serverside action.
             }),
          }).then((function(){
-             image.navigation.popToTop(); //Goes to  the main component, not sure if we would want this. We can change it easiyl though.
-         }))
+            navigation.navigate('Feed',{geohash});
+        }))
     }   
 
     return(
