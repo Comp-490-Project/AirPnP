@@ -15,10 +15,13 @@ import { handleImageInUI, addRestroom } from '../../../actions/restroomActions';
 import colors from '../../theme/colors';
 import AppButton from '../AppButton';
 import Rating from '../Rating';
+import { distanceBetween } from 'geofire-common';
+
+
 
 function AddBottomSheet({ reference, navigation }) {
   const dispatch = useDispatch();
-
+  var userLocation = useSelector((state) => state.userLocation);
   const { user } = useSelector((state) => state.userAuth);
   const { region, rating, image } = useSelector(
     (state) => state.restroomReview
