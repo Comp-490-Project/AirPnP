@@ -164,33 +164,7 @@ const TabNavigator = () => {
             ),
           }}
         ></Tab.Screen>
-        <Tab.Screen
-          name="Settings"
-          component={SettingsScreen}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <Image
-                  source={require('../assets/icons/tabs/settings.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: 25,
-                    height: 25,
-                    tintColor: focused ? colors.tabs : '#748c94',
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused ? colors.tabs : '#748c94',
-                    fontSize: 12,
-                  }}
-                >
-                  SETTINGS
-                </Text>
-              </View>
-            ),
-          }}
-        ></Tab.Screen>
+
       </Tab.Navigator>
     </View>
   );
