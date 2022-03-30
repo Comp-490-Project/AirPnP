@@ -12,6 +12,7 @@ import {
   USER_FAVORITE_ADDED,
   USER_FAVORITE_REMOVED,
   USER_FEED_STATE_CHANGED,
+  USER_FEED_STATE_CLEARED,
 } from '../constants/userTypes';
 
 export const userLocationReducer = (state = {}, action) => {
@@ -78,14 +79,20 @@ export const userAuthReducer = (state = {}, action) => {
   }
 };
 
-export const userFeedReducer = (state = {}, action)=>{
-  switch(action.type){
+export const userFeedReducer = (state = {}, action) => {
+  switch (action.type) {
     case USER_FEED_STATE_CHANGED:
-      return{
+      return {
         ...state,
         userPosts: action.payload,
-        loading: false
-      }
+        loading: false,
+      };
+    case USER_FEED_STATE_CLEARED:
+      return {
+        ...state,
+        userPosts: [],
+        loading: true,
+      };
     default:
       return state;
   }

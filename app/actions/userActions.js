@@ -14,6 +14,7 @@ import {
   RESTROOM_MARKER_FAVORITED,
   RESTROOM_MARKER_UNFAVORITED,
   USER_FEED_STATE_CHANGED,
+  USER_FEED_STATE_CLEARED,
 } from '../constants/userTypes';
 import { firebase } from '../firebase';
 import * as Location from 'expo-location';
@@ -104,17 +105,34 @@ export const checkUserStatus = () => (dispatch) => {
 };
 
 //Get all posts posted at a specified restroom
-export const getUserFeed = (geohash) => async (dispatch) =>{ //Action to obtain feed for a specific restroom utilzing the geohash prop.
+export const getUserFeed = (geohash) => async (dispatch) => {
+  //Action to obtain feed for a specific restroom utilzing the geohash prop.
   const postsDocRef = firebase.firestore().collection('posts').doc(geohash);
   const query = await postsDocRef.get();
   const docData = query.data();
-  const userPosts = docData.userPosts; //Reference array fieldValue in doc & set it to userPosts
 
-  dispatch({ //Dispatch posts array 
+  if (docData) {
+    const userPosts = docData.userPosts; //Reference array fieldValue in doc & set it to userPosts
+    dispatch({
+      //Dispatch posts array
       type: USER_FEED_STATE_CHANGED,
-      payload: userPosts
-    })
-}
+      payload: userPosts,
+    });
+  } else {
+    dispatch({
+      //Dispatch posts array
+      type: USER_FEED_STATE_CHANGED,
+      payload: [],
+    });
+  }
+};
+
+// Clear user feed
+export const clearUserFeed = () => {
+  return {
+    type: USER_FEED_STATE_CLEARED,
+  };
+};
 
 // Get user favorites
 export const getUserFavorites = () => async (dispatch, getState) => {
