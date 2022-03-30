@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import BottomSheet from 'reanimated-bottom-sheet';
-import { geohashForLocation } from 'geofire-common';
+import { geohashForLocation, distanceBetween } from 'geofire-common';
 import { useSelector, useDispatch } from 'react-redux';
 import { openCamera, openLibrary } from '../../../helpers/mediaPermissions';
 import { handleImageInUI, addRestroom } from '../../../actions/restroomActions';
@@ -18,7 +18,7 @@ import Rating from '../Rating';
 
 function AddBottomSheet({ reference, navigation }) {
   const dispatch = useDispatch();
-
+  var userLocation = useSelector((state) => state.userLocation);
   const { user } = useSelector((state) => state.userAuth);
   const { region, rating, image } = useSelector(
     (state) => state.restroomReview
@@ -38,19 +38,27 @@ function AddBottomSheet({ reference, navigation }) {
   };
 
   const handleSubmit = () => {
-    dispatch(
-      addRestroom({
-        description,
-        geohash: geohashForLocation([region.latitude, region.longitude]),
-        latitude: region.latitude,
-        longitude: region.longitude,
-        meanRating: rating,
-        name,
-        user: user.uid,
-        image,
-      })
-    );
-
+    const distanceInM =
+      distanceBetween(
+        [region.latitude, region.longitude],
+        [userLocation.location.latitude, userLocation.location.longitude]
+      ) * 1000;
+    if (distanceInM < 1500) {
+      dispatch(
+        addRestroom({
+          description,
+          geohash: geohashForLocation([region.latitude, region.longitude]),
+          latitude: region.latitude,
+          longitude: region.longitude,
+          meanRating: rating,
+          name,
+          user: user.uid,
+          image,
+        })
+      );
+    } else {
+      return alert('must be within 1500 meters of restroom!');
+    }
     setName('');
     setDescription('');
 
