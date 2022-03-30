@@ -8,16 +8,13 @@ import {
   StyleSheet,
 } from 'react-native';
 import BottomSheet from 'reanimated-bottom-sheet';
-import { geohashForLocation } from 'geofire-common';
+import { geohashForLocation, distanceBetween } from 'geofire-common';
 import { useSelector, useDispatch } from 'react-redux';
 import { openCamera, openLibrary } from '../../../helpers/mediaPermissions';
 import { handleImageInUI, addRestroom } from '../../../actions/restroomActions';
 import colors from '../../theme/colors';
 import AppButton from '../AppButton';
 import Rating from '../Rating';
-import { distanceBetween } from 'geofire-common';
-
-
 
 function AddBottomSheet({ reference, navigation }) {
   const dispatch = useDispatch();
@@ -41,23 +38,26 @@ function AddBottomSheet({ reference, navigation }) {
   };
 
   const handleSubmit = () => {
-    const distanceInM = distanceBetween([region.latitude, region.longitude], [userLocation.location.latitude, userLocation.location.longitude]) * 1000;
-    if(distanceInM < 1500){
-    dispatch(
-      addRestroom({
-        description,
-        geohash: geohashForLocation([region.latitude, region.longitude]),
-        latitude: region.latitude,
-        longitude: region.longitude,
-        meanRating: rating,
-        name,
-        user: user.uid,
-        image,
-      })
-    );
-    }else{
-      return alert("must be within 1500 meters of restroom!");
-
+    const distanceInM =
+      distanceBetween(
+        [region.latitude, region.longitude],
+        [userLocation.location.latitude, userLocation.location.longitude]
+      ) * 1000;
+    if (distanceInM < 1500) {
+      dispatch(
+        addRestroom({
+          description,
+          geohash: geohashForLocation([region.latitude, region.longitude]),
+          latitude: region.latitude,
+          longitude: region.longitude,
+          meanRating: rating,
+          name,
+          user: user.uid,
+          image,
+        })
+      );
+    } else {
+      return alert('must be within 1500 meters of restroom!');
     }
     setName('');
     setDescription('');

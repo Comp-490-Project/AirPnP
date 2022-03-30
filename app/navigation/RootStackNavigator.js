@@ -7,6 +7,9 @@ import RegisterScreen from '../assets/screens/RegisterScreen';
 import ForgotPasswordScreen from '../assets/screens/ForgotPasswordScreen';
 import ReviewScreen from '../assets/screens/ReviewScreen';
 import RestroomInfo from '../assets/screens/RestroomInfo';
+import UploadPost from '../assets/components/UploadPost';
+import FeedScreen from '../assets/screens/FeedScreen';
+import CameraScreen from '../assets/screens/CameraScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +26,9 @@ const RootStackNavigator = () => {
         <Stack.Screen name="RestroomInfo" component={RestroomInfo}></Stack.Screen>
         <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
         <Stack.Screen name="Review" component={ReviewScreen}></Stack.Screen>
+        <Stack.Screen name="Save" component={UploadPost}></Stack.Screen>
+        <Stack.Screen name="Feed" component={FeedScreen}></Stack.Screen>
+        <Stack.Screen name="Camera" component={CameraScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
