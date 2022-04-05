@@ -10,4 +10,5 @@ export default {
   blue: '#0000FF',
   lightgray: '#00000040',
   tabs: '#99e0c8', // Light green
+  darkBackground: '#272B37',
 };

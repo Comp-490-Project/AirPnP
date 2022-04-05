@@ -3,6 +3,7 @@ import { useState,useRef } from 'react';
 import React from 'react';
 import slides from '../../constants/slides';
 import TutorialItem from '../components/TutorialItem';
+import colors from '../theme/colors';
 
 export default function TutorialScreen() {
 
@@ -31,7 +32,7 @@ export default function TutorialScreen() {
             pagingEnabled //Snap instead of scrolling
             bounces={false} //Removes user ability to slowly drag the page
             keyExtractor={(item)=> item.id} //Keep track of data
-            onScroll={Animated.event([{nativeEvent:{contentOffSet:{x:scrollHorizontal}}}],{
+            onScroll={Animated.event([{nativeEvent:{contentOffset:{x:scrollHorizontal}}}],{
             useNativeDriver: false //Animated driver doesn't support width animation for some reason? So just disable it.
             })} 
             onViewableItemsChanged={viewableItemsChanged}
@@ -49,5 +50,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: colors.darkBackground
     }
 })
