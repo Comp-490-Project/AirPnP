@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { auth } from '../../firebase';
+import { WIDTH, HEIGHT } from '../../constants/Dimensions';
 import AnimationLoad from '../components/AnimationLoad';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MapMarker from '../components/MapMarker';
-import SearchBar from '../components/SearchBar';
 import MapBottomCard from '../components/MapBottomCard';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -15,8 +15,6 @@ import {
 import { getRestrooms } from '../../actions/restroomActions';
 import { useDirections } from '../../hooks/useDirections';
 function MapScreen({ navigation }) {
-  const reference = useRef(null);
-
   const dispatch = useDispatch();
 
   const { location } = useSelector((state) => state.userLocation);
@@ -53,10 +51,10 @@ function MapScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
-      <MapView
+    <>
+      {/* <MapView
         provider={PROVIDER_GOOGLE}
-        style={styles.map}
+        style={styles.mapView}
         showsUserLocation={true}
         region={{
           latitude: mapCenterLocation
@@ -74,26 +72,16 @@ function MapScreen({ navigation }) {
           <MapMarker key={marker.geohash} marker={marker} index={index} />
         ))}
         {useDirections(location, restroomWithDirections)}
-      </MapView>
-      {/* <SearchBar /> */}
-      {/* <MapBottomCard navigation={navigation} /> */}
-    </View>
+      </MapView> */}
+      <MapBottomCard navigation={navigation} />
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-  texty: {
-    position: 'absolute',
-    top: 500,
+  mapView: {
+    width: WIDTH,
+    height: HEIGHT,
   },
 });
 
