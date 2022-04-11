@@ -6,9 +6,11 @@ export default {
   textInput: '#fff',
   medium: '#6e6969', // Medium gray
   dark: '#0c0c0c', // Dark gray
-  white: '#fff',
+  white: '#FFFFFF',
   blue: '#0000FF',
   lightgray: '#00000040',
   tabs: '#99e0c8', // Light green
   darkBackground: '#272B37',
+  textRight: '#9599E2', 
+  textLeft: '#8BC6EC',
 };
