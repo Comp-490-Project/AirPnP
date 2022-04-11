@@ -55,13 +55,9 @@ function MapScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <MapView
-        onPress={() => {
-          /*reference.current.snapTo(1) this is not needed anymore without sheet*/;
-        }}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         showsUserLocation={true}
-        showsMyLocationButton={true}
         region={{
           latitude: mapCenterLocation
             ? mapCenterLocation.latitude
@@ -75,17 +71,12 @@ function MapScreen({ navigation }) {
         loadingEnabled={true}
       >
         {restrooms.map((marker, index) => (
-          <MapMarker
-            key={marker.geohash}
-            marker={marker}
-            reference={reference}
-            index={index}
-          />
+          <MapMarker key={marker.geohash} marker={marker} index={index} />
         ))}
         {useDirections(location, restroomWithDirections)}
       </MapView>
-      <SearchBar />
-      <MapBottomCard  navigation={navigation} />
+      {/* <SearchBar /> */}
+      {/* <MapBottomCard navigation={navigation} /> */}
     </View>
   );
 }
@@ -100,10 +91,10 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
-  texty:{
-    position : 'absolute',
-    top: 500
-  }
+  texty: {
+    position: 'absolute',
+    top: 500,
+  },
 });
 
 export default MapScreen;

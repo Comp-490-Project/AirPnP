@@ -1,76 +1,42 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import colors from '../theme/colors';
-import { Marker, Callout } from 'react-native-maps';
-import { useDispatch } from 'react-redux';
+import { Marker } from 'react-native-maps';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   setMarkerAttributes,
   setMapCenterLocation,
 } from '../../actions/restroomActions';
+import ToiletMarker from '../icons/marker.svg';
+import MainMarker from '../icons/main-marker.svg';
 
-function MapMarker({ marker, reference, index }) {
+function MapMarker({ marker, index }) {
   const dispatch = useDispatch();
 
+  const { mapCenterLocation } = useSelector((state) => state.map);
+
+  const selectedLat = mapCenterLocation?.latitude;
+  const selectedLng = mapCenterLocation?.longitude;
+
   return (
-    <Marker
-      key={index}
-      image={require('../../assets/icons/app-logo.png')}
-      coordinate={{
-        latitude: marker.latitude,
-        longitude: marker.longitude,
-      }}
-      onPress={() => {
-        dispatch(setMarkerAttributes(marker));
-        dispatch(setMapCenterLocation(marker.latitude, marker.longitude));
-      }}
-    >
-      <Callout tooltip onPress={() => {}}>
-        
-      </Callout>
-    </Marker>
+    <>
+      <Marker
+        key={index}
+        coordinate={{
+          latitude: marker.latitude,
+          longitude: marker.longitude,
+        }}
+        onPress={() => {
+          dispatch(setMarkerAttributes(marker));
+          dispatch(setMapCenterLocation(marker.latitude, marker.longitude));
+        }}
+      >
+        {marker.latitude === selectedLat && marker.longitude === selectedLng ? (
+          <MainMarker width={100} height={40} />
+        ) : (
+          <ToiletMarker width={100} height={40} />
+        )}
+      </Marker>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  calloutWindow: {
-    flexDirection: 'column',
-    alignSelf: 'stretch',
-    backgroundColor: colors.white,
-    borderRadius: 7,
-    borderColor: colors.medium,
-    borderWidth: 0.5,
-    padding: 15,
-    width: 150,
-  },
-  name: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  arrow: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    borderTopColor: colors.white,
-    borderWidth: 16,
-    alignSelf: 'center',
-    marginTop: -32,
-  },
-  arrowBorder: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    borderTopColor: colors.white,
-    borderWidth: 16,
-    alignSelf: 'center',
-    marginTop: -0.5,
-  },
-});
-
 export default MapMarker;
-/*<View>
-          <View style={styles.calloutWindow}>
-            <Text style={styles.name}>{marker.name}</Text>
-            <Text>{marker.description}</Text>
-          </View>
-          <View style={styles.arrowBorder} />
-          <View style={styles.arrow} />
-        </View>*/
