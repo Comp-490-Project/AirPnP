@@ -10,7 +10,7 @@ export default {
   blue: '#0000FF',
   lightgray: '#00000040',
   tabs: '#99e0c8', // Light green
-  darkBackground: '#272B37',
-  textRight: '#9599E2', 
-  textLeft: '#8BC6EC',
+  primary: '#9599E2',
+  secondary: '#8BC6EC',
+  backgroundDark: '#272B37',
 };
