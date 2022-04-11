@@ -1,33 +1,24 @@
 export default [
     {
         id: '1',
-        title: 'random text',
-        details: 'random text',
-        image: require('../assets/icons/marker.png')
+        title: 'Find Them',
+        description: 'Automatically get routed to the nearest restroom',
     },
     {
         id: '2',
-        title: 'random text',
-        details: 'random text',
-        image: require('../assets/icons/marker.png')
+        title: 'Add Them',
+        description: 'random text',
     },
     {
         id: '3',
-        title: 'random text',
-        details: 'random text',
-        image: require('../assets/icons/marker.png')
+        title: 'Post Them',
+        description: 'random text',
     },
     {
         id: '4',
-        title: 'random text',
-        details: 'random text',
-        image: require('../assets/icons/marker.png')
+        title: 'Get Started!',
+        description: 'random text',
     },
-    {
-        id: '5',
-        title: 'random text',
-        details: 'random text',
-        image: require('../assets/icons/marker.png')
-    },
+
     
 ]

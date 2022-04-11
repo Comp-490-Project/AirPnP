@@ -4,6 +4,7 @@ import React from 'react';
 import slides from '../../constants/slides';
 import TutorialItem from '../components/TutorialItem';
 import colors from '../theme/colors';
+import Indicator from '../components/Indicator';
 
 export default function TutorialScreen() {
 
@@ -28,7 +29,7 @@ export default function TutorialScreen() {
             data={slides} 
             renderItem={({item})=><TutorialItem item={item}/>}
             horizontal //For Horizontal Scrolling
-            showsHorizontalScrollIndicator 
+            showsHorizontalScrollIndicator ={false} 
             pagingEnabled //Snap instead of scrolling
             bounces={false} //Removes user ability to slowly drag the page
             keyExtractor={(item)=> item.id} //Keep track of data
@@ -41,6 +42,7 @@ export default function TutorialScreen() {
             ref={slidesRef}
             />
         </View>
+        <Indicator data={slides} scrollHorizontal={scrollHorizontal}></Indicator>
     </View>
   );
 };
