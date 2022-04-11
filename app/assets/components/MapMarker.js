@@ -11,10 +11,10 @@ import MainMarker from '../icons/main-marker.svg';
 function MapMarker({ marker, index }) {
   const dispatch = useDispatch();
 
-  const { mapCenterLocation } = useSelector((state) => state.map);
-
-  const selectedLat = mapCenterLocation?.latitude;
-  const selectedLng = mapCenterLocation?.longitude;
+  const { restroomWithDirections } = useSelector((state) => state.map);
+  const coordinates = restroomWithDirections.split(',');
+  const selectedLat = Number(coordinates[0]);
+  const selectedLng = Number(coordinates[1]);
 
   return (
     <>
