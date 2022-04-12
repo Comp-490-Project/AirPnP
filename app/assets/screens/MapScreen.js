@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { auth } from '../../firebase';
 import { WIDTH, HEIGHT } from '../../constants/Dimensions';
 import AnimationLoad from '../components/AnimationLoad';
