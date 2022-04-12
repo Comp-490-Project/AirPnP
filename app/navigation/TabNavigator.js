@@ -49,124 +49,121 @@ const TabNavigator = () => {
   );
 
   return (
-    <View style={{ width, height }}>
-      <Tab.Navigator
-        screenOptions={{
-          tabBarShowLabel: false,
-          headerShown: false,
-          tabBarStyle: [
-            {
-              position: 'absolute',
-              elevation: 0,
-              backgroundColor: '#ffffff',
-              height: 50,
-              ...styles.shadow,
-            },
-          ],
-        }}
-      >
-        <Tab.Screen
-          name="Home"
-          component={MapScreen}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <Image
-                  source={require('../assets/icons/tabs/home.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: 25,
-                    height: 25,
-                    tintColor: focused ? colors.tabs : '#748c94',
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused ? colors.tabs : '#748c94',
-                    fontSize: 12,
-                  }}
-                >
-                  HOME
-                </Text>
-              </View>
-            ),
-          }}
-        ></Tab.Screen>
-        <Tab.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <Image
-                  source={require('../assets/icons/tabs/profile.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: 25,
-                    height: 25,
-                    tintColor: focused ? colors.tabs : '#748c94',
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused ? colors.tabs : '#748c94',
-                    fontSize: 12,
-                  }}
-                >
-                  PROFILE
-                </Text>
-              </View>
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Add"
-          component={AddScreen}
-          options={{
-            tabBarIcon: ({ focused }) => (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        headerShown: false,
+        tabBarStyle: [
+          {
+            position: 'absolute',
+            elevation: 0,
+            backgroundColor: '#ffffff',
+            height: 50,
+            ...styles.shadow,
+          },
+        ],
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={MapScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
               <Image
-                source={require('../assets/icons/tabs/add.png')}
+                source={require('../assets/icons/tabs/home.png')}
                 resizeMode="contain"
                 style={{
                   width: 25,
                   height: 25,
-                  tintColor: colors.white,
+                  tintColor: focused ? colors.tabs : '#748c94',
                 }}
               />
-            ),
-            tabBarButton: (props) => <CustomTabBarButton {...props} />,
-          }}
-        />
-        <Tab.Screen
-          name="Favorites"
-          component={FavoritesScreen}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <Image
-                  source={require('../assets/icons/tabs/favorites.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: 25,
-                    height: 25,
-                    tintColor: focused ? colors.tabs : '#748c94',
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused ? colors.tabs : '#748c94',
-                    fontSize: 12,
-                  }}
-                >
-                  FAVORITES
-                </Text>
-              </View>
-            ),
-          }}
-        ></Tab.Screen>
-
-      </Tab.Navigator>
-    </View>
+              <Text
+                style={{
+                  color: focused ? colors.tabs : '#748c94',
+                  fontSize: 12,
+                }}
+              >
+                HOME
+              </Text>
+            </View>
+          ),
+        }}
+      ></Tab.Screen>
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+              <Image
+                source={require('../assets/icons/tabs/profile.png')}
+                resizeMode="contain"
+                style={{
+                  width: 25,
+                  height: 25,
+                  tintColor: focused ? colors.tabs : '#748c94',
+                }}
+              />
+              <Text
+                style={{
+                  color: focused ? colors.tabs : '#748c94',
+                  fontSize: 12,
+                }}
+              >
+                PROFILE
+              </Text>
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Add"
+        component={AddScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={require('../assets/icons/tabs/add.png')}
+              resizeMode="contain"
+              style={{
+                width: 25,
+                height: 25,
+                tintColor: colors.white,
+              }}
+            />
+          ),
+          tabBarButton: (props) => <CustomTabBarButton {...props} />,
+        }}
+      />
+      <Tab.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+              <Image
+                source={require('../assets/icons/tabs/favorites.png')}
+                resizeMode="contain"
+                style={{
+                  width: 25,
+                  height: 25,
+                  tintColor: focused ? colors.tabs : '#748c94',
+                }}
+              />
+              <Text
+                style={{
+                  color: focused ? colors.tabs : '#748c94',
+                  fontSize: 12,
+                }}
+              >
+                FAVORITES
+              </Text>
+            </View>
+          ),
+        }}
+      ></Tab.Screen>
+    </Tab.Navigator>
   );
 };
 
