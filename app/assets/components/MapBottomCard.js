@@ -1,32 +1,24 @@
 import React from 'react';
-import { View, Text, Image, Linking, StyleSheet } from 'react-native';
-import AppButton from '../components/AppButton';
+import { View, Image, StyleSheet } from 'react-native';
 import colors from '../theme/colors';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useSelector, useDispatch } from 'react-redux';
-import { favoriteHandler } from '../../actions/userActions';
+import { TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSelector } from 'react-redux';
 import StarFilled from '../icons/rating/star-filled.png';
-import StarUnfilled from '../icons/rating/star-unfilled.png';
 import { useFontLoader } from '../../hooks/useFontLoader';
-import GradientText from '../components/GradientText';
 import AnimationLoad from './AnimationLoad';
+import LightText from './LightText';
+import AttributeButton from './AttributeButton';
+import DirectionsIcon from './DirectionsIcon';
+import FeedIcon from './FeedIcon';
+import ToiletIcon from '../icons/toilet-icon.png';
+import DistancePersonIcon from '../icons/distance-person-icon.svg';
+import { WIDTH } from '../../constants/Dimensions';
 
 function MapBottomCard({ navigation }) {
-  const dispatch = useDispatch();
-
-  const maxRating = [1, 2, 3, 4, 5];
-
-  const { user } = useSelector((state) => state.userAuth);
-  const {
-    description,
-    geohash,
-    latitude,
-    longitude,
-    meanRating,
-    name,
-    images,
-    isFavorited,
-  } = useSelector((state) => state.restroomMarker);
+  const { geohash, latitude, longitude, meanRating, name } = useSelector(
+    (state) => state.restroomMarker
+  );
 
   const fontsLoaded = useFontLoader();
 
@@ -35,53 +27,112 @@ function MapBottomCard({ navigation }) {
   }
 
   return (
-    // @TODO: Remove outer view
-    <View style={styles.screenContainer}>
-      <GradientText
-        text="hello"
-        style={{
-          fontWeight: '600',
-          fontSize: 50,
-          marginBottom: 10,
-          textAlign: 'center',
-          fontFamily: 'Inter',
-        }}
-      />
-      <View style={styles.cardContainer}>
-        <View>
-          <Text>Subway</Text>
-          <View>
-            <Image source={StarFilled} />
-            <Text>
-              4.5 <Text>(2)</Text>
-            </Text>
+    <TouchableOpacity onPress={() => navigation.navigate('RestroomInfo')}>
+      <LinearGradient
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        colors={[colors.mapCardPrimary, colors.mapCardSecondary]}
+        locations={[0, 0.7]}
+        style={styles.cardBackground}
+      >
+        <View style={styles.cardContainer}>
+          <View style={styles.headingContainer}>
+            <LightText fontSize={28} fontWeight={'700'}>
+              {name}
+            </LightText>
+            {/* TODO: Count number of reviews */}
+            <View style={styles.ratingContainer}>
+              <Image source={StarFilled} style={styles.starIcon} />
+              <LightText>
+                {meanRating} <LightText fontSize={12}>(2)</LightText>
+              </LightText>
+            </View>
           </View>
+          {/* @TODO: Convert coordinates into address */}
+          <View style={styles.addressContainer}>
+            <LightText fontWeight="500" lineHeight={20}>
+              18111 Nordhoff St Maildrop 8271, Northridge, CA 91330
+            </LightText>
+          </View>
+          {/* @TODO: Check if restaurant description contains word restaurant */}
+          <View style={styles.attributeContainer}>
+            <AttributeButton attribute="free" />
+            <AttributeButton attribute="restaurant" />
+          </View>
+          <View style={styles.footerContainer}>
+            {/* @TODO: Convert distance in km to mi or feet */}
+            <View style={styles.distanceContainer}>
+              <DistancePersonIcon style={styles.distanceIcon} />
+              <LightText>300 feet away</LightText>
+            </View>
+            <View style={styles.btnContainer}>
+              <DirectionsIcon latitude={latitude} longitude={longitude} />
+              <FeedIcon navigation={navigation} geohash={geohash} />
+            </View>
+          </View>
+          <Image source={ToiletIcon} style={styles.toiletBackground} />
         </View>
-        <View>
-          <Text>18111 Nordhoff St Maildrop 8271, Northridge, CA 91330</Text>
-        </View>
-        <View>
-          <Text>Free</Text>
-          <Text>Restaurant</Text>
-        </View>
-        <View>
-          <Text>300 feet away</Text>
-        </View>
-      </View>
-    </View>
+      </LinearGradient>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  // @TODO: Remove
-  screenContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  cardBackground: {
+    width: WIDTH * 0.9,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    borderRadius: 20,
   },
   cardContainer: {
-    backgroundColor: 'violet',
+    padding: 20,
     justifyContent: 'center',
+    position: 'relative',
+  },
+  headingContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  ratingContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
+  },
+  starIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+  },
+  addressContainer: {
+    marginVertical: 5,
+  },
+  attributeContainer: {
+    marginBottom: 5,
+    flexDirection: 'row',
+  },
+  footerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  distanceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  distanceIcon: {
+    marginRight: 3,
+  },
+  btnContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    zIndex: 100,
+  },
+  toiletBackground: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    top: 0,
+    height: '130%',
+    width: '40%',
   },
 });
 

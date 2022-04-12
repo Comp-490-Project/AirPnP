@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { auth } from '../../firebase';
 import { WIDTH, HEIGHT } from '../../constants/Dimensions';
 import AnimationLoad from '../components/AnimationLoad';
@@ -46,13 +46,13 @@ function MapScreen({ navigation }) {
     return unsubscribe;
   }, []);
 
-  if (!location) {
+  if (!location || !restroomWithDirections) {
     return <AnimationLoad />;
   }
 
   return (
     <>
-      {/* <MapView
+      <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.mapView}
         showsUserLocation={true}
@@ -72,8 +72,10 @@ function MapScreen({ navigation }) {
           <MapMarker key={marker.geohash} marker={marker} index={index} />
         ))}
         {useDirections(location, restroomWithDirections)}
-      </MapView> */}
-      <MapBottomCard navigation={navigation} />
+      </MapView>
+      <View style={styles.card}>
+        <MapBottomCard navigation={navigation} />
+      </View>
     </>
   );
 }
@@ -82,6 +84,12 @@ const styles = StyleSheet.create({
   mapView: {
     width: WIDTH,
     height: HEIGHT,
+  },
+  card: {
+    position: 'absolute',
+    bottom: 90,
+    right: 0,
+    left: 0,
   },
 });
 
