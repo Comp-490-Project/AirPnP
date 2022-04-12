@@ -7,10 +7,14 @@ export default {
   medium: '#6e6969', // Medium gray
   dark: '#0c0c0c', // Dark gray
   white: '#FFFFFF',
+  whiteOpacity: 'rgba(255, 255, 255, 0.21)',
   blue: '#0000FF',
   lightgray: '#00000040',
   tabs: '#99e0c8', // Light green
   primary: '#9599E2',
   secondary: '#8BC6EC',
+  backgroundLight: '#F2F2F2',
   backgroundDark: '#272B37',
+  mapCardPrimary: '#7E82D8',
+  mapCardSecondary: '#54A5D9',
 };
