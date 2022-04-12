@@ -1,5 +1,5 @@
 export default {
-  primary: '#fff', // White
+  // primary: '#fff', // White
   buttons: '#000', // Black
   background: 'teal',
   buttonText: '#fff', // White
@@ -17,4 +17,5 @@ export default {
   backgroundDark: '#272B37',
   mapCardPrimary: '#7E82D8',
   mapCardSecondary: '#54A5D9',
+  directionsStroke: '#38A6E7',
 };
