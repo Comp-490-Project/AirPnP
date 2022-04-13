@@ -5,7 +5,7 @@ import Svg, {G,Circle} from 'react-native-svg';
 
 import {AntDesign} from '@expo/vector-icons'
 
-export default function NextButton({percentage}) {
+export default function NextButton({percentage, scrollTo}) {
 
     const size = 128;
     const strokeWidth = 2;
@@ -66,8 +66,8 @@ export default function NextButton({percentage}) {
                 />
             </G>
         </Svg>
-        <TouchableOpacity style={styles.button} activeOpacity={0.6}>
-            <AntDesign name="arrowright" size={32} color="#fff" />
+        <TouchableOpacity onPress={scrollTo} style={styles.button} activeOpacity={0.6}>
+            <AntDesign name="arrowright" size={44} color="#fff" />
         </TouchableOpacity>
     </View>
   )
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         backgroundColor: 'black',
         borderRadius: 100,
-        padding: 20,
+        padding: 30,
     }
 
 

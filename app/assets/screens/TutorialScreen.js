@@ -20,7 +20,16 @@ export default function TutorialScreen() {
     setCurrentPage(viewableItems[0].index)
   }).current;
 
+  const scrollTo = () => {
+    if (currentPage < slides.length - 1) {
+        slidesRef.current.scrollToIndex({ index: currentPage + 1 });
+    } else {
+        console.log('Last item.');
+    }
+};
+
   const viewConfig = useRef({viewAreaCoveragePercentThreshold:50}).current; //Slide contents on next scren must be 50% to be changed upon swipe.
+
 
 
   return (  
@@ -44,7 +53,7 @@ export default function TutorialScreen() {
             />
         </View>
         <Indicator data={slides} scrollHorizontal={scrollHorizontal}></Indicator>
-        <NextButton percentage={(currentPage + 1)*(100/slides.length)}/>
+        <NextButton scrollTo={scrollTo} percentage={(currentPage + 1)*(100/slides.length)}/>
     </View>
   );
 };
