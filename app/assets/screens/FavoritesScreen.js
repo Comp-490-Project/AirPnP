@@ -19,6 +19,7 @@ function FavoritesScreen({ navigation }) {
   return (
   <View style= {styles.container}> 
     <View style={styles.topBorder} />
+    <Image style= {styles.backbutton} source= {require('../icons/back-btn.png')}/>
     <Text style={styles.title}>Favorites</Text>
     <ScrollView>
       
@@ -109,6 +110,9 @@ const styles = StyleSheet.create({
     borderColor: colors.white,
     borderRadius: 30,
     borderWidth: 10,
+
+  },
+  backbutton:{
 
   },
   nameText: {

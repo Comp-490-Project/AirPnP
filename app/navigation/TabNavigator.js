@@ -9,7 +9,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MapScreen from '../assets/screens/MapScreen';
 import ProfileScreen from '../assets/screens/ProfileScreen';
 import AddScreen from '../assets/screens/AddScreen';
-
+import FavoritesScreen from '../assets/screens/FavoritesScreen';
 import colors from '../assets/theme/colors';
 
 const TabNavigator = () => {
@@ -77,7 +77,7 @@ const TabNavigator = () => {
         ></Tab.Screen>
         <Tab.Screen
           name="Profile"
-          component={ProfileScreen}
+          component={FavoritesScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
