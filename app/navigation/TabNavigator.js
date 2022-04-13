@@ -9,19 +9,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MapScreen from '../assets/screens/MapScreen';
 import ProfileScreen from '../assets/screens/ProfileScreen';
 import AddScreen from '../assets/screens/AddScreen';
-
 import colors from '../assets/theme/colors';
 
 const TabNavigator = () => {
 
   const Tab = createBottomTabNavigator();
 
-  const { width, height } = Dimensions.get('window');
-
 
 
   return (
-    <View style={{ width, height }}>
       <Tab.Navigator
         screenOptions={{
           tabBarShowLabel: false,
@@ -48,7 +44,7 @@ const TabNavigator = () => {
                   resizeMode="contain"
                   style={{
                     width: 50,
-                    height: 35,
+                    height: 35  ,
                     tintColor: focused ? colors.tabs : '#748c94',
                   }}
                 />
@@ -96,7 +92,6 @@ const TabNavigator = () => {
           }}
         />
       </Tab.Navigator>
-    </View>
   );
 };
 
