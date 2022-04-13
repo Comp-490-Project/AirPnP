@@ -21,7 +21,7 @@ const TabNavigator = () => {
 
 
   return (
-    <View style={{ width, height }}>
+    
       <Tab.Navigator
         screenOptions={{
           tabBarShowLabel: false,
@@ -96,7 +96,7 @@ const TabNavigator = () => {
           }}
         />
       </Tab.Navigator>
-    </View>
+    
   );
 };
 

@@ -11,15 +11,13 @@ import { withSafeAreaInsets } from 'react-native-safe-area-context';
 
 function FavoritesScreen({ navigation }) {
   const dispatch = useDispatch();
-
   const { userFavorites } = useSelector((state) => state.userFavorites);
-
   const maxRating = [1, 2, 3, 4, 5];
-
   return (
-  <View style= {styles.container}> 
-    <View style={styles.topBorder} />
-    <Image style= {styles.backbutton} source= {require('../icons/back-btn.png')}/>
+<>   
+  <View style={styles.topBorder} />
+  <Image source= {require('../icons/back-btn.png')}/>  
+  <View style= {styles.container}>  
     <Text style={styles.title}>Favorites</Text>
     <ScrollView>
       
@@ -84,7 +82,8 @@ function FavoritesScreen({ navigation }) {
         ))
       )}
     </ScrollView>
-  </View>   
+  </View>  
+</>    
   );
 }
 
@@ -107,12 +106,12 @@ const styles = StyleSheet.create({
   itemView: {
     color: colors.textLeft,
     padding: 15,
-    borderColor: colors.white,
-    borderRadius: 30,
-    borderWidth: 10,
-
+    borderRadius: 20,
+    backgroundColor: "white",
+    marginBottom: 20,
   },
   backbutton:{
+   
 
   },
   nameText: {
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
   },
   topBorder: {
     height: 50,
-    color: colors.greyBackground
+    backgroundColor: colors.greyBackground
   },
   customRatingBarStyle: {
     flexDirection: 'row',
