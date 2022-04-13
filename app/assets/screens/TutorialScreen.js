@@ -5,12 +5,13 @@ import slides from '../../constants/slides';
 import TutorialItem from '../components/TutorialItem';
 import colors from '../theme/colors';
 import Indicator from '../components/Indicator';
+import NextButton from '../components/NextButton';
 
 export default function TutorialScreen() {
 
   const [currentPage, setCurrentPage] = useState(0);
   const scrollHorizontal = useRef(new Animated.Value(0)).current;
-   
+  
 
   //Ref for animated value
   const slidesRef = useRef(null);
@@ -19,7 +20,16 @@ export default function TutorialScreen() {
     setCurrentPage(viewableItems[0].index)
   }).current;
 
+  const scrollTo = () => {
+    if (currentPage < slides.length - 1) {
+        slidesRef.current.scrollToIndex({ index: currentPage + 1 });
+    } else {
+        console.log('Last item.');
+    }
+};
+
   const viewConfig = useRef({viewAreaCoveragePercentThreshold:50}).current; //Slide contents on next scren must be 50% to be changed upon swipe.
+
 
 
   return (  
@@ -43,6 +53,7 @@ export default function TutorialScreen() {
             />
         </View>
         <Indicator data={slides} scrollHorizontal={scrollHorizontal}></Indicator>
+        <NextButton scrollTo={scrollTo} percentage={(currentPage + 1)*(100/slides.length)}/>
     </View>
   );
 };
