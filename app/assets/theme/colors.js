@@ -13,4 +13,5 @@ export default {
   darkBackground: '#272B37',
   textRight: '#9599E2', 
   textLeft: '#8BC6EC',
+  greyBackground: '#303645',
 };
