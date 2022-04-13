@@ -11,7 +11,8 @@ export default function NextButton({percentage}) {
     const strokeWidth = 2;
     const center = size/2;
     const radius = size/2 - strokeWidth/2;
-    const circumfrence = 2 * Math.PI * radius
+    const circumference = 2 * Math.PI * radius;
+
 
     const progress = useRef(new Animated.Value(0)).current
 
@@ -25,40 +26,50 @@ export default function NextButton({percentage}) {
         }).start()
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         animate(percentage);
-    },[percentage])
+    }, [percentage]);
 
-    useEffect(()=>{
-        progress.addListener((value)=>{
-            const strokeDashoffset = circumfrence - (circumfrence * value.value)/100; 
-            if(progressRef?.current){
-                progressRef.current.setNativeProps({
-                    strokeDashoffset 
-                })
-            }
-        },[percentage]);
-    });
+
+    useEffect(() => {
+        progress.addListener(
+            (value) => {
+                const strokeDashoffset = circumference - (circumference * value.value) / 100;
+
+                if (progressRef?.current) {
+                    progressRef.current.setNativeProps({
+                        strokeDashoffset,
+                    });
+                }
+            },
+            [percentage]
+        );
+
+        return () => {
+            progress.removeAllListeners();
+        };
+    }, []);
     
   return (
-      <View style={styles.container}>
-          <Svg width ={size} height={size}>
-            <G rotation='-90' origin={center}>
-            <Circle stroke = '#272B37' cx ={center} cy={center} r={radius} strokeWidth={strokeWidth}/>
-            <Circle
-                stroke= '#FFFFFF'
-                cx={center}
-                cy={center}
-                r={radius}
-                strokeWidth = {strokeWidth}
-                strokeDasharray = {circumfrence}
-            />
+    <View style={styles.container}>
+        <Svg width={size} height={size}>
+            <G rotation="-90" origin={center}>
+                <Circle stroke="#272B37" cx={center} cy={center} r={radius} strokeWidth={strokeWidth} />
+                <Circle
+                    ref={progressRef}
+                    stroke="#9599E2"
+                    cx={center}
+                    cy={center}
+                    r={radius}
+                    strokeWidth={strokeWidth}
+                    strokeDasharray={circumference}
+                />
             </G>
-          </Svg>
-          <TouchableOpacity style={styles.button} activeOpacity={0.6}>
-            <AntDesign name="arrowright" size={44} color="#8BC6EC" />
-          </TouchableOpacity>
-      </View>
+        </Svg>
+        <TouchableOpacity style={styles.button} activeOpacity={0.6}>
+            <AntDesign name="arrowright" size={32} color="#fff" />
+        </TouchableOpacity>
+    </View>
   )
 }
 
