@@ -5,12 +5,13 @@ import slides from '../../constants/slides';
 import TutorialItem from '../components/TutorialItem';
 import colors from '../theme/colors';
 import Indicator from '../components/Indicator';
+import NextButton from '../components/NextButton';
 
 export default function TutorialScreen() {
 
   const [currentPage, setCurrentPage] = useState(0);
   const scrollHorizontal = useRef(new Animated.Value(0)).current;
-   
+  
 
   //Ref for animated value
   const slidesRef = useRef(null);
@@ -43,6 +44,7 @@ export default function TutorialScreen() {
             />
         </View>
         <Indicator data={slides} scrollHorizontal={scrollHorizontal}></Indicator>
+        <NextButton percentage={(currentPage + 1)*(100/slides.length)}/>
     </View>
   );
 };
