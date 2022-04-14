@@ -6,6 +6,7 @@ import TutorialItem from '../components/TutorialItem';
 import colors from '../theme/colors';
 import Indicator from '../components/Indicator';
 import NextButton from '../components/NextButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function TutorialScreen() {
 
@@ -20,11 +21,19 @@ export default function TutorialScreen() {
     setCurrentPage(viewableItems[0].index)
   }).current;
 
-  const scrollTo = () => {
+  const scrollTo = async () => {
     if (currentPage < slides.length - 1) {
         slidesRef.current.scrollToIndex({ index: currentPage + 1 });
     } else {
         console.log('Last item.');
+    }
+    try{
+
+      await AsyncStorage.setItem('@tutorialViewed', 'true')
+
+    } catch (err){
+
+      console.log(err)
     }
 };
 
