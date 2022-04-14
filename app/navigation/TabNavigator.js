@@ -73,7 +73,7 @@ const TabNavigator = () => {
         ></Tab.Screen>
         <Tab.Screen
           name="Profile"
-          component={ProfileScreen}
+          component={FavoritesScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>

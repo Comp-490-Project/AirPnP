@@ -6,17 +6,22 @@ import colors from '../theme/colors';
 import { Linking } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { favoriteHandler } from '../../actions/userActions';
+import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
+import { withSafeAreaInsets } from 'react-native-safe-area-context';
 
 function FavoritesScreen({ navigation }) {
   const dispatch = useDispatch();
-
   const { userFavorites } = useSelector((state) => state.userFavorites);
-
   const maxRating = [1, 2, 3, 4, 5];
-
   return (
-    <ScrollView contentContainerstyle={styles.container}>
-      <View style={styles.topBorder} />
+<>   
+  <View style={styles.topBorder} />
+  <Image source= {require('../icons/back-btn.png')}/>  
+  <View style= {styles.container}>  
+    <Text style={styles.title}>Favorites</Text>
+    <ScrollView>
+      
+      
       {userFavorites.length == 0 ? (
         <Text style={{ flex: 1, justifyContent: 'center' }}>
           Data Not Available!
@@ -77,25 +82,43 @@ function FavoritesScreen({ navigation }) {
         ))
       )}
     </ScrollView>
+  </View>  
+</>    
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container:{
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.white,
-    justifyContent: 'space-around',
+    backgroundColor: colors.greyBackground,
+    
+
+  },
+  title:{
+    textAlign: 'center',
+    color: colors.white,
+    fontSize: 26,
+    fontFamily: 'Roboto',
+    paddingBottom: 50
   },
   itemView: {
-    backgroundColor: colors.lightgray,
+    color: colors.textLeft,
     padding: 15,
-    borderColor: colors.white,
-    borderBottomWidth: 10,
+    borderRadius: 20,
+    backgroundColor: "white",
+    marginBottom: 20,
+  },
+  backbutton:{
+   
+
   },
   nameText: {
     fontWeight: 'bold',
+  },
+  buffer:{
+  height: 50,
   },
   buttons: {
     padding: 15,
@@ -108,9 +131,7 @@ const styles = StyleSheet.create({
   },
   topBorder: {
     height: 50,
-  },
-  topBorder: {
-    height: 50,
+    backgroundColor: colors.greyBackground
   },
   customRatingBarStyle: {
     flexDirection: 'row',
