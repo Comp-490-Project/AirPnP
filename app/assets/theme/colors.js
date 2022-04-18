@@ -18,4 +18,11 @@ export default {
   mapCardPrimary: '#7E82D8',
   mapCardSecondary: '#54A5D9',
   directionsStroke: '#38A6E7',
+  textRight: '#9599E2', 
+  textLeft: '#8BC6EC',
+  greyBackground: '#303645',
+  firstfavColorLeft: '#9599E2',
+  firstfavColorRight: '#747AE8',
+  secondFavColorLeft:'#4AA1DA',
+  secondFavColorRight:'#338FCA',
 };
