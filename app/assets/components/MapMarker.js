@@ -29,11 +29,13 @@ function MapMarker({ marker, index }) {
           dispatch(setMapCenterLocation(marker.latitude, marker.longitude));
         }}
       >
-        {marker.latitude === selectedLat && marker.longitude === selectedLng ? (
-          <MainMarker width={100} height={40} />
+        {/* @TODO: FIX THIS RYAN ILANO!!! */}
+        {/* {marker.latitude === selectedLat && marker.longitude === selectedLng ? (
+          // <MainMarker width={100} height={40} />
+          <ToiletMarker width={100} height={40} />
         ) : (
           <ToiletMarker width={100} height={40} />
-        )}
+        )} */}
       </Marker>
     </>
   );
