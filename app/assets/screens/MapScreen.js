@@ -14,6 +14,7 @@ import {
 } from '../../actions/userActions';
 import { getRestrooms } from '../../actions/restroomActions';
 import { useDirections } from '../../hooks/useDirections';
+import SearchBox from '../components/SearchBox';
 function MapScreen({ navigation }) {
   const reference = useRef(null);
 
@@ -84,7 +85,7 @@ function MapScreen({ navigation }) {
         ))}
         {useDirections(location, restroomWithDirections)}
       </MapView>
-      <SearchBar />
+      <SearchBox navigation={navigation}/>
       <MapBottomCard  navigation={navigation} />
     </View>
   );
