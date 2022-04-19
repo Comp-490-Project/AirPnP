@@ -1,8 +1,16 @@
 import React from "react";
 import {View, StyleSheet, TouchableOpacity} from 'react-native'
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from "react-redux";
+import { getUserLocation } from "../../actions/userActions";
+import { setMapCenterLocation } from "../../actions/restroomActions";
+
 
 export default function CenterBox ({navigation}) {
+
+    const dispatch = useDispatch();
+    const { location } = useSelector((state) => state.userLocation);
+
     return (
         <View style={styles.container}>
            <TouchableOpacity 
@@ -12,6 +20,8 @@ export default function CenterBox ({navigation}) {
               color="black"
               size={30}
               style={{ alignSelf: 'center' }}
+              onPress={() => dispatch(setMapCenterLocation(location.latitude, location.longitude))} //TODO: Implement nice smooth scroll to center animation
+
             />
           </TouchableOpacity>
         </View>
