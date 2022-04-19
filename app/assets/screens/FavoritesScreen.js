@@ -16,7 +16,7 @@ import AttributeButton from '../components/AttributeButton';
 import DirectionsIcon from '../components/DirectionsIcon';
 import FeedIcon from '../components/FeedIcon';
 import ToiletIcon from '../icons/toilet-icon.png';
-import ToiletIcon2 from'../icons/toilet2.png';
+import ToiletIcon2 from '../icons/toilet2.png';
 import DistancePersonIcon from '../icons/distance-person-icon.svg';
 import { WIDTH } from '../../constants/Dimensions';
 
@@ -134,29 +134,27 @@ function FavoritesScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.greyBackground,
-    
-
   },
-  title:{
+  title: {
     textAlign: 'center',
     color: colors.white,
     fontSize: 26,
     fontFamily: 'Roboto',
-    paddingBottom: 50
+    paddingBottom: 50,
   },
-  backbutton:{
+  backbutton: {
     backgroundColor: colors.greyBackground,
   },
   nameText: {
     fontWeight: 'bold',
   },
-  buffer:{
-  height: 50,
+  buffer: {
+    height: 50,
   },
   topBorder: {
     height: 50,
@@ -235,14 +233,9 @@ const styles = StyleSheet.create({
 
 export default FavoritesScreen;
 
-
-
-  
-
-
 /*
 
-*/ 
+*/
 /*
 
           <View style={styles.itemView} key={index}>
