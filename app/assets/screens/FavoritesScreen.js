@@ -20,12 +20,18 @@ import ToiletIcon2 from'../icons/toilet2.png';
 import DistancePersonIcon from '../icons/distance-person-icon.svg';
 import { WIDTH } from '../../constants/Dimensions';
 
-/* todo wrap the back button with toucable opacity */
+/* todo
+1: wrap the back button with toucable opacity 
+2: make card into a component
+3: make heart into a component
+4: write code to add addresses to the database
+5: add place holders for visited and favorited stats
+6: create two more screen for visited and added restrooms or same screen with props
+*/
 
 function FavoritesScreen({ navigation }) {
   const dispatch = useDispatch();
   const { userFavorites } = useSelector((state) => state.userFavorites);
-  const maxRating = [1, 2, 3, 4, 5];
   return (
 <>   
   <View style={styles.topBorder} />
@@ -75,6 +81,7 @@ function FavoritesScreen({ navigation }) {
                 </View>
               </View>
               <Image source={ToiletIcon2} style={styles.toiletBackground2} />
+              <View style={styles.shadedfooter}/>
             </View>
           </LinearGradient>
           ) : (
@@ -111,6 +118,8 @@ function FavoritesScreen({ navigation }) {
             </View>
           </View>
           <Image source={ToiletIcon} style={styles.toiletBackground} />
+          <View style={styles.shadedfooter}/>
+          
         </View>
       </LinearGradient>
           ) 
@@ -197,6 +206,8 @@ const styles = StyleSheet.create({
     top: 0,
     height: '130%',
     width: '40%',
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
   },
   toiletBackground2: {
     position: 'absolute',
@@ -205,7 +216,21 @@ const styles = StyleSheet.create({
     top: 0,
     height: '130%',
     width: '40%',
+    borderBottomLeftRadius:20,
+    borderTopLeftRadius: 20,
   },
+  shadedfooter: {
+    backgroundColor: "black",
+    opacity: 0.2 ,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '44%',
+    borderBottomLeftRadius:20,
+    borderBottomRightRadius:20,
+  },
+  
 });
 
 export default FavoritesScreen;
