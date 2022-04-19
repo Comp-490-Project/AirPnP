@@ -15,6 +15,7 @@ import TutorialScreen from '../assets/screens/TutorialScreen';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnimationLoad from '../assets/components/AnimationLoad';
+import SearchScreen from '../assets/screens/SearchScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -65,6 +66,7 @@ const RootStackNavigator = () => {
           <Stack.Screen name="Save" component={UploadPost}></Stack.Screen>
           <Stack.Screen name="Feed" component={FeedScreen}></Stack.Screen>
           <Stack.Screen name="Camera" component={CameraScreen}></Stack.Screen>
+          <Stack.Screen name="Search" component={SearchScreen}></Stack.Screen>
         </>
       ) : (
         <>
