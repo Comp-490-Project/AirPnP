@@ -19,14 +19,13 @@ import ToiletIcon from '../icons/toilet-icon.png';
 import ToiletIcon2 from '../icons/toilet2.png';
 import DistancePersonIcon from '../icons/distance-person-icon.svg';
 import { WIDTH } from '../../constants/Dimensions';
+import HeartIcon from '../components/HeartIcon';
 
-/* todo
-1: wrap the back button with toucable opacity 
+/* todo 
 2: make card into a component
-3: make heart into a component
-4: write code to add addresses to the database
-5: add place holders for visited and favorited stats
-6: create two more screen for visited and added restrooms or same screen with props
+4: write code to add addresses to the database and add favorited and visited counters in the database
+5: add stats visited and favorited
+6: pass a mode prop to select favs, visited, added.
 */
 
 function FavoritesScreen({ navigation }) {
@@ -35,14 +34,14 @@ function FavoritesScreen({ navigation }) {
   return (
 <>   
   <View style={styles.topBorder} />
-  <View style= {styles.backbutton}>
+  <TouchableOpacity style= {styles.backbutton}>
     <Image  style = {{marginLeft: 15}} source= {require('../icons/back-btn.png')}/>  
-  </View>
+  </TouchableOpacity>
   <View style= {styles.container}>  
     <Text style={styles.title}>Favorites</Text>
     <ScrollView> 
       {userFavorites.length == 0 ? (
-        <Text style={{ flex: 1, justifyContent: 'center' }}>
+        <Text style={{ flex: 1, justifyContent: 'center' , color: colors.white}}>
           Data Not Available!
         </Text>
       ) : (
@@ -77,7 +76,7 @@ function FavoritesScreen({ navigation }) {
                 <View style={styles.btnContainer}>
                   <DirectionsIcon latitude={restroom.latitude} longitude={restroom.longitude} />
                   <FeedIcon navigation={navigation} geohash={restroom.geohash} />
-                  
+                  <HeartIcon geohash={restroom.geohash} />
                 </View>
               </View>
               <Image source={ToiletIcon2} style={styles.toiletBackground2} />
@@ -114,7 +113,7 @@ function FavoritesScreen({ navigation }) {
             <View style={styles.btnContainer}>
               <DirectionsIcon latitude={restroom.latitude} longitude={restroom.longitude} />
               <FeedIcon navigation={navigation} geohash={restroom.geohash} />
-              
+              <HeartIcon geohash={restroom.geohash} />
             </View>
           </View>
           <Image source={ToiletIcon} style={styles.toiletBackground} />
