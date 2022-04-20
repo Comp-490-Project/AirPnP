@@ -46,15 +46,15 @@ function FavoritesScreen({ navigation }) {
         </Text>
       ) : (
         userFavorites.map((restroom, index) => (
-        index % 2 == 0 ? (
-            <LinearGradient
+        
+          <LinearGradient
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            colors={[colors.firstfavColorLeft, colors.firstfavColorRight]}
+            colors={index % 2 == 0 ? ([colors.firstfavColorLeft, colors.firstfavColorRight]):([colors.secondFavColorLeft, colors.secondFavColorRight])}         
             locations={[0, 0.7]}
             style={styles.cardBackground}
             key={index}
-          >
+          >                
             <View style={styles.cardContainer}>
               <View style={styles.headingContainer}>
                 <LightText fontSize={26} fontWeight={'700'}>
@@ -79,53 +79,15 @@ function FavoritesScreen({ navigation }) {
                   <HeartIcon geohash={restroom.geohash} />
                 </View>
               </View>
+              {index % 2 == 0 ? (
               <Image source={ToiletIcon2} style={styles.toiletBackground2} />
+              ):(
+              <Image source={ToiletIcon} style={styles.toiletBackground} />
+                )}
               <View style={styles.shadedfooter}/>
             </View>
-          </LinearGradient>
-          ) : (
-      <LinearGradient
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        colors={[colors.secondFavColorLeft, colors.secondFavColorRight]}
-        locations={[0, 0.7]}
-        style={styles.cardBackground}
-        key={index}
-      >
-        <View style={styles.cardContainer}>
-          <View style={styles.headingContainer}>
-            <LightText fontSize={26} fontWeight={'700'}>
-              {restroom.name}
-            </LightText>
-          </View>
-          {/* @TODO: Convert coordinates into address */}
-          <View style={styles.addressContainer}>
-            <LightText fontWeight="500" lineHeight={20}>
-                  {restroom.description}
-            </LightText>
-          </View>
-          {/* @TODO: Check if restaurant description contains word restaurant */}
-          <View style={styles.attributeContainer}>
-            <AttributeButton attribute="free" />
-            <AttributeButton attribute="restaurant" />
-          </View>
-          <View style={styles.footerContainer}>
-            <View style={styles.btnContainer}>
-              <DirectionsIcon latitude={restroom.latitude} longitude={restroom.longitude} />
-              <FeedIcon navigation={navigation} geohash={restroom.geohash} />
-              <HeartIcon geohash={restroom.geohash} />
-            </View>
-          </View>
-          <Image source={ToiletIcon} style={styles.toiletBackground} />
-          <View style={styles.shadedfooter}/>
-          
-        </View>
-      </LinearGradient>
-          ) 
-        
-          
-        ))
-      )}
+          </LinearGradient>       
+      )))}
     </ScrollView>
   </View>  
 </>    
