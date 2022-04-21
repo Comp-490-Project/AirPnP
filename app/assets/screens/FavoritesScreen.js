@@ -68,10 +68,20 @@ function FavoritesScreen({ navigation }) {
                 </LightText>
               </View>
               {/* @TODO: Check if restaurant description contains word restaurant */}
-              <View style={styles.attributeContainer}>
-                <AttributeButton attribute="free" />
-                <AttributeButton attribute="restaurant" />
+              <View style= {styles.stats}>
+                <Image  source= {require('../icons/favstaticon.png')}/>
+                <LightText fontWeight="500" lineHeight={20}>
+                      {" 5 other have favorited this restroom!"}
+                </LightText>
               </View>
+              <View style= {styles.stats}>
+                <Image  source= {require('../icons/visitedcheckmark.png')}/>
+                <LightText fontWeight="500" lineHeight={20}>
+                      {" 5 others have visited this restroom!"}
+                </LightText>
+              </View>
+
+
               <View style={styles.footerContainer}>
                 <View style={styles.btnContainer}>
                   <DirectionsIcon latitude={restroom.latitude} longitude={restroom.longitude} />
@@ -141,10 +151,6 @@ const styles = StyleSheet.create({
   addressContainer: {
     marginVertical: 5,
   },
-  attributeContainer: {
-    marginBottom: 5,
-    flexDirection: 'row',
-  },
   footerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -185,69 +191,16 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: '44%',
+    height: '35%',
     borderBottomLeftRadius:20,
     borderBottomRightRadius:20,
+  },
+  stats:{
+    flexDirection: 'row',
+    marginBottom: 10,
   },
   
 });
 
 export default FavoritesScreen;
 
-/*
-
-*/
-/*
-
-          <View style={styles.itemView} key={index}>
-            <Text style={styles.nameText}>{restroom.name}</Text>
-            <View style={styles.customRatingBarStyle}>
-              <Text>Rating </Text>
-              {restroom.meanRating && restroom.meanRating == 1 ? (
-                <Image
-                  style={styles.starImgStyle}
-                  source={require('../icons/poop-emoji.png')}
-                />
-              ) : (
-                maxRating.map((item, index) => (
-                  <Image
-                    style={styles.starImgStyle}
-                    key={index}
-                    source={
-                      item <= restroom.meanRating
-                        ? require('../icons/rating/star-filled.png')
-                        : require('../icons/rating/star-unfilled.png')
-                    }
-                  />
-                ))
-              )}
-            </View>
-
-            <Text>{restroom.description}</Text>
-            <View style={styles.buttons}>
-              <AppButton
-                style={styles.navButton}
-                title="Navigate"
-                onPress={() => {
-                  const { latitude, longitude } = userFavorites[index];
-
-                  Platform.OS === 'ios'
-                    ? Linking.openURL(`maps:${latitude},${longitude}`)
-                    : Linking.openURL(`geo:0,0?q=${latitude},${longitude}`);
-                }}
-              ></AppButton>
-              <AppButton
-                title="Rate"
-                onPress={() => {
-                  navigation.navigate('Review', {
-                    geohash: userFavorites[index].geohash,
-                  });
-                }}
-              ></AppButton>
-              <AppButton
-                title="Remove"
-                onPress={() => dispatch(favoriteHandler(restroom.geohash))}
-              ></AppButton>
-            </View>
-          </View>
-*/
