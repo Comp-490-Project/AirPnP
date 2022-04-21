@@ -11,6 +11,7 @@ export default {
   blue: '#0000FF',
   lightgray: '#00000040',
   tabs: '#99e0c8', // Light green
+  // Ryan
   primary: '#9599E2',
   secondary: '#8BC6EC',
   backgroundLight: '#F2F2F2',
@@ -18,11 +19,13 @@ export default {
   mapCardPrimary: '#7E82D8',
   mapCardSecondary: '#54A5D9',
   directionsStroke: '#38A6E7',
-  textRight: '#9599E2', 
+  textDark: '#464646',
+  // End Ryan
+  textRight: '#9599E2',
   textLeft: '#8BC6EC',
   greyBackground: '#303645',
   firstfavColorLeft: '#9599E2',
   firstfavColorRight: '#747AE8',
-  secondFavColorLeft:'#4AA1DA',
-  secondFavColorRight:'#338FCA',
+  secondFavColorLeft: '#4AA1DA',
+  secondFavColorRight: '#338FCA',
 };
