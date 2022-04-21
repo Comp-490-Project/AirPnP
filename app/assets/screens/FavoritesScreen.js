@@ -74,14 +74,12 @@ function FavoritesScreen({ navigation }) {
                       {" 5 other have favorited this restroom!"}
                 </LightText>
               </View>
-              <View style= {styles.stats}>
+              <View style= {styles.stats2}>
                 <Image  source= {require('../icons/visitedcheckmark.png')}/>
                 <LightText fontWeight="500" lineHeight={20}>
                       {" 5 others have visited this restroom!"}
                 </LightText>
               </View>
-
-
               <View style={styles.footerContainer}>
                 <View style={styles.btnContainer}>
                   <DirectionsIcon latitude={restroom.latitude} longitude={restroom.longitude} />
@@ -142,6 +140,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'center',
     position: 'relative',
+    overflow: "hidden",
   },
   headingContainer: {
     width: '100%',
@@ -169,7 +168,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     top: 0,
-    height: '130%',
+    height: '125%',
     width: '40%',
     borderTopRightRadius: 20,
     borderBottomRightRadius: 20,
@@ -179,7 +178,7 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     top: 0,
-    height: '130%',
+    height: '125%',
     width: '40%',
     borderBottomLeftRadius:20,
     borderTopLeftRadius: 20,
@@ -198,6 +197,10 @@ const styles = StyleSheet.create({
   stats:{
     flexDirection: 'row',
     marginBottom: 10,
+  },
+  stats2:{
+    flexDirection: 'row',
+    marginBottom: 20,
   },
   
 });
