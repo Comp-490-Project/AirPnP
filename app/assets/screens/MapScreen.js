@@ -46,9 +46,7 @@ function MapScreen({ navigation }) {
     return unsubscribe;
   }, []);
 
-  // TODO: re-add this line after fixing markers
-  // || !restroomWithDirections
-  if (!location) {
+  if (!location || !restroomWithDirections) {
     return <AnimationLoad />;
   }
 

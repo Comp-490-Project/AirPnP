@@ -19,128 +19,86 @@ import ToiletIcon from '../icons/toilet-icon.png';
 import ToiletIcon2 from '../icons/toilet2.png';
 import DistancePersonIcon from '../icons/distance-person-icon.svg';
 import { WIDTH } from '../../constants/Dimensions';
+import HeartIcon from '../components/HeartIcon';
 
-/* todo wrap the back button with toucable opacity */
+/* todo 
+2: make card into a component
+4: write code to add addresses to the database and add favorited and visited counters in the database
+5: add stats visited and favorited
+6: pass a mode prop to select favs, visited, added.
+*/
 
 function FavoritesScreen({ navigation }) {
   const dispatch = useDispatch();
   const { userFavorites } = useSelector((state) => state.userFavorites);
-  const maxRating = [1, 2, 3, 4, 5];
   return (
-    <>
-      <View style={styles.topBorder} />
-      <View style={styles.backbutton}>
-        <Image
-          style={{ marginLeft: 15 }}
-          source={require('../icons/back-btn.png')}
-        />
-      </View>
-      <View style={styles.container}>
-        <Text style={styles.title}>Favorites</Text>
-        <ScrollView>
-          {userFavorites.length == 0 ? (
-            <Text style={{ flex: 1, justifyContent: 'center' }}>
-              Data Not Available!
-            </Text>
-          ) : (
-            userFavorites.map((restroom, index) =>
-              index % 2 == 0 ? (
-                <LinearGradient
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  colors={[colors.firstfavColorLeft, colors.firstfavColorRight]}
-                  locations={[0, 0.7]}
-                  style={styles.cardBackground}
-                  key={index}
-                >
-                  <View style={styles.cardContainer}>
-                    <View style={styles.headingContainer}>
-                      <LightText fontSize={26} fontWeight={'700'}>
-                        {restroom.name}
-                      </LightText>
-                    </View>
-                    {/* @TODO: Convert coordinates into address */}
-                    <View style={styles.addressContainer}>
-                      <LightText fontWeight="500" lineHeight={20}>
-                        {restroom.description}
-                      </LightText>
-                    </View>
-                    {/* @TODO: Check if restaurant description contains word restaurant */}
-                    <View style={styles.attributeContainer}>
-                      <AttributeButton attribute="free" />
-                      <AttributeButton attribute="restaurant" />
-                    </View>
-                    <View style={styles.footerContainer}>
-                      <View style={styles.btnContainer}>
-                        <DirectionsIcon
-                          latitude={restroom.latitude}
-                          longitude={restroom.longitude}
-                        />
-                        <FeedIcon
-                          navigation={navigation}
-                          geohash={restroom.geohash}
-                        />
-                      </View>
-                    </View>
-                    <Image
-                      source={ToiletIcon2}
-                      style={styles.toiletBackground2}
-                    />
-                  </View>
-                </LinearGradient>
-              ) : (
-                <LinearGradient
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  colors={[
-                    colors.secondFavColorLeft,
-                    colors.secondFavColorRight,
-                  ]}
-                  locations={[0, 0.7]}
-                  style={styles.cardBackground}
-                  key={index}
-                >
-                  <View style={styles.cardContainer}>
-                    <View style={styles.headingContainer}>
-                      <LightText fontSize={26} fontWeight={'700'}>
-                        {restroom.name}
-                      </LightText>
-                    </View>
-                    {/* @TODO: Convert coordinates into address */}
-                    <View style={styles.addressContainer}>
-                      <LightText fontWeight="500" lineHeight={20}>
-                        {restroom.description}
-                      </LightText>
-                    </View>
-                    {/* @TODO: Check if restaurant description contains word restaurant */}
-                    <View style={styles.attributeContainer}>
-                      <AttributeButton attribute="free" />
-                      <AttributeButton attribute="restaurant" />
-                    </View>
-                    <View style={styles.footerContainer}>
-                      <View style={styles.btnContainer}>
-                        <DirectionsIcon
-                          latitude={restroom.latitude}
-                          longitude={restroom.longitude}
-                        />
-                        <FeedIcon
-                          navigation={navigation}
-                          geohash={restroom.geohash}
-                        />
-                      </View>
-                    </View>
-                    <Image
-                      source={ToiletIcon}
-                      style={styles.toiletBackground}
-                    />
-                  </View>
-                </LinearGradient>
-              )
-            )
-          )}
-        </ScrollView>
-      </View>
-    </>
+<>   
+  <View style={styles.topBorder} />
+  <TouchableOpacity style= {styles.backbutton}>
+    <Image  style = {{marginLeft: 15}} source= {require('../icons/back-btn.png')}/>  
+  </TouchableOpacity>
+  <View style= {styles.container}>  
+    <Text style={styles.title}>Favorites</Text>
+    <ScrollView> 
+      {userFavorites.length == 0 ? (
+        <Text style={{ flex: 1, justifyContent: 'center' , color: colors.white}}>
+          Data Not Available!
+        </Text>
+      ) : (
+        userFavorites.map((restroom, index) => (
+        
+          <LinearGradient
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            colors={index % 2 == 0 ? ([colors.firstfavColorLeft, colors.firstfavColorRight]):([colors.secondFavColorLeft, colors.secondFavColorRight])}         
+            locations={[0, 0.7]}
+            style={styles.cardBackground}
+            key={index}
+          >                
+            <View style={styles.cardContainer}>
+              <View style={styles.headingContainer}>
+                <LightText fontSize={26} fontWeight={'700'}>
+                  {restroom.name}
+                </LightText>
+              </View>
+              {/* @TODO: Convert coordinates into address */}
+              <View style={styles.addressContainer}>
+                <LightText fontWeight="500" lineHeight={20}>
+                      {restroom.description}
+                </LightText>
+              </View>
+              {/* @TODO: Check if restaurant description contains word restaurant */}
+              <View style= {styles.stats}>
+                <Image  source= {require('../icons/favstaticon.png')}/>
+                <LightText fontWeight="500" lineHeight={20}>
+                      {" 5 other have favorited this restroom!"}
+                </LightText>
+              </View>
+              <View style= {styles.stats2}>
+                <Image  source= {require('../icons/visitedcheckmark.png')}/>
+                <LightText fontWeight="500" lineHeight={20}>
+                      {" 5 others have visited this restroom!"}
+                </LightText>
+              </View>
+              <View style={styles.footerContainer}>
+                <View style={styles.btnContainer}>
+                  <DirectionsIcon latitude={restroom.latitude} longitude={restroom.longitude} />
+                  <FeedIcon navigation={navigation} geohash={restroom.geohash} />
+                  <HeartIcon geohash={restroom.geohash} />
+                </View>
+              </View>
+              {index % 2 == 0 ? (
+              <Image source={ToiletIcon2} style={styles.toiletBackground2} />
+              ):(
+              <Image source={ToiletIcon} style={styles.toiletBackground} />
+                )}
+              <View style={styles.shadedfooter}/>
+            </View>
+          </LinearGradient>       
+      )))}
+    </ScrollView>
+  </View>  
+</>    
   );
 }
 
@@ -182,6 +140,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'center',
     position: 'relative',
+    overflow: "hidden",
   },
   headingContainer: {
     width: '100%',
@@ -190,10 +149,6 @@ const styles = StyleSheet.create({
   },
   addressContainer: {
     marginVertical: 5,
-  },
-  attributeContainer: {
-    marginBottom: 5,
-    flexDirection: 'row',
   },
   footerContainer: {
     flexDirection: 'row',
@@ -213,75 +168,42 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     top: 0,
-    height: '130%',
+    height: '125%',
     width: '40%',
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
   },
   toiletBackground2: {
     position: 'absolute',
     left: 0,
     bottom: 0,
     top: 0,
-    height: '130%',
+    height: '125%',
     width: '40%',
+    borderBottomLeftRadius:20,
+    borderTopLeftRadius: 20,
   },
+  shadedfooter: {
+    backgroundColor: "black",
+    opacity: 0.2 ,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '35%',
+    borderBottomLeftRadius:20,
+    borderBottomRightRadius:20,
+  },
+  stats:{
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  stats2:{
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  
 });
 
 export default FavoritesScreen;
 
-/*
-
-*/
-/*
-
-          <View style={styles.itemView} key={index}>
-            <Text style={styles.nameText}>{restroom.name}</Text>
-            <View style={styles.customRatingBarStyle}>
-              <Text>Rating </Text>
-              {restroom.meanRating && restroom.meanRating == 1 ? (
-                <Image
-                  style={styles.starImgStyle}
-                  source={require('../icons/poop-emoji.png')}
-                />
-              ) : (
-                maxRating.map((item, index) => (
-                  <Image
-                    style={styles.starImgStyle}
-                    key={index}
-                    source={
-                      item <= restroom.meanRating
-                        ? require('../icons/rating/star-filled.png')
-                        : require('../icons/rating/star-unfilled.png')
-                    }
-                  />
-                ))
-              )}
-            </View>
-
-            <Text>{restroom.description}</Text>
-            <View style={styles.buttons}>
-              <AppButton
-                style={styles.navButton}
-                title="Navigate"
-                onPress={() => {
-                  const { latitude, longitude } = userFavorites[index];
-
-                  Platform.OS === 'ios'
-                    ? Linking.openURL(`maps:${latitude},${longitude}`)
-                    : Linking.openURL(`geo:0,0?q=${latitude},${longitude}`);
-                }}
-              ></AppButton>
-              <AppButton
-                title="Rate"
-                onPress={() => {
-                  navigation.navigate('Review', {
-                    geohash: userFavorites[index].geohash,
-                  });
-                }}
-              ></AppButton>
-              <AppButton
-                title="Remove"
-                onPress={() => dispatch(favoriteHandler(restroom.geohash))}
-              ></AppButton>
-            </View>
-          </View>
-*/
