@@ -100,43 +100,29 @@ function RestroomInfo({ navigation }) {
         </View>
         <View style={styles.horizontalRule} />
         <View style={styles.reviewsContainer}>
-          <DarkText fontSize={16} color="#000">
+          <DarkText fontSize={16} color={colors.black}>
             Reviews
           </DarkText>
           <View style={styles.ratingContainer}>
             <View style={styles.starContainer}>
-              <FontAwesomeIcon
-                icon={faStar}
-                size={20}
-                style={styles.faStar}
-              ></FontAwesomeIcon>
-              <FontAwesomeIcon
-                icon={faStar}
-                size={20}
-                style={styles.faStar}
-              ></FontAwesomeIcon>
-              <FontAwesomeIcon
-                icon={faStar}
-                size={20}
-                style={styles.faStar}
-              ></FontAwesomeIcon>
-              <FontAwesomeIcon
-                icon={faStar}
-                size={20}
-                style={styles.faStar}
-              ></FontAwesomeIcon>
+              <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
+              <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
+              <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
+              <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
               <FontAwesomeIcon
                 icon={faStarHalfStroke}
                 size={20}
                 style={styles.faStar}
-              ></FontAwesomeIcon>
+              />
             </View>
             <View style={styles.ratingText}>
               <DarkText color="#000">4.5 out of 5</DarkText>
             </View>
           </View>
           <DarkText fontSize={12}>2 ratings</DarkText>
-          <DarkText fontSize={16}>Reviews with Images</DarkText>
+          <DarkText fontSize={16} color={colors.black}>
+            Reviews with Images
+          </DarkText>
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={true}
@@ -162,7 +148,9 @@ function RestroomInfo({ navigation }) {
             />
           </ScrollView>
         </View>
-        <Review />
+        <View style={styles.userReviews}>
+          <Review />
+        </View>
       </ScrollView>
     </SafeView>
   );
@@ -254,6 +242,9 @@ const styles = StyleSheet.create({
     width: WIDTH * 0.4,
     marginRight: 10,
     borderRadius: 5,
+  },
+  userReviews: {
+    marginVertical: 12,
   },
 });
 

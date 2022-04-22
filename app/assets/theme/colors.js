@@ -20,6 +20,7 @@ export default {
   mapCardSecondary: '#54A5D9',
   directionsStroke: '#38A6E7',
   textDark: '#464646',
+  black: '#000',
   // End Ryan
   textRight: '#9599E2',
   textLeft: '#8BC6EC',

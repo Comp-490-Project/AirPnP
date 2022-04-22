@@ -5,14 +5,18 @@ import FreeIcon from '../icons/dollar-sign-icon.svg';
 import RestaurantIcon from '../icons/restaurant-icon.svg';
 import colors from '../theme/colors';
 
-const AttributeButton = ({ attribute }) => {
+const AttributeButton = ({ attribute, bgColor }) => {
   return attribute === 'free' ? (
-    <View style={styles.btnContainer}>
+    <View
+      style={[styles.btnContainer, bgColor && { backgroundColor: bgColor }]}
+    >
       <FreeIcon height={15} width={10} style={styles.icon} />
       <LightText lineHeight={20}>Free</LightText>
     </View>
   ) : (
-    <View style={styles.btnContainer}>
+    <View
+      style={[styles.btnContainer, bgColor && { backgroundColor: bgColor }]}
+    >
       <RestaurantIcon height={15} width={20} style={styles.icon} />
       <LightText lineHeight={20}>Restaurant</LightText>
     </View>
@@ -30,7 +34,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 8,
     paddingVertical: 1,
-    marginRight: 5,
   },
   icon: {
     marginRight: 3,
