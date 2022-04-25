@@ -46,7 +46,7 @@ function MapScreen({ navigation }) {
     return unsubscribe;
   }, []);
 
-  if (!location || !restroomWithDirections) {
+  if (!location) {
     return <AnimationLoad />;
   }
 
