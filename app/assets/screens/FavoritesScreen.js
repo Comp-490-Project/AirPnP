@@ -1,146 +1,72 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import AppButton from '../components/AppButton';
 import colors from '../theme/colors';
-import { Linking } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { favoriteHandler } from '../../actions/userActions';
-import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
-import { withSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
+import { TouchableOpacity } from 'react-native';
+import RestroomCard from '../components/RestroomCard';
+/* todo 
+4: write code to add addresses to the database and add favorited and visited counters in the database
+5: add stats visited and favorited
+6: pass a mode prop to select favs, visited, added.
+*/
 
 function FavoritesScreen({ navigation }) {
-  const dispatch = useDispatch();
   const { userFavorites } = useSelector((state) => state.userFavorites);
-  const maxRating = [1, 2, 3, 4, 5];
   return (
 <>   
   <View style={styles.topBorder} />
-  <Image source= {require('../icons/back-btn.png')}/>  
+  <TouchableOpacity style= {styles.backbutton}>
+    <Image  style = {{marginLeft: 15}} source= {require('../icons/back-btn.png')}/>  
+  </TouchableOpacity>
   <View style= {styles.container}>  
     <Text style={styles.title}>Favorites</Text>
-    <ScrollView>
-      
-      
+    <ScrollView> 
       {userFavorites.length == 0 ? (
-        <Text style={{ flex: 1, justifyContent: 'center' }}>
+        <Text style={{ flex: 1, justifyContent: 'center' , color: colors.white}}>
           Data Not Available!
         </Text>
       ) : (
         userFavorites.map((restroom, index) => (
-          <View style={styles.itemView} key={index}>
-            <Text style={styles.nameText}>{restroom.name}</Text>
-            <View style={styles.customRatingBarStyle}>
-              <Text>Rating </Text>
-              {restroom.meanRating && restroom.meanRating == 1 ? (
-                <Image
-                  style={styles.starImgStyle}
-                  source={require('../icons/poop-emoji.png')}
-                />
-              ) : (
-                maxRating.map((item, index) => (
-                  <Image
-                    style={styles.starImgStyle}
-                    key={index}
-                    source={
-                      item <= restroom.meanRating
-                        ? require('../icons/rating/star-filled.png')
-                        : require('../icons/rating/star-unfilled.png')
-                    }
-                  />
-                ))
-              )}
-            </View>
-
-            <Text>{restroom.description}</Text>
-            <View style={styles.buttons}>
-              <AppButton
-                style={styles.navButton}
-                title="Navigate"
-                onPress={() => {
-                  const { latitude, longitude } = userFavorites[index];
-
-                  Platform.OS === 'ios'
-                    ? Linking.openURL(`maps:${latitude},${longitude}`)
-                    : Linking.openURL(`geo:0,0?q=${latitude},${longitude}`);
-                }}
-              ></AppButton>
-              <AppButton
-                title="Rate"
-                onPress={() => {
-                  navigation.navigate('Review', {
-                    geohash: userFavorites[index].geohash,
-                  });
-                }}
-              ></AppButton>
-              <AppButton
-                title="Remove"
-                onPress={() => dispatch(favoriteHandler(restroom.geohash))}
-              ></AppButton>
-            </View>
-          </View>
-        ))
-      )}
+          <RestroomCard 
+          navigation={ navigation}
+          indexValue= {index}
+          key= {index}
+          name= {restroom.name}
+          address= {restroom.description}
+          latitude= {restroom.latitude}
+          longitude= {restroom.longitude}
+          geohash= {restroom.geohash}
+          />
+          
+      )))}
     </ScrollView>
   </View>  
 </>    
   );
 }
-
 const styles = StyleSheet.create({
   container:{
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.greyBackground,
-    
-
   },
-  title:{
+  title: {
     textAlign: 'center',
     color: colors.white,
     fontSize: 26,
     fontFamily: 'Roboto',
-    paddingBottom: 50
+    paddingBottom: 50,
   },
-  itemView: {
-    color: colors.textLeft,
-    padding: 15,
-    borderRadius: 20,
-    backgroundColor: "white",
-    marginBottom: 20,
-  },
-  backbutton:{
-   
-
-  },
-  nameText: {
-    fontWeight: 'bold',
-  },
-  buffer:{
-  height: 50,
-  },
-  buttons: {
-    padding: 15,
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-around',
-  },
-  navButton: {
-    width: '50%',
+  backbutton: {
+    backgroundColor: colors.greyBackground,
   },
   topBorder: {
     height: 50,
-    backgroundColor: colors.greyBackground
-  },
-  customRatingBarStyle: {
-    flexDirection: 'row',
-  },
-  starImgStyle: {
-    width: 20,
-    height: 20,
-    resizeMode: 'cover',
+    backgroundColor: colors.greyBackground,
   },
 });
 
 export default FavoritesScreen;
+

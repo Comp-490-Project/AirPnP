@@ -4,19 +4,34 @@ import {
   StyleSheet,
   Linking,
   View,
-  Dimensions,
   Text,
   TouchableOpacity,
   Image,
 } from 'react-native';
-import AppButton from '../components/AppButton';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { LinearGradient } from 'expo-linear-gradient';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import {
+  faPencil,
+  faImages,
+  faStar,
+  faStarHalfStroke,
+} from '@fortawesome/free-solid-svg-icons';
+import { HEIGHT, WIDTH } from '../../constants/Dimensions';
+import SafeView from '../components/SafeView';
+import DarkText from '../components/DarkText';
+import LightText from '../components/LightText';
+import StarFilled from '../icons/rating/star-filled.png';
+import StarUnFilled from '../icons/rating/star-unfilled.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { favoriteHandler } from '../../actions/userActions';
 import colors from '../theme/colors';
+import Review from '../components/Review';
 
 function RestroomInfo({ navigation }) {
+  const dispatch = useDispatch();
+
   const {
-    description,
     geohash,
     latitude,
     longitude,
@@ -25,174 +40,214 @@ function RestroomInfo({ navigation }) {
     images,
     isFavorited,
   } = useSelector((state) => state.restroomMarker);
-  const dispatch = useDispatch();
-  const maxRating = [1, 2, 3, 4, 5];
+  const { location } = useSelector((state) => state.userLocation);
   const { user } = useSelector((state) => state.userAuth);
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.bottomSheetPanel}>
-        {user && (
-          <TouchableOpacity
-            onPress={() => {
-              dispatch(favoriteHandler(geohash));
-            }}
+    <SafeView>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <LightText
+          fontSize={36}
+          fontWeight="bold"
+          lineHeight={40}
+          textAlign="center"
+        >
+          {name}
+        </LightText>
+        <MapView
+          style={styles.mapView}
+          showsUserLocation={true}
+          region={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.0015,
+            longitudeDelta: 0.0121,
+          }}
+        />
+        <View style={styles.btnContainer}>
+          <LinearGradient
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            colors={[colors.secondary, colors.primary]}
+            locations={[0, 1]}
+            style={styles.gradientReview}
           >
-            <Image
-              style={styles.heart}
-              source={
-                !isFavorited
-                  ? require('../icons/favorite-heart/heart-unfilled.png')
-                  : require('../icons/favorite-heart/heart-filled.png')
-              }
-            />
-          </TouchableOpacity>
-        )}
-        <View style={{ alignItems: 'center' }}>
-          <Text style={styles.panelRestroomName}>{name}</Text>
-          <View style={styles.customRatingBarStyle}>
-            <Text>Rating: </Text>
-
-            {meanRating && meanRating == 1 ? (
-              <Image
-                style={styles.starImgStyle}
-                source={require('../icons/poop-emoji.png')}
+            <View style={styles.btnReview}>
+              <FontAwesomeIcon
+                icon={faPencil}
+                size={20}
+                style={styles.faPencil}
               />
-            ) : (
-              maxRating.map((item, index) => (
-                <Image
-                  style={styles.starImgStyle}
-                  key={index}
-                  source={
-                    item <= meanRating
-                      ? require('../icons/rating/star-filled.png')
-                      : require('../icons/rating/star-unfilled.png')
-                  }
-                />
-              ))
-            )}
-          </View>
-          <Text style={styles.panelRestroomDescription}>{description}</Text>
-        </View>
-        <View style={{ alignContent: 'space-around' }}>
-          <TouchableOpacity
-            style={{ margin: 5 }}
-            onPress={() =>
-              Platform.OS === 'ios'
-                ? Linking.openURL(`maps:${latitude},${longitude}`)
-                : Linking.openURL(`geo:0,0?q=${latitude},${longitude}`)
-            }
+              <DarkText fontSize={16}>Write a Review</DarkText>
+            </View>
+          </LinearGradient>
+          <LinearGradient
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            colors={[colors.secondary, colors.primary]}
+            locations={[0, 1]}
+            style={styles.gradientFeed}
           >
-            <AppButton
-              title={'Navigate'}
-              styles={{ width: '80%' }}
-              onPress={() =>
-                Platform.OS === 'ios'
-                  ? Linking.openURL(`maps:${latitude},${longitude}`)
-                  : Linking.openURL(`geo:0,0?q=${latitude},${longitude}`)
-              }
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ margin: 5 }}>
-            <AppButton
-              title={'Feed'}
-              styles={{ width: '80%' }}
-              onPress={() => navigation.navigate('Feed', { geohash })}
-            />
-          </TouchableOpacity>
-          {user && (
-            <>
-              <TouchableOpacity style={{ margin: 5 }}>
-                <AppButton
-                  title={'Camera'}
-                  styles={{ width: '80%' }}
-                  onPress={() => navigation.navigate('Camera', { geohash })}
-                />
-              </TouchableOpacity>
-            </>
-          )}
-
-          {user && (
-            <>
-              <View Style={{ height: 10, backgroundColor: colors.white }} />
-              <TouchableOpacity style={{ margin: 5 }}>
-                <AppButton
-                  title={'Rate'}
-                  styles={{ width: '80%' }}
-                  onPress={() => navigation.navigate('Review', { geohash })}
-                />
-              </TouchableOpacity>
-            </>
-          )}
+            <View style={styles.btnFeed}>
+              <FontAwesomeIcon
+                icon={faImages}
+                size={20}
+                style={styles.faImages}
+              />
+              <LightText fontSize={16}>View Feed</LightText>
+            </View>
+          </LinearGradient>
         </View>
-        <View style={{ marginTop: 10, marginRight: 10 }}>
+        <View style={styles.horizontalRule} />
+        <View style={styles.reviewsContainer}>
+          <LightText fontSize={16} color={colors.black}>
+            Reviews
+          </LightText>
+          <View style={styles.ratingContainer}>
+            <View style={styles.starContainer}>
+              <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
+              <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
+              <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
+              <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
+              <FontAwesomeIcon
+                icon={faStarHalfStroke}
+                size={20}
+                style={styles.faStar}
+              />
+            </View>
+            <View style={styles.ratingText}>
+              <LightText color="#000">4.5 out of 5</LightText>
+            </View>
+          </View>
+          <LightText fontSize={12}>2 ratings</LightText>
+          <LightText fontSize={16} color={colors.black}>
+            Reviews with Images
+          </LightText>
           <ScrollView
-            style={{ width: Dimensions.get('window').width, height: 200 }}
-            pagingEnabled={true}
             horizontal={true}
             showsHorizontalScrollIndicator={true}
+            style={styles.carouselContainer}
           >
-            {images.map((image, index) => (
-              <Image
-                key={index}
-                source={{ uri: image }}
-                style={{
-                  width: Dimensions.get('window').width,
-                  height: 200,
-                  resizeMode: 'center',
-                }}
-              />
-            ))}
+            <Image
+              style={styles.reviewImage}
+              source={{
+                uri: 'https://images.pexels.com/photos/11303948/pexels-photo-11303948.jpeg?cs=srgb&dl=pexels-veeru-edits-11303948.jpg&fm=jpg',
+              }}
+            />
+            <Image
+              style={styles.reviewImage}
+              source={{
+                uri: 'https://images.pexels.com/photos/9225981/pexels-photo-9225981.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+              }}
+            />
+            <Image
+              style={styles.reviewImage}
+              source={{
+                uri: 'https://images.pexels.com/photos/631214/pexels-photo-631214.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+              }}
+            />
           </ScrollView>
         </View>
-      </View>
-    </View>
+        <View style={styles.userReviews}>
+          <Review />
+        </View>
+      </ScrollView>
+    </SafeView>
   );
 }
+
 const styles = StyleSheet.create({
-  bottomSheetHeader: {
-    backgroundColor: colors.white,
-    paddingTop: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+  contentContainer: {
+    minHeight: HEIGHT,
+    maxWidth: WIDTH,
+    paddingHorizontal: 10,
+    backgroundColor: colors.backgroundDark,
   },
-  bottomSheetpanelHeader: {
+  mapView: {
+    marginVertical: 5,
+    height: HEIGHT * 0.3,
+    width: '100%',
+  },
+  btnContainer: {
+    width: '100%',
+    height: '5%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 12,
+  },
+  gradientReview: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    width: '48%',
+    height: '100%',
+    overflow: 'hidden',
+  },
+  btnReview: {
+    width: '98.5%',
+    height: '97%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.backgroundLight,
+    borderRadius: 4,
+  },
+  gradientFeed: {
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '48%',
+  },
+  btnFeed: {
+    paddingVertical: 7,
+    paddingHorizontal: 25,
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  bottomSheetpanelHandle: {
-    width: 40,
-    height: 8,
-    borderRadius: 5,
-    backgroundColor: colors.lightgray,
-    marginBottom: 10,
+  faPencil: {
+    marginRight: 8,
   },
-  bottomSheetPanel: {
-    backgroundColor: colors.white,
-    padding: 10,
+  faImages: {
+    color: 'white',
+    marginRight: 8,
   },
-  panelRestroomName: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  horizontalRule: {
+    height: 6,
+    width: '100%',
+    borderBottomColor: colors.textDark,
+    borderBottomWidth: 1,
+    marginBottom: 6,
   },
-  panelRestroomDescription: {
-    fontSize: 12,
-    fontWeight: 'normal',
-    margin: 10,
+  reviewsContainer: {
+    width: '100%',
+    alignItems: 'flex-start',
   },
-  heart: {
-    height: 30,
-    width: 30,
-    resizeMode: 'contain',
-    alignSelf: 'flex-end',
-    marginHorizontal: 15,
+  ratingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  customRatingBarStyle: {
+  starContainer: {
     flexDirection: 'row',
   },
-  starImgStyle: {
-    width: 20,
-    height: 20,
-    resizeMode: 'cover',
+  faStar: {
+    color: '#FDC630',
+  },
+  ratingText: {
+    marginLeft: 8,
+  },
+  carouselContainer: {
+    minWidth: WIDTH,
+  },
+  reviewImage: {
+    height: HEIGHT * 0.1,
+    width: WIDTH * 0.4,
+    marginRight: 10,
+    borderRadius: 5,
+  },
+  userReviews: {
+    marginVertical: 12,
   },
 });
+
 export default RestroomInfo;

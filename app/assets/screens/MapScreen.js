@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react';
-import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { auth } from '../../firebase';
+import { WIDTH, HEIGHT } from '../../constants/Dimensions';
 import AnimationLoad from '../components/AnimationLoad';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MapMarker from '../components/MapMarker';
-import SearchBar from '../components/SearchBar';
 import MapBottomCard from '../components/MapBottomCard';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -17,14 +17,199 @@ import { useDirections } from '../../hooks/useDirections';
 import SearchBox from '../components/SearchBox';
 import CenterBox from '../components/CenterBox';
 function MapScreen({ navigation }) {
-  const reference = useRef(null);
-
   const dispatch = useDispatch();
 
   const { location } = useSelector((state) => state.userLocation);
   const { restrooms, restroomWithDirections, mapCenterLocation } = useSelector(
     (state) => state.map
   );
+
+  const mapStyle = [
+    {
+      elementType: 'geometry',
+      stylers: [
+        {
+          color: '#212121',
+        },
+      ],
+    },
+    {
+      elementType: 'labels.icon',
+      stylers: [
+        {
+          visibility: 'off',
+        },
+      ],
+    },
+    {
+      elementType: 'labels.text.fill',
+      stylers: [
+        {
+          color: '#757575',
+        },
+      ],
+    },
+    {
+      elementType: 'labels.text.stroke',
+      stylers: [
+        {
+          color: '#212121',
+        },
+      ],
+    },
+    {
+      featureType: 'administrative',
+      elementType: 'geometry',
+      stylers: [
+        {
+          color: '#757575',
+        },
+      ],
+    },
+    {
+      featureType: 'administrative.country',
+      elementType: 'labels.text.fill',
+      stylers: [
+        {
+          color: '#9e9e9e',
+        },
+      ],
+    },
+    {
+      featureType: 'administrative.land_parcel',
+      stylers: [
+        {
+          visibility: 'off',
+        },
+      ],
+    },
+    {
+      featureType: 'administrative.locality',
+      elementType: 'labels.text.fill',
+      stylers: [
+        {
+          color: '#bdbdbd',
+        },
+      ],
+    },
+    {
+      featureType: 'poi',
+      elementType: 'labels.text.fill',
+      stylers: [
+        {
+          color: '#757575',
+        },
+      ],
+    },
+    {
+      featureType: 'poi.park',
+      elementType: 'geometry',
+      stylers: [
+        {
+          color: '#181818',
+        },
+      ],
+    },
+    {
+      featureType: 'poi.park',
+      elementType: 'labels.text.fill',
+      stylers: [
+        {
+          color: '#616161',
+        },
+      ],
+    },
+    {
+      featureType: 'poi.park',
+      elementType: 'labels.text.stroke',
+      stylers: [
+        {
+          color: '#1b1b1b',
+        },
+      ],
+    },
+    {
+      featureType: 'road',
+      elementType: 'geometry.fill',
+      stylers: [
+        {
+          color: '#2c2c2c',
+        },
+      ],
+    },
+    {
+      featureType: 'road',
+      elementType: 'labels.text.fill',
+      stylers: [
+        {
+          color: '#8a8a8a',
+        },
+      ],
+    },
+    {
+      featureType: 'road.arterial',
+      elementType: 'geometry',
+      stylers: [
+        {
+          color: '#373737',
+        },
+      ],
+    },
+    {
+      featureType: 'road.highway',
+      elementType: 'geometry',
+      stylers: [
+        {
+          color: '#3c3c3c',
+        },
+      ],
+    },
+    {
+      featureType: 'road.highway.controlled_access',
+      elementType: 'geometry',
+      stylers: [
+        {
+          color: '#4e4e4e',
+        },
+      ],
+    },
+    {
+      featureType: 'road.local',
+      elementType: 'labels.text.fill',
+      stylers: [
+        {
+          color: '#616161',
+        },
+      ],
+    },
+    {
+      featureType: 'transit',
+      elementType: 'labels.text.fill',
+      stylers: [
+        {
+          color: '#757575',
+        },
+      ],
+    },
+    {
+      featureType: 'water',
+      elementType: 'geometry',
+      stylers: [
+        {
+          color: '#000000',
+        },
+      ],
+    },
+    {
+      featureType: 'water',
+      elementType: 'labels.text.fill',
+      stylers: [
+        {
+          color: '#3d3d3d',
+        },
+      ],
+    },
+  ];
 
   useEffect(() => {
     if (!location) {
@@ -55,15 +240,12 @@ function MapScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <>
       <MapView
-        onPress={() => {
-          /*reference.current.snapTo(1) this is not needed anymore without sheet*/;
-        }}
         provider={PROVIDER_GOOGLE}
-        style={styles.map}
+        style={styles.mapView}
         showsUserLocation={true}
-        showsMyLocationButton={true}
+        customMapStyle={mapStyle}
         region={{
           latitude: mapCenterLocation
             ? mapCenterLocation.latitude
@@ -77,12 +259,7 @@ function MapScreen({ navigation }) {
         loadingEnabled={true}
       >
         {restrooms.map((marker, index) => (
-          <MapMarker
-            key={marker.geohash}
-            marker={marker}
-            reference={reference}
-            index={index}
-          />
+          <MapMarker key={marker.geohash} marker={marker} index={index} />
         ))}
         {useDirections(location, restroomWithDirections)}
       </MapView>
@@ -94,19 +271,16 @@ function MapScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  mapView: {
+    width: WIDTH,
+    height: HEIGHT,
   },
-  map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+  card: {
+    position: 'absolute',
+    bottom: 90,
+    right: 0,
+    left: 0,
   },
-  texty:{
-    position : 'absolute',
-    top: 500
-  }
 });
 
 export default MapScreen;
