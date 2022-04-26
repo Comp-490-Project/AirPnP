@@ -46,14 +46,14 @@ function RestroomInfo({ navigation }) {
   return (
     <SafeView>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <DarkText
+        <LightText
           fontSize={36}
           fontWeight="bold"
           lineHeight={40}
           textAlign="center"
         >
           {name}
-        </DarkText>
+        </LightText>
         <MapView
           style={styles.mapView}
           showsUserLocation={true}
@@ -100,9 +100,9 @@ function RestroomInfo({ navigation }) {
         </View>
         <View style={styles.horizontalRule} />
         <View style={styles.reviewsContainer}>
-          <DarkText fontSize={16} color={colors.black}>
+          <LightText fontSize={16} color={colors.black}>
             Reviews
-          </DarkText>
+          </LightText>
           <View style={styles.ratingContainer}>
             <View style={styles.starContainer}>
               <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
@@ -116,13 +116,13 @@ function RestroomInfo({ navigation }) {
               />
             </View>
             <View style={styles.ratingText}>
-              <DarkText color="#000">4.5 out of 5</DarkText>
+              <LightText color="#000">4.5 out of 5</LightText>
             </View>
           </View>
-          <DarkText fontSize={12}>2 ratings</DarkText>
-          <DarkText fontSize={16} color={colors.black}>
+          <LightText fontSize={12}>2 ratings</LightText>
+          <LightText fontSize={16} color={colors.black}>
             Reviews with Images
-          </DarkText>
+          </LightText>
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={true}
@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
     minHeight: HEIGHT,
     maxWidth: WIDTH,
     paddingHorizontal: 10,
+    backgroundColor: colors.backgroundDark,
   },
   mapView: {
     marginVertical: 5,
@@ -213,7 +214,7 @@ const styles = StyleSheet.create({
   horizontalRule: {
     height: 6,
     width: '100%',
-    borderBottomColor: '#D8D8D8',
+    borderBottomColor: colors.textDark,
     borderBottomWidth: 1,
     marginBottom: 6,
   },

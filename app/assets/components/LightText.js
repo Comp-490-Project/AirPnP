@@ -7,6 +7,7 @@ const LightText = ({
   fontSize = 14,
   fontWeight = '400',
   lineHeight = 30,
+  textAlign = 'left',
   children,
 }) => {
   useFontLoader();
@@ -19,6 +20,7 @@ const LightText = ({
         fontSize,
         fontWeight,
         lineHeight,
+        textAlign,
       }}
     >
       {children}

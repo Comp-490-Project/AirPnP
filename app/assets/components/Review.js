@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faUser, faStar } from '@fortawesome/free-solid-svg-icons';
 import { HEIGHT, WIDTH } from '../../constants/Dimensions';
 import AttributeButton from './AttributeButton';
-import DarkText from './DarkText';
+import LightText from './LightText';
 import colors from '../theme/colors';
 
 const Review = () => {
@@ -17,14 +17,14 @@ const Review = () => {
           </View>
           <View style={styles.postInfo}>
             <View style={styles.username}>
-              <DarkText color={colors.black} lineHeight={15} fontWeight="bold">
+              <LightText color={colors.black} lineHeight={15} fontWeight="bold">
                 @johndoe
-              </DarkText>
+              </LightText>
             </View>
             <View style={styles.createdAt}>
-              <DarkText color="#706F6F" lineHeight={15}>
+              <LightText color="#706F6F" lineHeight={15}>
                 August 19, 2021
-              </DarkText>
+              </LightText>
             </View>
           </View>
         </View>
@@ -43,17 +43,17 @@ const Review = () => {
         </View>
       </View>
       <View style={styles.reviewBody}>
-        <DarkText color={colors.black} lineHeight={25}>
+        <LightText color={colors.black} lineHeight={25}>
           Adipiscing sed consequat, ullamcorpera curabitur sollicitudin ornare
           felis massa ac. Tellus cursus sed commodo ut. Metus id erat id vitae.
           Tortor donec vitae mi viverra. Sed consectetur tincidunt vivamus
           malesuada leo, volutpat ut scelerisque.
-        </DarkText>
+        </LightText>
       </View>
       <View style={styles.reviewImage}>
         <Image
           source={{
-            uri: 'https://images.pexels.com/photos/9225708/pexels-photo-9225708.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+            uri: 'https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
           }}
           style={styles.reviewImage}
         />
@@ -64,7 +64,7 @@ const Review = () => {
 
 const styles = StyleSheet.create({
   reviewContainer: {
-    backgroundColor: '#E2E2E2',
+    backgroundColor: '#303645',
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 75,
