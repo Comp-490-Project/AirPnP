@@ -263,10 +263,12 @@ function MapScreen({ navigation }) {
         ))}
         {useDirections(location, restroomWithDirections)}
       </MapView>
-      <SearchBox navigation={navigation}/>
-      <CenterBox/>
-      <MapBottomCard  navigation={navigation} />
-    </View>
+      <SearchBox navigation={navigation} />
+      <CenterBox />
+      <View style={styles.card}>
+        <MapBottomCard navigation={navigation} />
+      </View>
+    </>
   );
 }
 
