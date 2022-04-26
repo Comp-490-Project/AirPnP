@@ -1,6 +1,8 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Button, SafeAreaView} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import colors from '../theme/colors';
+import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 
 function SearchBox ({navigation}) {
 
@@ -11,7 +13,7 @@ return (
         style={styles.box}>
         <MaterialIcons
           name="search"
-          color="black"
+          color="white"
           size={30}
           style={{ alignSelf: 'center' }}
         />
@@ -34,7 +36,7 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'center',
     borderRadius: 20,
-    backgroundColor: 'white',
+    backgroundColor: colors.darkBackground
   },
 });
 export default SearchBox;
