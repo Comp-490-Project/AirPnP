@@ -50,7 +50,7 @@ function MapScreen({ navigation }) {
     return unsubscribe;
   }, []);
 
-  if (!location) {
+  if (!location || !restroomWithDirections) {
     return <AnimationLoad />;
   }
 

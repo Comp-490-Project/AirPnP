@@ -32,8 +32,8 @@ export const userLocationReducer = (state = {}, action) => {
       return {
         ...state,
         location: {
-          latitude: 37.422131,
-          longitude: -122.084801,
+          latitude: 34.241,
+          longitude: -118.5277,
         },
       };
     default:
