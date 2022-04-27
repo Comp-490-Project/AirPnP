@@ -4,7 +4,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabNavigator from './TabNavigator';
 import LoginScreen from '../assets/screens/LoginScreen';
-import RegisterScreen from '../assets/screens/RegisterScreen';
+import RegisterStartScreen from '../assets/screens/register/RegisterStartScreen';
+import RegisterEmailScreen from '../assets/screens/register/RegisterEmailScreen';
+import RegisterUserScreen from '../assets/screens/register/RegisterUserScreen';
+import RegisterPasswordScreen from '../assets/screens/register/RegisterPasswordScreen';
 import ForgotPasswordScreen from '../assets/screens/ForgotPasswordScreen';
 import RestroomInfo from '../assets/screens/RestroomInfo';
 import FavoritesScreen from '../assets/screens/FavoritesScreen';
@@ -52,7 +55,19 @@ const RootStackNavigator = () => {
             <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
             <Stack.Screen
               name="Register"
-              component={RegisterScreen}
+              component={RegisterStartScreen}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="RegisterEmail"
+              component={RegisterEmailScreen}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="RegisterUser"
+              component={RegisterUserScreen}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="RegisterPassword"
+              component={RegisterPasswordScreen}
             ></Stack.Screen>
             <Stack.Screen
               name="Forgot"
