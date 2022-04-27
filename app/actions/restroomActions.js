@@ -17,8 +17,8 @@ import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 // Get restrooms around passed in latitude and longitude
 export const getRestrooms = (latitude, longitude) => async (dispatch) => {
   const center = [latitude, longitude];
-  const radiusInM = 2500;
-  const bounds = geohashQueryBounds(center, radiusInM);
+  var radiusInM = 2500;
+  var bounds = geohashQueryBounds(center, radiusInM);
   const promises = [];
 
   for (const b of bounds) {
@@ -31,10 +31,27 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
     promises.push(q.get());
   }
 
-  const snapshots = await Promise.all(promises);
+  var snapshots = await Promise.all(promises);
   const restrooms = [];
   let closestRestroom;
   let closestMarker;
+  // in no restrooms then increase radius of search
+  
+  if(snapshots[0].docs.length == 0){
+    radiusInM = 6100;
+    bounds = geohashQueryBounds(center, radiusInM);
+    for (const b of bounds) {
+      const q = firebase
+        .firestore()
+        .collection('Los-Angeles')
+        .orderBy('geohash')
+        .startAt(b[0])
+        .endAt(b[1]);
+      promises.push(q.get());
+    }
+    snapshots = await Promise.all(promises);
+  }
+  
   for (const snap of snapshots) {
     for (const doc of snap.docs) {
       const lat = doc.get('latitude');
@@ -57,6 +74,7 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
       }
     }
   }
+
   dispatch(setMarkerAttributes(closestMarker));
   dispatch({
     type: RESTROOM_MARKERS_LOADED,
