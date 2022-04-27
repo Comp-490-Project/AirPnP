@@ -10,6 +10,9 @@ export default {
   whiteOpacity: 'rgba(255, 255, 255, 0.21)',
   blue: '#0000FF',
   lightgray: '#00000040',
+  tabs: '#9599E2', // Light green
+  darkBackground: '#272B37',
+  greyBackground: '#303645',
   tabs: '#99e0c8', // Light green
   // Ryan
   primary: '#9599E2',

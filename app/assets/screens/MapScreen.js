@@ -14,6 +14,8 @@ import {
 } from '../../actions/userActions';
 import { getRestrooms } from '../../actions/restroomActions';
 import { useDirections } from '../../hooks/useDirections';
+import SearchBox from '../components/SearchBox';
+import CenterBox from '../components/CenterBox';
 function MapScreen({ navigation }) {
   const dispatch = useDispatch();
 
@@ -261,6 +263,8 @@ function MapScreen({ navigation }) {
         ))}
         {useDirections(location, restroomWithDirections)}
       </MapView>
+      <SearchBox navigation={navigation} />
+      <CenterBox />
       <View style={styles.card}>
         <MapBottomCard navigation={navigation} />
       </View>

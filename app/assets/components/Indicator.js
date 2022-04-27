@@ -13,7 +13,7 @@ export default function Indicator({data, scrollHorizontal}) {
                 
                 const dotWidth = scrollHorizontal.interpolate({
                     inputRange,
-                    outputRange: [10,20,10],
+                    outputRange: [10,10,10],
                     extrapolate: 'clamp'
                 });
 
@@ -22,7 +22,6 @@ export default function Indicator({data, scrollHorizontal}) {
                     outputRange: [0.3,1,0.3],
                     extrapolate: 'clamp'
                 })
-
                 return <Animated.View style = {[styles.dot, {width:dotWidth, opacity}]} key={i.toString()}/>
             })}
         </View>
