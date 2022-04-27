@@ -1,10 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ScrollView } from 'react-native-gesture-handler';
-import colors from '../theme/colors';
 import { useSelector } from 'react-redux';
-import { TouchableOpacity } from 'react-native';
+import SafeView from '../components/SafeView';
 import RestroomCard from '../components/RestroomCard';
+import BackButton from '../icons/back-btn.png';
+import colors from '../theme/colors';
+
 /* todo 
 4: write code to add addresses to the database and add favorited and visited counters in the database
 5: add stats visited and favorited
@@ -13,52 +16,56 @@ import RestroomCard from '../components/RestroomCard';
 
 function FavoritesScreen({ navigation }) {
   const { userFavorites } = useSelector((state) => state.userFavorites);
+
   return (
-    <>
-      <View style={styles.topBorder} />
-      <TouchableOpacity
-        onPress={() => navigation.pop()}
-        style={styles.backbutton}
-      >
-        <Image
-          style={{ marginLeft: 15 }}
-          source={require('../icons/back-btn.png')}
-        />
-      </TouchableOpacity>
-      <View style={styles.container}>
-        <Text style={styles.title}>Favorites</Text>
-        <ScrollView>
-          {userFavorites.length == 0 ? (
-            <Text
-              style={{ flex: 1, justifyContent: 'center', color: colors.white }}
-            >
-              Data Not Available!
-            </Text>
-          ) : (
-            userFavorites.map((restroom, index) => (
-              <RestroomCard
-                navigation={navigation}
-                indexValue={index}
-                key={index}
-                name={restroom.name}
-                address={restroom.description}
-                latitude={restroom.latitude}
-                longitude={restroom.longitude}
-                geohash={restroom.geohash}
-              />
-            ))
-          )}
-        </ScrollView>
-      </View>
-    </>
+    <SafeView>
+      <>
+        <TouchableOpacity onPress={() => navigation.pop()}>
+          <Image style={styles.backButton} source={BackButton} />
+        </TouchableOpacity>
+        <View style={styles.container}>
+          <Text style={styles.title}>Favorites</Text>
+          <ScrollView>
+            {userFavorites.length == 0 ? (
+              <Text
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  color: colors.white,
+                }}
+              >
+                Data Not Available!
+              </Text>
+            ) : (
+              userFavorites.map((restroom, index) => (
+                <RestroomCard
+                  navigation={navigation}
+                  indexValue={index}
+                  key={index}
+                  name={restroom.name}
+                  address={restroom.description}
+                  latitude={restroom.latitude}
+                  longitude={restroom.longitude}
+                  geohash={restroom.geohash}
+                />
+              ))
+            )}
+          </ScrollView>
+        </View>
+      </>
+    </SafeView>
   );
 }
 const styles = StyleSheet.create({
+  backButton: {
+    marginTop: 15,
+    marginLeft: 15,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.greyBackground,
+    backgroundColor: colors.backgroundDark,
   },
   title: {
     textAlign: 'center',
@@ -66,13 +73,6 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontFamily: 'Roboto',
     paddingBottom: 50,
-  },
-  backbutton: {
-    backgroundColor: colors.greyBackground,
-  },
-  topBorder: {
-    height: 50,
-    backgroundColor: colors.greyBackground,
   },
 });
 
