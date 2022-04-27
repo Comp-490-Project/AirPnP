@@ -39,7 +39,7 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
     for (const doc of snap.docs) {
       const lat = doc.get('latitude');
       const lng = doc.get('longitude');
-      
+
       if (!closestRestroom) {
         closestRestroom = [lat, lng];
       }
@@ -67,8 +67,6 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
     type: RESTROOM_DIRECTIONS_CHANGED,
     payload: closestRestroom.join(', '),
   });
-  
-  
 };
 
 // Set current marker attributes

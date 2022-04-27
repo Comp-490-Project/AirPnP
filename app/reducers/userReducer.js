@@ -13,6 +13,7 @@ import {
   USER_FAVORITE_REMOVED,
   USER_FEED_STATE_CHANGED,
   USER_FEED_STATE_CLEARED,
+  USER_LOGOUT_FAIL,
 } from '../constants/userTypes';
 
 export const userLocationReducer = (state = {}, action) => {
@@ -70,6 +71,11 @@ export const userAuthReducer = (state = {}, action) => {
         user: action.payload,
       };
     case USER_LOGGED_OUT:
+      return {
+        ...state,
+        user: null,
+      };
+    case USER_LOGOUT_FAIL:
       return {
         ...state,
         user: null,

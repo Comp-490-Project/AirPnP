@@ -14,35 +14,43 @@ import RestroomCard from '../components/RestroomCard';
 function FavoritesScreen({ navigation }) {
   const { userFavorites } = useSelector((state) => state.userFavorites);
   return (
-<>   
-  <View style={styles.topBorder} />
-  <TouchableOpacity style= {styles.backbutton}>
-    <Image  style = {{marginLeft: 15}} source= {require('../icons/back-btn.png')}/>  
-  </TouchableOpacity>
-  <View style= {styles.container}>  
-    <Text style={styles.title}>Favorites</Text>
-    <ScrollView> 
-      {userFavorites.length == 0 ? (
-        <Text style={{ flex: 1, justifyContent: 'center' , color: colors.white}}>
-          Data Not Available!
-        </Text>
-      ) : (
-        userFavorites.map((restroom, index) => (
-          <RestroomCard 
-          navigation={ navigation}
-          indexValue= {index}
-          key= {index}
-          name= {restroom.name}
-          address= {restroom.description}
-          latitude= {restroom.latitude}
-          longitude= {restroom.longitude}
-          geohash= {restroom.geohash}
-          />
-          
-      )))}
-    </ScrollView>
-  </View>  
-</>    
+    <>
+      <View style={styles.topBorder} />
+      <TouchableOpacity
+        onPress={() => navigation.pop()}
+        style={styles.backbutton}
+      >
+        <Image
+          style={{ marginLeft: 15 }}
+          source={require('../icons/back-btn.png')}
+        />
+      </TouchableOpacity>
+      <View style={styles.container}>
+        <Text style={styles.title}>Favorites</Text>
+        <ScrollView>
+          {userFavorites.length == 0 ? (
+            <Text
+              style={{ flex: 1, justifyContent: 'center', color: colors.white }}
+            >
+              Data Not Available!
+            </Text>
+          ) : (
+            userFavorites.map((restroom, index) => (
+              <RestroomCard
+                navigation={navigation}
+                indexValue={index}
+                key={index}
+                name={restroom.name}
+                address={restroom.description}
+                latitude={restroom.latitude}
+                longitude={restroom.longitude}
+                geohash={restroom.geohash}
+              />
+            ))
+          )}
+        </ScrollView>
+      </View>
+    </>
   );
 }
 const styles = StyleSheet.create({
@@ -69,4 +77,3 @@ const styles = StyleSheet.create({
 });
 
 export default FavoritesScreen;
-
