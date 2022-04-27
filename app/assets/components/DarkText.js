@@ -2,6 +2,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import colors from '../theme/colors';
 import { useFontLoader } from '../../hooks/useFontLoader';
+import AnimationLoad from '../components/AnimationLoad';
 
 const DarkText = ({
   fontSize = 14,
@@ -11,7 +12,11 @@ const DarkText = ({
   color = colors.textDark,
   children,
 }) => {
-  useFontLoader();
+  const fontsLoaded = useFontLoader();
+
+  if (!fontsLoaded) {
+    return <AnimationLoad />;
+  }
 
   return (
     <Text
