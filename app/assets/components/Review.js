@@ -17,7 +17,7 @@ const Review = () => {
           </View>
           <View style={styles.postInfo}>
             <View style={styles.username}>
-              <LightText color={colors.black} lineHeight={15} fontWeight="bold">
+              <LightText lineHeight={15} fontWeight="bold">
                 @johndoe
               </LightText>
             </View>
@@ -43,7 +43,7 @@ const Review = () => {
         </View>
       </View>
       <View style={styles.reviewBody}>
-        <LightText color={colors.black} lineHeight={25}>
+        <LightText lineHeight={25}>
           Adipiscing sed consequat, ullamcorpera curabitur sollicitudin ornare
           felis massa ac. Tellus cursus sed commodo ut. Metus id erat id vitae.
           Tortor donec vitae mi viverra. Sed consectetur tincidunt vivamus

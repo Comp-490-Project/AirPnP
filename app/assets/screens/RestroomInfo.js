@@ -100,9 +100,7 @@ function RestroomInfo({ navigation }) {
         </View>
         <View style={styles.horizontalRule} />
         <View style={styles.reviewsContainer}>
-          <LightText fontSize={16} color={colors.black}>
-            Reviews
-          </LightText>
+          <LightText fontSize={16}>Reviews</LightText>
           <View style={styles.ratingContainer}>
             <View style={styles.starContainer}>
               <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
@@ -116,13 +114,11 @@ function RestroomInfo({ navigation }) {
               />
             </View>
             <View style={styles.ratingText}>
-              <LightText color="#000">4.5 out of 5</LightText>
+              <LightText>4.5 out of 5</LightText>
             </View>
           </View>
           <LightText fontSize={12}>2 ratings</LightText>
-          <LightText fontSize={16} color={colors.black}>
-            Reviews with Images
-          </LightText>
+          <LightText fontSize={16}>Reviews with Images</LightText>
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={true}
