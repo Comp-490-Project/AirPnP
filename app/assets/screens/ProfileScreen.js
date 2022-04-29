@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import { Avatar, Title, Caption, TouchableRipple } from 'react-native-paper';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import {
+  faUser,
+  faHeart,
+  faPlus,
+  faCheckCircle,
+  faArrowRightFromBracket,
+  faAngleRight,
+} from '@fortawesome/free-solid-svg-icons';
+import SafeView from '../components/SafeView';
+import colors from '../theme/colors';
+import { HEIGHT, WIDTH } from '../../constants/Dimensions';
 import { firebase } from '../../firebase';
 import { logout } from '../../actions/userActions';
+import LightText from '../components/LightText';
 
 function ProfileScreen({ navigation }) {
   const clearLocal = async () => {
@@ -59,22 +70,6 @@ function ProfileScreen({ navigation }) {
       });
   };
 
-  // @todo
-  // Reviews must be object of objects
-  // const [reviews, setReviews] = useState([]);
-  // const getUserReviews = async () => {
-  //   const restroomsRef = firebase.firestore().collection('Los-Angeles');
-  //   const reviewsQuery = restroomsRef.where('reviews', 'array-contains', {
-  //     Comment: '',
-  //     Rating: 2,
-  //     userID: 'sq4kvQ2OLbWFtvgHg5hEMCu2cxG2',
-  //   });
-
-  //   // Execute query
-  //   const snapshot = await reviewsQuery.get();
-  //   snapshot.forEach((snap) => console.log(snap.data()));
-  // };
-
   useEffect(() => {
     if (user) {
       getUserAddedRestrooms();
@@ -84,192 +79,234 @@ function ProfileScreen({ navigation }) {
 
   if (!user) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Text>Log In First</Text>
-      </View>
+      <SafeView>
+        <View style={styles.contentContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <View style={styles.btnLogin}>
+              <LightText fontSize={24}>Login</LightText>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </SafeView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.userInfoSection}>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 15,
-          }}
-        >
-          <Avatar.Image
-            source={{
-              uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-            }}
-            size={100}
-          />
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
+    <SafeView>
+      <View style={styles.contentContainer}>
+        <View style={styles.userContainer}>
+          <View style={styles.avatar}>
+            <FontAwesomeIcon
+              icon={faUser}
+              size={50}
+              color="grey"
+              style={styles.faUser}
+            />
+          </View>
+          <LightText fontSize={18}>@{user.displayName}</LightText>
+        </View>
+
+        <View style={styles.statsContainer}>
+          <View style={styles.stat}>
+            <LightText fontWeight="bold" fontSize={18}>
+              {visitedRestrooms.length}
+            </LightText>
+            <LightText textAlign="center" lineHeight={20}>
+              Restrooms{'\n'}Visited
+            </LightText>
+          </View>
+          <View style={styles.stat}>
+            <LightText fontWeight="bold" fontSize={18}>
+              {addedRestrooms.length}
+            </LightText>
+            <LightText textAlign="center" lineHeight={20}>
+              Restrooms{'\n'}Added
+            </LightText>
+          </View>
+          <View style={styles.stat}>
+            <LightText fontWeight="bold" fontSize={18}>
+              193
+            </LightText>
+            <LightText textAlign="center" lineHeight={20}>
+              Reviews{'\n'}Submitted
+            </LightText>
+          </View>
+        </View>
+
+        <View style={styles.horizontalRule} />
+
+        <View style={styles.listContainer}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('Favorites', { key: 'favorites' })
+            }
+          >
+            <View style={styles.optionContainer}>
+              <View style={styles.option}>
+                <View style={styles.iconBackground}>
+                  <FontAwesomeIcon
+                    icon={faHeart}
+                    size={30}
+                    color={colors.primary}
+                    style={styles.faUser}
+                  />
+                </View>
+                <LightText color={colors.primary}>Favorites</LightText>
+              </View>
+              <FontAwesomeIcon
+                icon={faAngleRight}
+                size={30}
+                color={colors.primary}
+                style={styles.faUser}
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Favorites', { key: 'added' })}
+          >
+            <View style={styles.optionContainer}>
+              <View style={styles.option}>
+                <View style={styles.iconBackground}>
+                  <FontAwesomeIcon
+                    icon={faPlus}
+                    size={30}
+                    color={colors.primary}
+                    style={styles.faUser}
+                  />
+                </View>
+                <LightText color={colors.primary}>Added Restrooms</LightText>
+              </View>
+              <FontAwesomeIcon
+                icon={faAngleRight}
+                size={30}
+                color={colors.primary}
+                style={styles.faUser}
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Favorites', { key: 'visited' })}
+          >
+            <View style={styles.optionContainer}>
+              <View style={styles.option}>
+                <View style={styles.iconBackground}>
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    size={30}
+                    color={colors.primary}
+                    style={styles.faUser}
+                  />
+                </View>
+                <LightText color={colors.primary}>Visited Restrooms</LightText>
+              </View>
+              <FontAwesomeIcon
+                icon={faAngleRight}
+                size={30}
+                color={colors.primary}
+                style={styles.faUser}
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              firebase.auth().signOut();
+              dispatch(logout());
+              navigation.navigate('Home');
             }}
           >
-            <Title
-              style={
-                (styles.title,
-                {
-                  marginTop: 15,
-                  marginBottom: 5,
-                })
-              }
-            >
-              {user.displayName}
-            </Title>
-            <Caption style={styles.caption}>{user.email}</Caption>
-          </View>
+            <View style={styles.optionContainer}>
+              <View style={styles.option}>
+                <View style={styles.iconBackground}>
+                  <FontAwesomeIcon
+                    icon={faArrowRightFromBracket}
+                    size={30}
+                    color={colors.primary}
+                    style={styles.faUser}
+                  />
+                </View>
+                <LightText color={colors.primary}>Logout</LightText>
+              </View>
+              <FontAwesomeIcon
+                icon={faAngleRight}
+                size={30}
+                color={colors.primary}
+                style={styles.faUser}
+              />
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
-
-      <View style={styles.infoBoxWrapper}>
-        <View
-          style={[
-            styles.infoBox,
-            { borderRightColor: '#dddddd', borderRightWidth: 1 },
-          ]}
-        >
-          <Title style={styles.infoBoxText}>{visitedRestrooms.length}</Title>
-          <Caption>Visits</Caption>
-        </View>
-        <View
-          style={[
-            styles.infoBox,
-            { borderRightColor: '#dddddd', borderRightWidth: 1 },
-          ]}
-        >
-          <Title style={styles.infoBoxText}>{addedRestrooms.length}</Title>
-          <Caption>Restrooms Added</Caption>
-        </View>
-        <View style={styles.infoBox}>
-          <Title style={styles.infoBoxText}>5</Title>
-          <Caption>Other</Caption>
-        </View>
-      </View>
-
-      <View style={styles.menuWrapper}>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <FontAwesome name="user" size={20} color="#4aa564" />
-            <Text style={styles.menuItemText}>Edit Profile</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <FontAwesome name="heart" size={20} color="#4aa564" />
-            <Text
-              style={styles.menuItemText}
-              onPress={() => navigation.navigate('Favorites')}
-            >
-              Your Favorites
-            </Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <FontAwesome name="unlock" size={20} color="#4aa564" />
-            <Text style={styles.menuItemText}>Change Password</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <FontAwesome name="gear" size={20} color="#4aa564" />
-            <Text
-              style={styles.menuItemText}
-              onPress={() => navigation.navigate('Settings')}
-            >
-              Settings
-            </Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <FontAwesome name="sign-out" size={20} color="#4aa564" />
-            <Text
-              style={styles.menuItemText}
-              onPress={() => {
-                firebase.auth().signOut();
-                dispatch(logout());
-                navigation.navigate('Home');
-              }}
-            >
-              Logout
-            </Text>
-          </View>
-        </TouchableRipple>
-      </View>
-    </SafeAreaView>
+    </SafeView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  contentContainer: {
     flex: 1,
-  },
-  userInfoSection: {
-    paddingHorizontal: 30,
-    marginBottom: 25,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  caption: {
-    fontSize: 14,
-    lineHeight: 14,
-    fontWeight: '500',
-  },
-  row: {
-    flexDirection: 'row',
-    marginBottom: 10,
-  },
-  infoBoxWrapper: {
-    borderBottomColor: '#dddddd',
-    borderBottomWidth: 1,
-    borderTopColor: '#dddddd',
-    borderTopWidth: 1,
-    flexDirection: 'row',
-    height: 100,
-  },
-  infoBox: {
-    width: '33%',
+    height: HEIGHT - 50,
+    maxWidth: WIDTH,
+    paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  infoBoxText: {
-    color: '#4aa564',
-  },
-  menuWrapper: {
-    marginTop: 20,
-  },
-  menuItem: {
-    flexDirection: 'row',
+  btnLogin: {
+    backgroundColor: '#303645',
     paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderBottomColor: '#dddddd',
-    borderBottomWidth: 1,
-    borderTopColor: '#dddddd',
-    borderTopWidth: 1,
-    marginBottom: 20,
+    paddingHorizontal: 75,
+    borderRadius: 5,
   },
-  menuItemText: {
-    color: '#777777',
-    marginLeft: 20,
-    fontWeight: '600',
-    fontSize: 18,
-    lineHeight: 26,
+  userContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatar: {
+    backgroundColor: '#CDCDCD',
+    borderRadius: 50,
+    padding: 15,
+    marginBottom: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statsContainer: {
+    width: WIDTH,
+    paddingHorizontal: 20,
+    marginVertical: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  stat: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  horizontalRule: {
+    height: 6,
+    width: '100%',
+    borderBottomColor: colors.textDark,
+    borderBottomWidth: 1,
+  },
+  listContainer: {
+    width: WIDTH,
+    padding: 20,
+  },
+  optionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 25,
+  },
+  option: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconBackground: {
+    backgroundColor: '#292D3A',
+    borderRadius: 5,
+    padding: 10,
+    marginRight: 15,
   },
 });
 
