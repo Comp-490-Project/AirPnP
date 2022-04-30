@@ -50,49 +50,47 @@ const RootStackNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {viewed ? (
-          <>
-            <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
-            <Stack.Screen
-              name="Register"
-              component={RegisterStartScreen}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="RegisterEmail"
-              component={RegisterEmailScreen}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="RegisterUser"
-              component={RegisterUserScreen}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="RegisterPassword"
-              component={RegisterPasswordScreen}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="Forgot"
-              component={ForgotPasswordScreen}
-            ></Stack.Screen>
-            <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
-            <Stack.Screen
-              name="RestroomInfo"
-              component={RestroomInfo}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="Favorites"
-              component={FavoritesScreen}
-            ></Stack.Screen>
-            <Stack.Screen name="Review" component={ReviewScreen}></Stack.Screen>
-            <Stack.Screen name="Save" component={UploadPost}></Stack.Screen>
-            <Stack.Screen name="Feed" component={FeedScreen}></Stack.Screen>
-            <Stack.Screen name="Camera" component={CameraScreen}></Stack.Screen>
-            <Stack.Screen name="Search" component={SearchScreen}></Stack.Screen>
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="onBoarding" component={TutorialScreen} />
-          </>
+        {!viewed && (
+          <Stack.Screen
+            name="Tutorial"
+            component={TutorialScreen}
+          ></Stack.Screen>
         )}
+        <Stack.Screen
+          name="Register"
+          component={RegisterStartScreen}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="RegisterEmail"
+          component={RegisterEmailScreen}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="RegisterUser"
+          component={RegisterUserScreen}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="RegisterPassword"
+          component={RegisterPasswordScreen}
+        ></Stack.Screen>
+        <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
+        <Stack.Screen
+          name="Forgot"
+          component={ForgotPasswordScreen}
+        ></Stack.Screen>
+        <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
+        <Stack.Screen
+          name="RestroomInfo"
+          component={RestroomInfo}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="Favorites"
+          component={FavoritesScreen}
+        ></Stack.Screen>
+        <Stack.Screen name="Review" component={ReviewScreen}></Stack.Screen>
+        <Stack.Screen name="Save" component={UploadPost}></Stack.Screen>
+        <Stack.Screen name="Feed" component={FeedScreen}></Stack.Screen>
+        <Stack.Screen name="Camera" component={CameraScreen}></Stack.Screen>
+        <Stack.Screen name="Search" component={SearchScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

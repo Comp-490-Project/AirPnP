@@ -8,7 +8,7 @@ import Indicator from '../components/Indicator';
 import NextButton from '../components/NextButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function TutorialScreen() {
+function TutorialScreen({ navigation }) {
   const [currentPage, setCurrentPage] = useState(0);
   const scrollHorizontal = useRef(new Animated.Value(0)).current;
 
@@ -24,7 +24,7 @@ export default function TutorialScreen() {
     if (currentPage < slides.length - 1) {
       slidesRef.current.scrollToIndex({ index: currentPage + 1 });
     } else {
-      console.log('Last item.');
+      navigation.navigate('Register');
     }
     try {
       await AsyncStorage.setItem('@tutorialViewed', 'true');
@@ -75,3 +75,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.darkBackground,
   },
 });
+
+export default TutorialScreen;
