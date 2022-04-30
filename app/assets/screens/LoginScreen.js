@@ -97,9 +97,6 @@ function LoginScreen({ navigation }) {
           onPress={() => navigation.navigate('Register')}
         />
       </View>
-      <View style={styles.guestButton}>
-        <AppButton title="Guest" onPress={() => navigation.navigate('Tabs')} />
-      </View>
     </ImageBackground>
   );
 }
