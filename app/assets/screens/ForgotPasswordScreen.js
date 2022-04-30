@@ -1,77 +1,122 @@
 import React from 'react';
-import {
-  ImageBackground,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from 'react-native';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import AppTextInput from '../components/AppTextInput';
+import { View, Image, TextInput, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import SafeView from '../components/SafeView';
+import LightText from '../components/LightText';
 import AppButton from '../components/AppButton';
-import { auth } from '../../firebase';
+import BackButton from '../icons/back-btn.png';
+import { HEIGHT, WIDTH } from '../../constants/Dimensions';
+import colors from '../theme/colors';
 
 function ForgotPasswordScreen({ navigation }) {
-  const validationSchema = Yup.object().shape({
-    email: Yup.string().required().email().label('Email'),
-  });
-
   return (
-    <ImageBackground
-      style={{ flex: 1, justifyContent: 'center' }}
-      source={require('../../assets/icons/background.jpg')}
-    >
-      <Formik
-        initialValues={{ email: '' }}
-        onSubmit={(values) => {
-          auth
-            .sendPasswordResetEmail(values.email)
-            .catch((error) => alert(error.message));
-          alert('Email Sent');
-          navigation.navigate('Login');
-        }}
-        validationSchema={validationSchema}
-      >
-        {({ handleChange, handleSubmit, errors }) => (
-          <>
-            <View style={styles.inputFields}>
-              <AppTextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                icon="email"
-                keyboardType="email-address"
-                onChangeText={handleChange('email')}
-                placeholder="Email"
-                textContentType="emailAddress"
+    <SafeView>
+      <>
+        <TouchableOpacity onPress={() => navigation.pop()}>
+          <Image style={styles.backButton} source={BackButton} />
+        </TouchableOpacity>
+        <View style={styles.screenContainer}>
+          <View style={styles.headerContainer}>
+            <LightText fontSize={24} fontWeight="bold">
+              Forgot Password?
+            </LightText>
+          </View>
+
+          <LightText fontSize={16} fontWeight="bold" color="#ccc">
+            Don’t Panic! Please enter the email address associated with your
+            account.
+          </LightText>
+
+          <LinearGradient
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            colors={[colors.secondary, colors.primary]}
+            locations={[0, 1]}
+            style={styles.gradientOutline}
+          >
+            <View style={styles.formGroup}>
+              <TextInput
+                style={styles.formInput}
+                placeholder="john@email.com"
+                placeholderTextColor="#CDCDCD"
               />
-              <Text style={{ color: 'red' }}>{errors.email}</Text>
+              <FontAwesomeIcon
+                icon={faEnvelope}
+                size={22}
+                color="#CDCDCD"
+                style={styles.envelope}
+              />
             </View>
-            <View style={styles.resetButton}>
-              <TouchableOpacity>
-                <AppButton title="Reset Password" onPress={handleSubmit} />
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-      </Formik>
-    </ImageBackground>
+          </LinearGradient>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                alert('TODO!');
+              }}
+            >
+              <AppButton title="Submit" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </>
+    </SafeView>
   );
 }
+
 const styles = StyleSheet.create({
-  inputFields: {
-    position: 'absolute',
-    bottom: 150,
-    left: 20,
-    right: 20,
+  backButton: {
+    marginTop: 15,
+    marginLeft: 15,
   },
-  resetButton: {
+  screenContainer: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    height: HEIGHT,
+    width: WIDTH,
+    paddingHorizontal: 20,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginVertical: 25,
+  },
+  gradientOutline: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    width: '100%',
+    height: HEIGHT * 0.06,
+    borderRadius: 4,
+    marginVertical: 25,
+  },
+  formGroup: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  formInput: {
+    position: 'relative',
+    backgroundColor: colors.backgroundDark,
+    paddingHorizontal: 47,
+    width: '99.3%',
+    height: '94%',
+    borderRadius: 3,
+    color: colors.backgroundLight,
+  },
+  envelope: {
     position: 'absolute',
-    bottom: 90,
-    left: 20,
-    right: 20,
-    height: 30,
-    marginBottom: 10,
+    left: 15,
+  },
+  buttonContainer: {
+    alignSelf: 'center',
+    width: '100%',
   },
 });
 

@@ -18,7 +18,7 @@ import Rating from '../Rating';
 
 function AddBottomSheet({ reference, navigation }) {
   const dispatch = useDispatch();
-  var userLocation = useSelector((state) => state.userLocation);
+  const userLocation = useSelector((state) => state.userLocation);
   const { user } = useSelector((state) => state.userAuth);
   const { region, rating, image } = useSelector(
     (state) => state.restroomReview

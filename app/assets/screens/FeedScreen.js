@@ -1,120 +1,113 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
-  StyleSheet,
   View,
+  StyleSheet,
+  Animated,
+  FlatList,
   Text,
   Image,
-  FlatList,
-  PanResponder,
-  Animated,
+  Dimensions,
+  StatusBar,
 } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUserFeed, clearUserFeed } from '../../actions/userActions';
-import AnimationLoad from '../components/AnimationLoad';
-import { ACTION_OFFSET } from '../../constants/Dimensions';
-import FeedCard from '../components/Cards/FeedCard';
 
-function FeedScreen({ navigation, route }) {
-  //Screen to display user posts.
+const { width, height } = Dimensions.get('screen');
+
+const imageWidth = width * 0.7;
+
+const imageHeight = imageWidth * 1.54;
+
+export default function FeedScreen({ navigation, route }) {
+  const scrollX = React.useRef(new Animated.Value(0)).current;
 
   const { geohash } = route.params;
-
   const { userPosts, loading } = useSelector((state) => state.feed);
-
-  const [posts, setPosts] = useState([]);
 
   const dispatch = useDispatch();
 
-  const swipe = useRef(new Animated.ValueXY()).current;
-
-  const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
-    onPanResponderMove: (_, { dx, dy }) => {
-      swipe.setValue({ x: dx, y: dy });
-    },
-    onPanResponderRelease: (_, { dx, dy }) => {
-      const direction = Math.sign(dx);
-      const userAction = Math.abs(dx) > ACTION_OFFSET;
-
-      if (userAction) {
-        Animated.timing(swipe, {
-          duration: 200,
-          toValue: {
-            x: direction * 500,
-            y: dy,
-          },
-          useNativeDriver: true,
-        }).start(removeCard);
-      } else {
-        Animated.spring(swipe, {
-          toValue: {
-            x: 0,
-            y: 0,
-          },
-          useNativeDriver: true,
-          friction: 5,
-        }).start();
-      }
-    },
-  });
-
-  const removeCard = useCallback(() => {
-    setPosts((prevState) => prevState.slice(1));
-    swipe.setValue({ x: 0, y: 0 });
-  }, [swipe]);
-
   useEffect(() => {
-    if (loading) {
+    if (!loading) {
       dispatch(getUserFeed(geohash));
     }
-    setPosts(userPosts);
   }, [loading]);
-
-  useEffect(() => {
-    return () => {
-      dispatch(clearUserFeed());
-    };
-  }, []);
-
-  if (loading) {
-    return <AnimationLoad />;
-  }
 
   return (
     <View style={styles.container}>
-      {posts.length === 0 ? (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Text>No posts to display</Text>
-        </View>
-      ) : (
-        posts
-          .map(({ caption, downloadURL, user }, index) => {
-            const isFirst = index === 0;
-            const dragHandlers = isFirst ? panResponder.panHandlers : {};
-            return (
-              <FeedCard
-                key={downloadURL}
-                source={downloadURL}
-                caption={caption}
-                userName={user}
-                isFirst={isFirst}
-                swipe={swipe}
-                {...dragHandlers}
-              />
-            );
-          })
-          .reverse()
-      )}
+      <StatusBar hidden />
+      <View style={StyleSheet.absoluteFillObject}>
+        {userPosts.map((image, index) => {
+          const inputRange = [
+            (index - 1) * width,
+            index * width,
+            (index + 1) * width,
+          ];
+          const opacity = scrollX.interpolate({
+            inputRange,
+            outputRange: [0, 1, 0],
+          });
+          return (
+            <Animated.Image
+              key={`image-${index}`}
+              source={{ uri: image.downloadURL }}
+              style={[
+                StyleSheet.absoluteFillObject,
+                {
+                  opacity,
+                },
+              ]}
+              blurRadius={20}
+            />
+          );
+        })}
+      </View>
+      <Animated.FlatList
+        data={userPosts}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: true }
+        )}
+        keyExtractor={(_, index) => index.toString()}
+        horizontal
+        pagingEnabled
+        renderItem={({ item }) => {
+          return (
+            <View style={styles.photoContainer}>
+              <Image
+                source={{ uri: item.downloadURL }}
+                style={styles.photo}
+              ></Image>
+            </View>
+          );
+        }}
+      ></Animated.FlatList>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
+  photo: {
+    width: imageWidth,
+    height: imageHeight,
+    resizeMode: 'cover',
+    borderRadius: 16,
+  },
+
+  photoContainer: {
+    width,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 1,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowRadius: 20,
+  },
+
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#000',
     alignItems: 'center',
   },
 });
-
-export default FeedScreen;

@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react';
-import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { auth } from '../../firebase';
+import { WIDTH, HEIGHT } from '../../constants/Dimensions';
 import AnimationLoad from '../components/AnimationLoad';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MapMarker from '../components/MapMarker';
-import SearchBar from '../components/SearchBar';
 import MapBottomCard from '../components/MapBottomCard';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -14,9 +14,11 @@ import {
 } from '../../actions/userActions';
 import { getRestrooms } from '../../actions/restroomActions';
 import { useDirections } from '../../hooks/useDirections';
-function MapScreen({ navigation }) {
-  const reference = useRef(null);
+import SearchBox from '../components/SearchBox';
+import CenterBox from '../components/CenterBox';
+import mapStyle from '../../constants/mapStyle';
 
+function MapScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const { location } = useSelector((state) => state.userLocation);
@@ -48,20 +50,17 @@ function MapScreen({ navigation }) {
     return unsubscribe;
   }, []);
 
-  if (!location) {
+  if (!location || !restroomWithDirections) {
     return <AnimationLoad />;
   }
 
   return (
-    <View style={styles.container}>
+    <>
       <MapView
-        onPress={() => {
-          /*reference.current.snapTo(1) this is not needed anymore without sheet*/;
-        }}
         provider={PROVIDER_GOOGLE}
-        style={styles.map}
+        style={styles.mapView}
         showsUserLocation={true}
-        showsMyLocationButton={true}
+        customMapStyle={mapStyle}
         region={{
           latitude: mapCenterLocation
             ? mapCenterLocation.latitude
@@ -75,35 +74,47 @@ function MapScreen({ navigation }) {
         loadingEnabled={true}
       >
         {restrooms.map((marker, index) => (
-          <MapMarker
-            key={marker.geohash}
-            marker={marker}
-            reference={reference}
-            index={index}
-          />
+          <MapMarker key={marker.geohash} marker={marker} index={index} />
         ))}
         {useDirections(location, restroomWithDirections)}
       </MapView>
-      <SearchBar />
-      <MapBottomCard  navigation={navigation} />
-    </View>
+      <View style={styles.searchContainer}>
+        <SearchBox navigation={navigation} />
+      </View>
+      <View style={styles.centerContainer}>
+        <CenterBox />
+      </View>
+      <View style={styles.card}>
+        <MapBottomCard navigation={navigation} />
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  mapView: {
+    width: WIDTH,
+    height: HEIGHT,
   },
-  map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+  searchContainer: {
+    position: 'absolute',
+    paddingVertical: HEIGHT * 0.04,
+    paddingHorizontal: 15,
+    right: 0,
   },
-  texty:{
-    position : 'absolute',
-    top: 500
-  }
+  centerContainer: {
+    position: 'absolute',
+    paddingVertical: HEIGHT * 0.04,
+    paddingHorizontal: 15,
+    top: 75,
+    right: 0,
+  },
+  card: {
+    position: 'absolute',
+    bottom: 90,
+    right: 0,
+    left: 0,
+  },
 });
 
 export default MapScreen;
