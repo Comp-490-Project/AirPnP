@@ -188,7 +188,7 @@ function RestroomInfo({ navigation }) {
             </>
           )}
         </View>
-        {reviews.length > 0 && (
+        {reviews?.length > 0 && (
           <View style={styles.userReviews}>
             {reviews.map((review, index) => (
               <Review
