@@ -4,6 +4,11 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import { firebase, auth } from '../../../firebase';
+import { useDispatch } from 'react-redux';
+import { register as registerRedux } from '../../../actions/userActions';
 import SafeView from '../../components/SafeView';
 import LightText from '../../components/LightText';
 import AppButton from '../../components/AppButton';
@@ -11,8 +16,45 @@ import BackButton from '../../icons/back-btn.png';
 import { HEIGHT, WIDTH } from '../../../constants/Dimensions';
 import colors from '../../theme/colors';
 
-function RegisterPasswordScreen({ navigation }) {
+function RegisterPasswordScreen({ navigation, route }) {
+  const dispatch = useDispatch();
+
   const [showPassword, setShowPassword] = useState(false);
+
+  const validationSchema = Yup.object().shape({
+    password: Yup.string().required().min(6).label('Password'),
+  });
+
+  const register = async (values) => {
+    const { email, username, password } = values;
+
+    try {
+      const userCredentials = await auth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
+
+      const user = userCredentials.user;
+      const uid = user.uid;
+
+      user.updateProfile({
+        displayName: username,
+      });
+
+      const dataRef = firebase.firestore().collection('users');
+
+      await dataRef.doc(uid).set({
+        email,
+        username,
+      });
+
+      dispatch(registerRedux(user));
+
+      navigation.navigate('Tabs');
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   return (
     <SafeView>
@@ -43,52 +85,77 @@ function RegisterPasswordScreen({ navigation }) {
             Please enter a password:
           </LightText>
 
-          <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={[colors.secondary, colors.primary]}
-            locations={[0, 1]}
-            style={styles.gradientOutline}
-          >
-            <View style={styles.formGroup}>
-              <TextInput
-                style={styles.formInput}
-                placeholder="******"
-                placeholderTextColor="#CDCDCD"
-                textContentType="password"
-                secureTextEntry={!showPassword}
-              />
-              <FontAwesomeIcon
-                icon={faLock}
-                size={22}
-                color="#CDCDCD"
-                style={styles.lock}
-              />
-              {showPassword ? (
-                <FontAwesomeIcon
-                  icon={faEyeSlash}
-                  size={18}
-                  color="#CDCDCD"
-                  style={styles.eyeSlash}
-                  onPress={() => setShowPassword(!showPassword)}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faEye}
-                  size={18}
-                  color="#CDCDCD"
-                  style={styles.eye}
-                  onPress={() => setShowPassword(!showPassword)}
-                />
-              )}
-            </View>
-          </LinearGradient>
+          <Formik
+            initialValues={{ password: '' }}
+            onSubmit={(values) => {
+              const formData = {
+                ...route.params.formData,
+                password: values.password,
+              };
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate('Tabs')}>
-              <AppButton title="Sign Up" />
-            </TouchableOpacity>
-          </View>
+              register(formData);
+            }}
+            validationSchema={validationSchema}
+          >
+            {({ handleChange, handleSubmit, errors, values }) => (
+              <>
+                {errors?.password && (
+                  <LightText color="#F03D17">{errors.password}</LightText>
+                )}
+                <LinearGradient
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  colors={[colors.secondary, colors.primary]}
+                  locations={[0, 1]}
+                  style={[
+                    styles.gradientOutline,
+                    { marginTop: errors.password ? 0 : 25 },
+                  ]}
+                >
+                  <View style={styles.formGroup}>
+                    <TextInput
+                      style={styles.formInput}
+                      placeholder="******"
+                      placeholderTextColor="#CDCDCD"
+                      textContentType="password"
+                      secureTextEntry={!showPassword}
+                      value={values.password}
+                      onChangeText={handleChange('password')}
+                    />
+                    <FontAwesomeIcon
+                      icon={faLock}
+                      size={22}
+                      color="#CDCDCD"
+                      style={styles.lock}
+                    />
+                    {showPassword ? (
+                      <FontAwesomeIcon
+                        icon={faEyeSlash}
+                        size={18}
+                        color="#CDCDCD"
+                        style={styles.eyeSlash}
+                        onPress={() => setShowPassword(!showPassword)}
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        size={18}
+                        color="#CDCDCD"
+                        style={styles.eye}
+                        onPress={() => setShowPassword(!showPassword)}
+                      />
+                    )}
+                  </View>
+                </LinearGradient>
+
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity onPress={handleSubmit}>
+                    <AppButton title="Sign Up" />
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </Formik>
         </View>
       </>
     </SafeView>
@@ -119,7 +186,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: HEIGHT * 0.06,
     borderRadius: 4,
-    marginVertical: 25,
+    marginBottom: 25,
   },
   formGroup: {
     width: '100%',

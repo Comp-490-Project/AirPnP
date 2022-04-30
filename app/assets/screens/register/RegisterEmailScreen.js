@@ -4,6 +4,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import SafeView from '../../components/SafeView';
 import LightText from '../../components/LightText';
 import AppButton from '../../components/AppButton';
@@ -12,6 +14,10 @@ import { HEIGHT, WIDTH } from '../../../constants/Dimensions';
 import colors from '../../theme/colors';
 
 function RegisterEmailScreen({ navigation }) {
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required().email().label('Email'),
+  });
+
   return (
     <SafeView>
       <>
@@ -41,37 +47,56 @@ function RegisterEmailScreen({ navigation }) {
             Please enter your email address:
           </LightText>
 
-          <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={[colors.secondary, colors.primary]}
-            locations={[0, 1]}
-            style={styles.gradientOutline}
-          >
-            <View style={styles.formGroup}>
-              <TextInput
-                style={styles.formInput}
-                placeholder="john@email.com"
-                placeholderTextColor="#CDCDCD"
-              />
-              <FontAwesomeIcon
-                icon={faEnvelope}
-                size={22}
-                color="#CDCDCD"
-                style={styles.envelope}
-              />
-            </View>
-          </LinearGradient>
+          <Formik
+            initialValues={{ email: '' }}
+            onSubmit={(values) => {
+              const formData = values;
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('RegisterUser');
-              }}
-            >
-              <AppButton title="Continue" />
-            </TouchableOpacity>
-          </View>
+              navigation.navigate('RegisterUser', {
+                formData,
+              });
+            }}
+            validationSchema={validationSchema}
+          >
+            {({ handleChange, handleSubmit, errors, values }) => (
+              <>
+                {errors?.email && (
+                  <LightText color="#F03D17">{errors.email}</LightText>
+                )}
+                <LinearGradient
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  colors={[colors.secondary, colors.primary]}
+                  locations={[0, 1]}
+                  style={[
+                    styles.gradientOutline,
+                    { marginTop: errors.email ? 0 : 25 },
+                  ]}
+                >
+                  <View style={styles.formGroup}>
+                    <TextInput
+                      style={styles.formInput}
+                      placeholder="john@email.com"
+                      placeholderTextColor="#CDCDCD"
+                      value={values.email}
+                      onChangeText={handleChange('email')}
+                    />
+                    <FontAwesomeIcon
+                      icon={faEnvelope}
+                      size={22}
+                      color="#CDCDCD"
+                      style={styles.envelope}
+                    />
+                  </View>
+                </LinearGradient>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity onPress={handleSubmit}>
+                    <AppButton title="Continue" />
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </Formik>
         </View>
       </>
     </SafeView>
@@ -102,7 +127,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: HEIGHT * 0.06,
     borderRadius: 4,
-    marginVertical: 25,
+    marginBottom: 25,
   },
   formGroup: {
     width: '100%',

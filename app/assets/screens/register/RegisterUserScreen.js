@@ -4,6 +4,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import SafeView from '../../components/SafeView';
 import LightText from '../../components/LightText';
 import AppButton from '../../components/AppButton';
@@ -11,7 +13,11 @@ import BackButton from '../../icons/back-btn.png';
 import { HEIGHT, WIDTH } from '../../../constants/Dimensions';
 import colors from '../../theme/colors';
 
-function RegisterUserScreen({ navigation }) {
+function RegisterUserScreen({ navigation, route }) {
+  const validationSchema = Yup.object().shape({
+    username: Yup.string().required().max(25).label('Username'),
+  });
+
   return (
     <SafeView>
       <>
@@ -41,35 +47,60 @@ function RegisterUserScreen({ navigation }) {
             Please enter a username:
           </LightText>
 
-          <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={[colors.secondary, colors.primary]}
-            locations={[0, 1]}
-            style={styles.gradientOutline}
-          >
-            <View style={styles.formGroup}>
-              <TextInput
-                style={styles.formInput}
-                placeholder="johndoe"
-                placeholderTextColor="#CDCDCD"
-              />
-              <FontAwesomeIcon
-                icon={faUser}
-                size={22}
-                color="#CDCDCD"
-                style={styles.user}
-              />
-            </View>
-          </LinearGradient>
+          <Formik
+            initialValues={{ username: '' }}
+            onSubmit={(values) => {
+              const formData = {
+                ...route.params.formData,
+                username: values.username,
+              };
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('RegisterPassword')}
-            >
-              <AppButton title="Continue" />
-            </TouchableOpacity>
-          </View>
+              navigation.navigate('RegisterPassword', {
+                formData,
+              });
+            }}
+            validationSchema={validationSchema}
+          >
+            {({ handleChange, handleSubmit, errors, values }) => (
+              <>
+                {errors?.username && (
+                  <LightText color="#F03D17">{errors.username}</LightText>
+                )}
+                <LinearGradient
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  colors={[colors.secondary, colors.primary]}
+                  locations={[0, 1]}
+                  style={[
+                    styles.gradientOutline,
+                    { marginTop: errors.username ? 0 : 25 },
+                  ]}
+                >
+                  <View style={styles.formGroup}>
+                    <TextInput
+                      style={styles.formInput}
+                      placeholder="johndoe"
+                      placeholderTextColor="#CDCDCD"
+                      value={values.username}
+                      onChangeText={handleChange('username')}
+                    />
+                    <FontAwesomeIcon
+                      icon={faUser}
+                      size={22}
+                      color="#CDCDCD"
+                      style={styles.user}
+                    />
+                  </View>
+                </LinearGradient>
+
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity onPress={handleSubmit}>
+                    <AppButton title="Continue" />
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </Formik>
         </View>
       </>
     </SafeView>
@@ -100,7 +131,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: HEIGHT * 0.06,
     borderRadius: 4,
-    marginVertical: 25,
+    marginBottom: 25,
   },
   formGroup: {
     width: '100%',
