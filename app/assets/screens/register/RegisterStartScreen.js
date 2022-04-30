@@ -6,12 +6,26 @@ import LightText from '../../components/LightText';
 import SkipButton from '../../icons/skip-btn.png';
 import colors from '../../theme/colors';
 import { HEIGHT, WIDTH } from '../../../constants/Dimensions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegisterStartScreen = ({ navigation }) => {
+  const skipAuth = async () => {
+    try {
+      await AsyncStorage.setItem('@skipAuth', 'true');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <SafeView>
       <>
-        <TouchableOpacity onPress={() => navigation.navigate('Tabs')}>
+        <TouchableOpacity
+          onPress={() => {
+            skipAuth();
+            navigation.navigate('Tabs');
+          }}
+        >
           <Image style={styles.skipButton} source={SkipButton} />
         </TouchableOpacity>
         <View style={styles.screenContainer}>
@@ -29,7 +43,11 @@ const RegisterStartScreen = ({ navigation }) => {
           </TouchableOpacity>
           <View style={styles.subText}>
             <LightText>Already have an account? </LightText>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Login');
+              }}
+            >
               <LightText color={colors.primary}>Log In</LightText>
             </TouchableOpacity>
           </View>
