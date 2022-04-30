@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { auth } from '../firebase';
 import TabNavigator from './TabNavigator';
 import LoginScreen from '../assets/screens/LoginScreen';
 import RegisterStartScreen from '../assets/screens/register/RegisterStartScreen';
@@ -27,6 +28,7 @@ const RootStackNavigator = () => {
   const [loading, setLoading] = useState(true);
   const [viewed, setViewed] = useState(false);
   const [skipAuth, setSkipAuth] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const getAsyncStorageItems = async () => {
     try {
@@ -51,16 +53,72 @@ const RootStackNavigator = () => {
     getAsyncStorageItems();
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsAuthenticated(true);
+      }
+    });
+    return unsubscribe;
+  }, []);
+
   if (loading) return <AnimationLoad />;
+
+  if (isAuthenticated || skipAuth)
+    return (
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Tabs" component={TabNavigator} />
+          <Stack.Screen name="Register" component={RegisterStartScreen} />
+          <Stack.Screen name="RegisterEmail" component={RegisterEmailScreen} />
+          <Stack.Screen name="RegisterUser" component={RegisterUserScreen} />
+          <Stack.Screen
+            name="RegisterPassword"
+            component={RegisterPasswordScreen}
+          />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Forgot" component={ForgotPasswordScreen} />
+          <Stack.Screen name="RestroomInfo" component={RestroomInfo} />
+          <Stack.Screen name="Favorites" component={FavoritesScreen} />
+          <Stack.Screen name="Review" component={ReviewScreen} />
+          <Stack.Screen name="Save" component={UploadPost} />
+          <Stack.Screen name="Feed" component={FeedScreen} />
+          <Stack.Screen name="Camera" component={CameraScreen} />
+          <Stack.Screen name="Search" component={SearchScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+
+  if (!viewed)
+    return (
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Tutorial" component={TutorialScreen} />
+          <Stack.Screen name="Tabs" component={TabNavigator} />
+          <Stack.Screen name="Register" component={RegisterStartScreen} />
+          <Stack.Screen name="RegisterEmail" component={RegisterEmailScreen} />
+          <Stack.Screen name="RegisterUser" component={RegisterUserScreen} />
+          <Stack.Screen
+            name="RegisterPassword"
+            component={RegisterPasswordScreen}
+          />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Forgot" component={ForgotPasswordScreen} />
+          <Stack.Screen name="RestroomInfo" component={RestroomInfo} />
+          <Stack.Screen name="Favorites" component={FavoritesScreen} />
+          <Stack.Screen name="Review" component={ReviewScreen} />
+          <Stack.Screen name="Save" component={UploadPost} />
+          <Stack.Screen name="Feed" component={FeedScreen} />
+          <Stack.Screen name="Camera" component={CameraScreen} />
+          <Stack.Screen name="Search" component={SearchScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
 
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!viewed && <Stack.Screen name="Tutorial" component={TutorialScreen} />}
-        {!skipAuth && (
-          <Stack.Screen name="Register" component={RegisterStartScreen} />
-        )}
-        <Stack.Screen name="Tabs" component={TabNavigator} />
+        <Stack.Screen name="Register" component={RegisterStartScreen} />
         <Stack.Screen name="RegisterEmail" component={RegisterEmailScreen} />
         <Stack.Screen name="RegisterUser" component={RegisterUserScreen} />
         <Stack.Screen
@@ -69,6 +127,7 @@ const RootStackNavigator = () => {
         />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Forgot" component={ForgotPasswordScreen} />
+        <Stack.Screen name="Tabs" component={TabNavigator} />
         <Stack.Screen name="RestroomInfo" component={RestroomInfo} />
         <Stack.Screen name="Favorites" component={FavoritesScreen} />
         <Stack.Screen name="Review" component={ReviewScreen} />
