@@ -3,11 +3,16 @@ import { View, Image, StyleSheet } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faUser, faStar } from '@fortawesome/free-solid-svg-icons';
 import { HEIGHT, WIDTH } from '../../constants/Dimensions';
+import StarUnfilled from '../icons/rating/star-unfilled.png';
 import AttributeButton from './AttributeButton';
 import LightText from './LightText';
 import colors from '../theme/colors';
 
-const Review = () => {
+const Review = ({ user, comment, rating }) => {
+  const maxRating = [1, 2, 3, 4, 5];
+
+  // TODO: QUERY FIRESTORE FOR USERNAME BASED OFF USER ID (PROP user)
+
   return (
     <View style={styles.reviewContainer}>
       <View style={styles.reviewHeader}>
@@ -18,11 +23,12 @@ const Review = () => {
           <View style={styles.postInfo}>
             <View style={styles.username}>
               <LightText lineHeight={15} fontWeight="bold">
-                @johndoe
+                {user}
               </LightText>
             </View>
+            {/* TODO: CreatedAt field in review */}
             <View style={styles.createdAt}>
-              <LightText color="#706F6F" lineHeight={15}>
+              <LightText color="#A8A8A8" lineHeight={15}>
                 August 19, 2021
               </LightText>
             </View>
@@ -30,11 +36,22 @@ const Review = () => {
         </View>
         <View style={styles.ratingContainer}>
           <View style={styles.starContainer}>
-            <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
-            <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
-            <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
-            <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
-            <FontAwesomeIcon icon={faStar} size={20} style={styles.faStar} />
+            {maxRating.map((item, index) =>
+              item <= rating ? (
+                <FontAwesomeIcon
+                  key={index}
+                  icon={faStar}
+                  size={20}
+                  style={styles.faStar}
+                />
+              ) : (
+                <Image
+                  key={index}
+                  source={StarUnfilled}
+                  style={{ height: 20, width: 20 }}
+                />
+              )
+            )}
           </View>
           <View style={styles.attributeContainer}>
             <AttributeButton attribute="free" bgColor={colors.primary} />
@@ -43,13 +60,9 @@ const Review = () => {
         </View>
       </View>
       <View style={styles.reviewBody}>
-        <LightText lineHeight={25}>
-          Adipiscing sed consequat, ullamcorpera curabitur sollicitudin ornare
-          felis massa ac. Tellus cursus sed commodo ut. Metus id erat id vitae.
-          Tortor donec vitae mi viverra. Sed consectetur tincidunt vivamus
-          malesuada leo, volutpat ut scelerisque.
-        </LightText>
+        <LightText lineHeight={25}>{comment}</LightText>
       </View>
+      {/* TODO: image URI reference in review */}
       <View style={styles.reviewImage}>
         <Image
           source={{
@@ -69,6 +82,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 75,
     borderRadius: 5,
+    marginBottom: 12,
   },
   userInfo: {
     flexDirection: 'row',
