@@ -45,8 +45,6 @@ function RestroomInfo({ navigation }) {
   const { location } = useSelector((state) => state.userLocation);
   const { user } = useSelector((state) => state.userAuth);
 
-  console.log(reviews);
-
   return (
     <SafeView>
       <TouchableOpacity onPress={() => navigation.pop()}>
