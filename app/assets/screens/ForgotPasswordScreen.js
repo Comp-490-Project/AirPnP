@@ -4,6 +4,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import { auth } from '../../firebase';
 import SafeView from '../components/SafeView';
 import LightText from '../components/LightText';
 import AppButton from '../components/AppButton';
@@ -12,6 +15,10 @@ import { HEIGHT, WIDTH } from '../../constants/Dimensions';
 import colors from '../theme/colors';
 
 function ForgotPasswordScreen({ navigation }) {
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required().email().label('Email'),
+  });
+
   return (
     <SafeView>
       <>
@@ -30,37 +37,59 @@ function ForgotPasswordScreen({ navigation }) {
             account.
           </LightText>
 
-          <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={[colors.secondary, colors.primary]}
-            locations={[0, 1]}
-            style={styles.gradientOutline}
+          <Formik
+            initialValues={{ email: '' }}
+            onSubmit={(values) => {
+              auth
+                .sendPasswordResetEmail(values.email)
+                .catch((error) => alert(error.message));
+              alert(
+                'Please check your email and click on the provided link to reset your password.'
+              );
+            }}
+            validationSchema={validationSchema}
           >
-            <View style={styles.formGroup}>
-              <TextInput
-                style={styles.formInput}
-                placeholder="john@email.com"
-                placeholderTextColor="#CDCDCD"
-              />
-              <FontAwesomeIcon
-                icon={faEnvelope}
-                size={22}
-                color="#CDCDCD"
-                style={styles.envelope}
-              />
-            </View>
-          </LinearGradient>
-
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                alert('TODO!');
-              }}
-            >
-              <AppButton title="Submit" />
-            </TouchableOpacity>
-          </View>
+            {({ handleChange, handleSubmit, errors, values }) => (
+              <>
+                {errors?.email && (
+                  <View style={styles.errorContainer}>
+                    <LightText color="#F03D17">{errors.email}</LightText>
+                  </View>
+                )}
+                <LinearGradient
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  colors={[colors.secondary, colors.primary]}
+                  locations={[0, 1]}
+                  style={[
+                    styles.gradientOutline,
+                    { marginTop: errors.email ? 0 : 25 },
+                  ]}
+                >
+                  <View style={styles.formGroup}>
+                    <TextInput
+                      style={styles.formInput}
+                      placeholder="john@email.com"
+                      placeholderTextColor="#CDCDCD"
+                      value={values.email}
+                      onChangeText={handleChange('email')}
+                    />
+                    <FontAwesomeIcon
+                      icon={faEnvelope}
+                      size={22}
+                      color="#CDCDCD"
+                      style={styles.envelope}
+                    />
+                  </View>
+                </LinearGradient>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity onPress={handleSubmit}>
+                    <AppButton title="Submit" />
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </Formik>
         </View>
       </>
     </SafeView>
