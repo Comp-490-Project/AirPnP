@@ -66,8 +66,12 @@ function MapBottomCard({ navigation }) {
               <LightText>300 feet away</LightText>
             </View>
             <View style={styles.btnContainer}>
-              <DirectionsIcon latitude={latitude} longitude={longitude} />
-              <FeedIcon navigation={navigation} geohash={geohash} />
+              <View style={{ marginRight: 15 }}>
+                <DirectionsIcon latitude={latitude} longitude={longitude} />
+              </View>
+              <View>
+                <FeedIcon navigation={navigation} geohash={geohash} />
+              </View>
             </View>
           </View>
           <Image source={ToiletIcon} style={styles.toiletBackground} />
@@ -128,6 +132,8 @@ const styles = StyleSheet.create({
   },
   toiletBackground: {
     position: 'absolute',
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
     right: 0,
     bottom: 0,
     top: 0,

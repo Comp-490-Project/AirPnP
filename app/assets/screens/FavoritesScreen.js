@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
   backButton: {
     marginTop: 15,
     marginLeft: 15,
+    marginBottom: 15,
   },
   container: {
     flex: 1,

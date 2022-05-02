@@ -1,30 +1,31 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   ScrollView,
   StyleSheet,
   Linking,
   View,
-  Text,
   TouchableOpacity,
   Image,
+  Platform,
 } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
+  faDirections,
+  faHeart,
+  faCircleCheck,
   faPencil,
   faImages,
   faStar,
-  faStarHalfStroke,
 } from '@fortawesome/free-solid-svg-icons';
 import { HEIGHT, WIDTH } from '../../constants/Dimensions';
 import SafeView from '../components/SafeView';
-import DarkText from '../components/DarkText';
 import LightText from '../components/LightText';
 import StarUnfilled from '../icons/rating/star-unfilled.png';
 import BackButton from '../icons/back-btn.png';
 import { useDispatch, useSelector } from 'react-redux';
-import { favoriteHandler } from '../../actions/userActions';
+import { favoriteHandler, visitHandler } from '../../actions/userActions';
 import colors from '../theme/colors';
 import Review from '../components/Review';
 import mapStyle from '../../constants/mapStyle';
@@ -41,9 +42,14 @@ function RestroomInfo({ navigation }) {
     reviews,
     images,
     isFavorited,
+    isVisited,
   } = useSelector((state) => state.restroomMarker);
-  const { location } = useSelector((state) => state.userLocation);
   const { user } = useSelector((state) => state.userAuth);
+
+  const openInMaps = (latitude, longitude) =>
+    Platform.OS === 'ios'
+      ? Linking.openURL(`maps:${latitude},${longitude}`)
+      : Linking.openURL(`geo:0,0?q=${latitude},${longitude}`);
 
   return (
     <SafeView>
@@ -59,24 +65,79 @@ function RestroomInfo({ navigation }) {
         >
           {name}
         </LightText>
-        <MapView
-          style={styles.mapView}
-          customMapStyle={mapStyle}
-          showsUserLocation={true}
-          region={{
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }}
-        >
-          <Marker
-            coordinate={{
+        <View style={styles.mapContainer}>
+          <View style={styles.mapFooterContainer}>
+            <View style={styles.btnContainerLeft}>
+              <View style={styles.mapBtnContainer}>
+                <TouchableOpacity
+                  onPress={() => openInMaps(latitude, longitude)}
+                >
+                  <FontAwesomeIcon
+                    icon={faDirections}
+                    size={30}
+                    color={colors.backgroundLight}
+                  />
+                </TouchableOpacity>
+              </View>
+              {user && (
+                <>
+                  <View style={styles.mapBtnContainer}>
+                    <TouchableOpacity
+                      onPress={() => dispatch(favoriteHandler(geohash))}
+                    >
+                      <FontAwesomeIcon
+                        icon={faHeart}
+                        size={30}
+                        color={
+                          isFavorited
+                            ? colors.secondary
+                            : colors.backgroundLight
+                        }
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.mapBtnContainer}>
+                    <TouchableOpacity
+                      onPress={() => dispatch(visitHandler(geohash))}
+                    >
+                      <FontAwesomeIcon
+                        icon={faCircleCheck}
+                        size={30}
+                        color={
+                          isVisited ? colors.secondary : colors.backgroundLight
+                        }
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
+            </View>
+          </View>
+          <MapView
+            style={styles.mapView}
+            mapPadding={{
+              top: 0,
+              right: 0,
+              bottom: 30,
+              left: 0,
+            }}
+            customMapStyle={mapStyle}
+            showsUserLocation
+            region={{
               latitude: latitude,
               longitude: longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
             }}
-          />
-        </MapView>
+          >
+            <Marker
+              coordinate={{
+                latitude: latitude,
+                longitude: longitude,
+              }}
+            />
+          </MapView>
+        </View>
         <View style={styles.btnContainer}>
           <TouchableOpacity
             style={{ width: '48%' }}
@@ -219,10 +280,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: colors.backgroundDark,
   },
-  mapView: {
-    marginVertical: 5,
+  mapContainer: {
+    position: 'relative',
     height: HEIGHT * 0.3,
     width: '100%',
+    marginVertical: 5,
+  },
+  mapView: {
+    height: '100%',
+    width: '100%',
+  },
+  mapFooterContainer: {
+    width: '100%',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    zIndex: 100,
+  },
+  btnContainerLeft: {
+    flexDirection: 'row',
+  },
+  mapBtnContainer: {
+    marginRight: 20,
   },
   btnContainer: {
     width: '100%',

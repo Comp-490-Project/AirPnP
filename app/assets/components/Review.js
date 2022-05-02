@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faUser, faStar } from '@fortawesome/free-solid-svg-icons';
@@ -7,11 +7,22 @@ import StarUnfilled from '../icons/rating/star-unfilled.png';
 import AttributeButton from './AttributeButton';
 import LightText from './LightText';
 import colors from '../theme/colors';
+import { firebase } from '../../firebase';
 
 const Review = ({ user, comment, rating }) => {
   const maxRating = [1, 2, 3, 4, 5];
 
-  // TODO: QUERY FIRESTORE FOR USERNAME BASED OFF USER ID (PROP user)
+  // const getUsername = async () => {
+  //   const docRef = firebase.firestore().collection('users').doc(user);
+
+  //   const snapshot = await docRef.get();
+
+  //   console.log(snapshot.data());
+  // };
+
+  // useEffect(() => {
+  //   getUsername();
+  // }, []);
 
   return (
     <View style={styles.reviewContainer}>

@@ -18,20 +18,12 @@ import { logout } from '../../actions/userActions';
 import LightText from '../components/LightText';
 
 function ProfileScreen({ navigation }) {
-  const clearLocal = async () => {
-    try {
-      await AsyncStorage.removeItem('@tutorialViewed');
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.userAuth);
+  const { userVisited } = useSelector((state) => state.userVisited);
 
   const [addedRestrooms, setAddedRestrooms] = useState([]);
-  const [visitedRestrooms, setVisitedRestrooms] = useState([]);
 
   // Get user added restrooms (development: testing, production: Los-Angeles)
   const getUserAddedRestrooms = async () => {
@@ -47,33 +39,9 @@ function ProfileScreen({ navigation }) {
     );
   };
 
-  // Get restrooms that user has visited
-  const getUserVisitedRestrooms = async () => {
-    const docRef = firebase.firestore().collection('users').doc(user.uid);
-    const query = await docRef.get();
-    const { visited } = query.data();
-
-    const collectionRef = firebase.firestore().collection('Los-Angeles');
-
-    // Clear array
-    setVisitedRestrooms([]);
-
-    visited &&
-      visited.forEach(async (restroom) => {
-        const docRef = await collectionRef.doc(restroom).get();
-        const restroomData = docRef.data();
-
-        setVisitedRestrooms((visitedRestrooms) => [
-          ...visitedRestrooms,
-          restroomData,
-        ]);
-      });
-  };
-
   useEffect(() => {
     if (user) {
       getUserAddedRestrooms();
-      getUserVisitedRestrooms();
     }
   }, []);
 
@@ -109,7 +77,7 @@ function ProfileScreen({ navigation }) {
         <View style={styles.statsContainer}>
           <View style={styles.stat}>
             <LightText fontWeight="bold" fontSize={18}>
-              {visitedRestrooms.length}
+              {userVisited.length}
             </LightText>
             <LightText textAlign="center" lineHeight={20}>
               Restrooms{'\n'}Visited
