@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import HeartIconSvg from '../icons/heart-icon.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import colors from '../theme/colors';
 import { useDispatch } from 'react-redux';
 import { favoriteHandler } from '../../actions/userActions';
 
@@ -9,7 +11,11 @@ const HeartIcon = ({ geohash }) => {
   return (
     <View>
       <TouchableOpacity onPress={() => dispatch(favoriteHandler(geohash))}>
-        <HeartIconSvg height={30} width={60} />
+        <FontAwesomeIcon
+          icon={faHeart}
+          size={30}
+          color={colors.backgroundLight}
+        />
       </TouchableOpacity>
     </View>
   );
