@@ -15,6 +15,7 @@ import * as Yup from 'yup';
 import { auth } from '../../firebase';
 import { useDispatch } from 'react-redux';
 import { login } from '../../actions/userActions';
+import SafeView from '../components/SafeView';
 
 function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ function LoginScreen({ navigation }) {
   }, []);
 
   return (
-    <>
+    <SafeView>
       <View>
       <Image
               style={styles.reviewImage}
@@ -114,7 +115,7 @@ function LoginScreen({ navigation }) {
           Sign Up
         </Text>
       </View>
-    </>
+    </SafeView>
   );
 }
 
@@ -168,13 +169,6 @@ const styles = StyleSheet.create({
     right: 50,
   },
 
-  guestButton: {
-    position: 'absolute',
-    bottom: 50,
-    left: 20,
-    width: '40%',
-    height: 30,
-  },
   inputFields: {
     position: 'absolute',
     bottom: 150,
