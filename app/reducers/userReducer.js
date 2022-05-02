@@ -14,6 +14,9 @@ import {
   USER_FEED_STATE_CHANGED,
   USER_FEED_STATE_CLEARED,
   USER_LOGOUT_FAIL,
+  USER_VISITED_RESTROOMS_LOADED,
+  USER_VISITED_ADDED,
+  USER_VISITED_REMOVED,
 } from '../constants/userTypes';
 
 export const userLocationReducer = (state = {}, action) => {
@@ -121,6 +124,30 @@ export const userFavoritesReducer = (state = { userFavorites: [] }, action) => {
         ...state,
         userFavorites: state.userFavorites.filter(
           (favorite) => favorite.geohash !== action.payload
+        ),
+      };
+    default:
+      return state;
+  }
+};
+
+export const userVisitedReducer = (state = { userVisited: [] }, action) => {
+  switch (action.type) {
+    case USER_VISITED_RESTROOMS_LOADED:
+      return {
+        ...state,
+        userVisited: action.payload,
+      };
+    case USER_VISITED_ADDED:
+      return {
+        ...state,
+        userVisited: [...state.userVisited, action.payload],
+      };
+    case USER_VISITED_REMOVED:
+      return {
+        ...state,
+        userVisited: state.userVisited.filter(
+          (visit) => visit.geohash !== action.payload
         ),
       };
     default:

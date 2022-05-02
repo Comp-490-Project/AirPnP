@@ -78,13 +78,13 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
   dispatch(setMarkerAttributes(closestMarker));
 
   dispatch({
-    type: RESTROOM_MARKERS_LOADED,
-    payload: restrooms,
+    type: RESTROOM_DIRECTIONS_CHANGED,
+    payload: closestRestroom.join(', '),
   });
 
   dispatch({
-    type: RESTROOM_DIRECTIONS_CHANGED,
-    payload: closestRestroom.join(', '),
+    type: RESTROOM_MARKERS_LOADED,
+    payload: restrooms,
   });
 };
 
@@ -101,11 +101,17 @@ export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
   } = marker;
 
   const { userFavorites } = getState().userFavorites;
+  const { userVisited } = getState().userVisited;
 
   // Check if restroom is favorited by the user
   const isFavorited = userFavorites.find(
-    (userFavorite) => userFavorite.geohash == geohash
+    (userFavorite) => userFavorite.geohash === geohash
   )
+    ? true
+    : false;
+
+  // Check if restroom is visited by the user
+  const isVisited = userVisited.find((visited) => visited.geohash === geohash)
     ? true
     : false;
 
@@ -120,6 +126,7 @@ export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
       reviews,
       name,
       isFavorited,
+      isVisited,
     },
   });
 

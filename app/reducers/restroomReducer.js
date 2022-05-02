@@ -14,6 +14,8 @@ import {
 import {
   RESTROOM_MARKER_FAVORITED,
   RESTROOM_MARKER_UNFAVORITED,
+  RESTROOM_MARKER_UNVISITED,
+  RESTROOM_MARKER_VISITED,
 } from '../constants/userTypes';
 
 export const mapReducer = (state = { restrooms: [] }, action) => {
@@ -65,6 +67,16 @@ export const restroomMarkerReducer = (state = {}, action) => {
       return {
         ...state,
         isFavorited: false,
+      };
+    case RESTROOM_MARKER_VISITED:
+      return {
+        ...state,
+        isVisited: true,
+      };
+    case RESTROOM_MARKER_UNVISITED:
+      return {
+        ...state,
+        isVisited: false,
       };
     default:
       return state;

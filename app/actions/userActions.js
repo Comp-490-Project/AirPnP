@@ -14,6 +14,11 @@ import {
   USER_FAVORITE_REMOVED,
   RESTROOM_MARKER_FAVORITED,
   RESTROOM_MARKER_UNFAVORITED,
+  USER_VISITED_RESTROOMS_LOADED,
+  USER_VISITED_ADDED,
+  USER_VISITED_REMOVED,
+  RESTROOM_MARKER_VISITED,
+  RESTROOM_MARKER_UNVISITED,
   USER_FEED_STATE_CHANGED,
   USER_FEED_STATE_CLEARED,
 } from '../constants/userTypes';
@@ -179,6 +184,34 @@ export const getUserFavorites = () => async (dispatch, getState) => {
   }
 };
 
+// Get user visited restrooms
+export const getUserVisitedRestrooms = () => async (dispatch, getState) => {
+  // Get current user
+  const { user } = getState().userAuth;
+
+  // Get reference to user document and toilet collection
+  const userDocRef = firebase.firestore().collection('users').doc(user.uid);
+  const restroomsRef = firebase.firestore().collection('Los-Angeles');
+
+  const snapshot = await userDocRef.get();
+
+  const { visited } = snapshot.data();
+
+  if (visited) {
+    const userVisited = [];
+
+    for (const visit of visited) {
+      const visitedRestroom = await restroomsRef.doc(visit).get();
+      userVisited.push(visitedRestroom.data());
+    }
+
+    dispatch({
+      type: USER_VISITED_RESTROOMS_LOADED,
+      payload: userVisited,
+    });
+  }
+};
+
 // Add or remove user's favorite
 export const favoriteHandler = (geohash) => async (dispatch, getState) => {
   // Get current user and favorites
@@ -245,6 +278,76 @@ export const favoriteHandler = (geohash) => async (dispatch, getState) => {
     // Remove favorite from userFavorites array
     dispatch({
       type: USER_FAVORITE_REMOVED,
+      payload: geohash,
+      loading: false,
+    });
+  }
+};
+
+// Add or remove user's visited restroom
+export const visitHandler = (geohash) => async (dispatch, getState) => {
+  // Get current user and visited restrooms
+  const { user } = getState().userAuth;
+  const { userVisited } = getState().userVisited;
+
+  // Get current restroom marker geohash for validation of unchecking visited in UI
+  const { geohash: markerGeohash } = getState().restroomMarker;
+
+  const visitedFound = userVisited.find((visited) => visited.geohash == geohash)
+    ? true
+    : false;
+
+  // If not visited, mark as visited
+  if (!visitedFound) {
+    // Add visited to Firebase
+    await firebase
+      .firestore()
+      .collection('users')
+      .doc(user.uid)
+      .update({
+        visited: firebase.firestore.FieldValue.arrayUnion(geohash),
+      });
+
+    // Update UI for current marker (restroom info)
+    dispatch({
+      type: RESTROOM_MARKER_VISITED,
+    });
+
+    // Get reference to new visited restroom
+    const newVisitedRef = firebase
+      .firestore()
+      .collection('Los-Angeles')
+      .doc(geohash);
+
+    // Get data of new visited restroom
+    const newVisitData = await newVisitedRef.get();
+
+    // Add new visited to userVisited array
+    dispatch({
+      type: USER_VISITED_ADDED,
+      payload: newVisitData.data(),
+    });
+  } else {
+    // If already visited, remove as visited
+    await firebase
+      .firestore()
+      .collection('users')
+      .doc(user.uid)
+      .update({
+        visited: firebase.firestore.FieldValue.arrayRemove(geohash),
+      });
+
+    // Check to make sure Visited Screen and Restroom Info geohash refer to same restroom
+    if (geohash === markerGeohash) {
+      // Refresh UI to show uncolored visited icon
+      dispatch({
+        type: RESTROOM_MARKER_UNVISITED,
+      });
+    }
+
+    // Remove visited from userVisited array
+    dispatch({
+      type: USER_VISITED_REMOVED,
       payload: geohash,
       loading: false,
     });
