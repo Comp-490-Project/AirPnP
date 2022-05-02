@@ -59,7 +59,6 @@ function MapScreen({ navigation }) {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.mapView}
-        showsUserLocation={true}
         customMapStyle={mapStyle}
         region={{
           latitude: mapCenterLocation
