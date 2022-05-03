@@ -16,7 +16,7 @@ import DistancePersonIcon from '../icons/distance-person-icon.svg';
 import { WIDTH } from '../../constants/Dimensions';
 
 function MapBottomCard({ navigation }) {
-  const { geohash, latitude, longitude, meanRating, name, address } =
+  const { geohash, latitude, longitude, meanRating, name, address, distance} =
     useSelector((state) => state.restroomMarker);
 
   const fontsLoaded = useFontLoader();
@@ -62,7 +62,7 @@ function MapBottomCard({ navigation }) {
             {/* @TODO: Convert distance in km to mi or feet */}
             <View style={styles.distanceContainer}>
               <DistancePersonIcon style={styles.distanceIcon} />
-              <LightText>300 feet away</LightText>
+              <LightText>{" "}{distance} {" feet away"}</LightText>
             </View>
             <View style={styles.btnContainer}>
               <View style={{ marginRight: 15 }}>

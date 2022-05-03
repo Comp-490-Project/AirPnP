@@ -53,24 +53,30 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
   }
 
   for (const snap of snapshots) {
-    for (const doc of snap.docs) {
+    for (const doc of snap.docs) {// this was changed from const to var
       const lat = doc.get('latitude');
       const lng = doc.get('longitude');
-
+      var restroomInfo;
       if (!closestRestroom) {
         closestRestroom = [lat, lng];
       }
 
       const distanceInM = distanceBetween([lat, lng], center) * 1000;
+      
+      
+      
       const closestDistance = distanceBetween(closestRestroom, center) * 1000;
 
       if (distanceInM <= radiusInM) {
-        restrooms.push(doc.data());
+        restroomInfo = doc.data();//*******************************************here this is added */
+        restroomInfo.distance = Math.round(distanceInM * 3.28084);
+        restrooms.push(restroomInfo);
       }
 
       if (distanceInM < closestDistance) {
         closestRestroom = [lat, lng];
         closestMarker = doc.data();
+        closestMarker.distance = Math.round(distanceInM * 3.28084);//*******************************************here this is added */
       }
     }
   }
@@ -99,6 +105,8 @@ export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
     meanRating,
     reviews,
     name,
+    distance,//*******************************************here this is added */
+
   } = marker;
 
   const { userFavorites } = getState().userFavorites;
@@ -129,6 +137,8 @@ export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
       name,
       isFavorited,
       isVisited,
+      distance,//*******************************************here this is added */
+
     },
   });
 

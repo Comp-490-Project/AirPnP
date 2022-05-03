@@ -11,7 +11,7 @@ import colors from '../theme/colors';
 
 /* todo 
 
-6: pass a mode prop to select favs, visited, added.
+get userAdded array into store and access with use selector
 */
 
 function FavoritesScreen({navigation, route}) {
