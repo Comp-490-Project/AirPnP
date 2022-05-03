@@ -91,6 +91,7 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
 // Set current marker attributes
 export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
   const {
+    address,
     description,
     geohash,
     latitude,
@@ -118,6 +119,7 @@ export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
   dispatch({
     type: MARKER_ATTRIBUTES_SET,
     payload: {
+      address,
       description,
       geohash,
       latitude,

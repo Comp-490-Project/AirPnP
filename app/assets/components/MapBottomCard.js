@@ -16,9 +16,8 @@ import DistancePersonIcon from '../icons/distance-person-icon.svg';
 import { WIDTH } from '../../constants/Dimensions';
 
 function MapBottomCard({ navigation }) {
-  const { geohash, latitude, longitude, meanRating, name } = useSelector(
-    (state) => state.restroomMarker
-  );
+  const { geohash, latitude, longitude, meanRating, name, address } =
+    useSelector((state) => state.restroomMarker);
 
   const fontsLoaded = useFontLoader();
 
@@ -51,7 +50,7 @@ function MapBottomCard({ navigation }) {
           {/* @TODO: Convert coordinates into address */}
           <View style={styles.addressContainer}>
             <LightText fontWeight="500" lineHeight={20}>
-              18111 Nordhoff St Maildrop 8271, Northridge, CA 91330
+              {address}
             </LightText>
           </View>
           {/* @TODO: Check if restaurant description contains word restaurant */}
@@ -108,7 +107,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   addressContainer: {
-    marginVertical: 5,
+    marginVertical: 10,
   },
   attributeContainer: {
     marginBottom: 5,
