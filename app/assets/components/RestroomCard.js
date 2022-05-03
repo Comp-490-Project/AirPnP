@@ -5,10 +5,20 @@ import { LinearGradient } from 'expo-linear-gradient';
 import LightText from '../components/LightText';
 import DirectionsIcon from '../components/DirectionsIcon';
 import FeedIcon from '../components/FeedIcon';
-import ToiletIcon from '../icons/toilet-icon.png';
-import ToiletIconLeft from '../icons/toilet-icon-left.png';
 import { HEIGHT, WIDTH } from '../../constants/Dimensions';
 import HeartIcon from '../components/HeartIcon';
+import ToiletIconRight from '../icons/toilet-icon.png';
+import ToiletIconLeft from '../icons/toilet-icon-left.png';
+import poopLeftIcon from '../icons/poop-left.png';
+import poopRightIcon from '../icons/poop-right.png';
+import checkLeftIcon from '../icons/check-left.png';
+import checkRightIcon from '../icons/check-right.png';
+
+
+
+
+//cardmode 1 = favs, 2 = visited, 3 = Added 
+
 
 function RestroomCard({
   navigation,
@@ -18,7 +28,30 @@ function RestroomCard({
   longitude,
   geohash,
   indexValue,
-}) {
+  favorited,
+  visited,
+  cardMode
+})
+ {
+   var leftIcon;
+   var rightIcon;
+switch(cardMode){
+  case 1 :
+    leftIcon = ToiletIconLeft;
+    rightIcon = ToiletIconRight;
+    break;
+  case 2 :
+    leftIcon = checkLeftIcon;
+    rightIcon = checkRightIcon;
+    break;
+  case 3: 
+  leftIcon = poopLeftIcon;
+  rightIcon = poopRightIcon;
+    break;
+}
+
+
+
   return (
     <LinearGradient
       start={{ x: 0, y: 0 }}
@@ -39,27 +72,27 @@ function RestroomCard({
         </View>
         <View style={styles.addressContainer}>
           <LightText fontWeight="500" lineHeight={20}>
-            18111 Nordhoff St Maildrop 8271, Northridge, CA 91330
+            {address}
           </LightText>
         </View>
         <View style={styles.statsContainer}>
           <View style={styles.stat}>
             <Image source={require('../icons/favstaticon.png')} />
             <LightText fontWeight="500" lineHeight={20}>
-              {' 5 other have favorited this restroom!'}
+            {" "}{favorited}{' others have favorited this restroom!'}
             </LightText>
           </View>
           <View style={styles.stat}>
             <Image source={require('../icons/visitedcheckmark.png')} />
             <LightText fontWeight="500" lineHeight={20}>
-              {' 5 others have visited this restroom!'}
+              {" "}{visited}{' others have visited this restroom!'}
             </LightText>
           </View>
         </View>
         {indexValue % 2 == 0 ? (
-          <Image source={ToiletIconLeft} style={styles.toiletBackgroundLeft} />
+          <Image source={leftIcon} style={styles.toiletBackgroundLeft} />
         ) : (
-          <Image source={ToiletIcon} style={styles.toiletBackgroundRight} />
+          <Image source={rightIcon} style={styles.toiletBackgroundRight} />
         )}
       </View>
       <View style={styles.cardFooterContainer}>
@@ -121,7 +154,7 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     height: '105%',
-    width: '35%',
+    
   },
   toiletBackgroundRight: {
     position: 'absolute',
@@ -129,7 +162,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: '105%',
-    width: '35%',
+    
   },
 });
 

@@ -8,15 +8,30 @@ import RestroomCard from '../components/RestroomCard';
 import BackButton from '../icons/back-btn.png';
 import colors from '../theme/colors';
 
+
 /* todo 
-4: write code to add addresses to the database and add favorited and visited counters in the database
-5: add stats visited and favorited
+
 6: pass a mode prop to select favs, visited, added.
 */
 
-function FavoritesScreen({ navigation }) {
+function FavoritesScreen({navigation, route}) {
   const { userFavorites } = useSelector((state) => state.userFavorites);
-
+  var title;
+  var screenMode;
+switch(route.params.key){
+  case "favorites":
+    title = "Favorites";
+    screenMode = 1;
+  break;
+  case "visited":
+    title = "Visited Restrooms";
+    screenMode = 2;
+  break; 
+  case "added":
+    title = "Added Restrooms";
+    screenMode = 3;
+  break;
+}
   return (
     <SafeView>
       <>
@@ -24,7 +39,7 @@ function FavoritesScreen({ navigation }) {
           <Image style={styles.backButton} source={BackButton} />
         </TouchableOpacity>
         <View style={styles.container}>
-          <Text style={styles.title}>Favorites</Text>
+          <Text style={styles.title}>{title}</Text>
           <ScrollView>
             {userFavorites.length == 0 ? (
               <Text
@@ -43,10 +58,13 @@ function FavoritesScreen({ navigation }) {
                   indexValue={index}
                   key={index}
                   name={restroom.name}
-                  address={restroom.description}
+                  address={restroom.address}
                   latitude={restroom.latitude}
                   longitude={restroom.longitude}
                   geohash={restroom.geohash}
+                  favorited= {restroom.favoriteCounter}
+                  visited= {restroom.visitedCounter}
+                  cardMode= {screenMode}
                 />
               ))
             )}
