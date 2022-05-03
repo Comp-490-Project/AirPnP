@@ -16,20 +16,25 @@ import colors from '../theme/colors';
 
 function FavoritesScreen({navigation, route}) {
   const { userFavorites } = useSelector((state) => state.userFavorites);
+  const { userVisited } = useSelector((state) => state.userVisited);
   var title;
   var screenMode;
+  var arrayInUse;
 switch(route.params.key){
   case "favorites":
     title = "Favorites";
     screenMode = 1;
+    arrayInUse = userFavorites;
   break;
   case "visited":
     title = "Visited Restrooms";
     screenMode = 2;
+    arrayInUse = userVisited;
   break; 
   case "added":
     title = "Added Restrooms";
     screenMode = 3;
+    arrayInUse = userAdded;
   break;
 }
   return (
@@ -41,7 +46,7 @@ switch(route.params.key){
         <View style={styles.container}>
           <Text style={styles.title}>{title}</Text>
           <ScrollView>
-            {userFavorites.length == 0 ? (
+            {arrayInUse.length == 0 ? (
               <Text
                 style={{
                   flex: 1,
@@ -52,7 +57,7 @@ switch(route.params.key){
                 Data Not Available!
               </Text>
             ) : (
-              userFavorites.map((restroom, index) => (
+              arrayInUse.map((restroom, index) => (
                 <RestroomCard
                   navigation={navigation}
                   indexValue={index}
