@@ -40,7 +40,7 @@ function ReviewScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView style={{color: colors.white}}>
         <View style={styles.titlecontainer}>
           <Text style={styles.title}>Review</Text>
           <View style={styles.TextInput}>
@@ -50,6 +50,7 @@ function ReviewScreen({ navigation, route }) {
               placeholder="How Was It?"
               mode="outlined"
               multiline
+              color= 'white'
             />
           </View>
           <Text style={styles.title}>Rating</Text>
@@ -80,11 +81,14 @@ function ReviewScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.greyBackground,
+    color: colors.white,
   },
 
   titlecontainer: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.greyBackground,
+    color: colors.white,
     width: '100%',
     paddingHorizontal: 20,
   },
@@ -97,6 +101,7 @@ const styles = StyleSheet.create({
     fontSize: 35,
     marginTop: 30,
     alignSelf: 'center',
+    color: colors.white,
   },
   TextInput: {
     height: 200,
@@ -105,6 +110,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingLeft: 10,
     paddingRight: 10,
+    color: colors.white,
   },
   imageContainer: {
     width: '100%',
