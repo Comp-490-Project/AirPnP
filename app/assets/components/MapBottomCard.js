@@ -14,6 +14,8 @@ import FeedIcon from './FeedIcon';
 import ToiletIcon from '../icons/toilet-icon.png';
 import DistancePersonIcon from '../icons/distance-person-icon.svg';
 import { WIDTH } from '../../constants/Dimensions';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faCar } from '@fortawesome/free-solid-svg-icons';
 
 function MapBottomCard({ navigation }) {
   const { geohash, latitude, longitude, meanRating, name, address, distance} =
@@ -60,10 +62,23 @@ function MapBottomCard({ navigation }) {
           </View>
           <View style={styles.footerContainer}>
             {/* @TODO: Convert distance in km to mi or feet */}
+
+            { (distance < 2640) ? (
             <View style={styles.distanceContainer}>
               <DistancePersonIcon style={styles.distanceIcon} />
               <LightText>{" "}{distance} {" feet away"}</LightText>
             </View>
+            ) : (
+            <View style={styles.distanceContainer}>
+              <FontAwesomeIcon
+                      icon={faCar}
+                      size={22}
+                      color="#CDCDCD"
+                      style={styles.envelope}
+                    />
+              <LightText>{" "}{(distance / 5280).toFixed(1)} {" miles away"}</LightText>
+            </View>
+            )}
             <View style={styles.btnContainer}>
               <View style={{ marginRight: 15 }}>
                 <DirectionsIcon latitude={latitude} longitude={longitude} />
