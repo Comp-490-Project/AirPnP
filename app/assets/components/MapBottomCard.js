@@ -18,7 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCar } from '@fortawesome/free-solid-svg-icons';
 
 function MapBottomCard({ navigation }) {
-  const { geohash, latitude, longitude, meanRating, name, address, distance} =
+  const { geohash, latitude, longitude, meanRating, name, address, distance } =
     useSelector((state) => state.restroomMarker);
 
   const fontsLoaded = useFontLoader();
@@ -42,12 +42,12 @@ function MapBottomCard({ navigation }) {
               {name}
             </LightText>
             {/* TODO: Count number of reviews */}
-            <View style={styles.ratingContainer}>
-              <Image source={StarFilled} style={styles.starIcon} />
-              <LightText>
-                {meanRating} <LightText fontSize={12}>(2)</LightText>
-              </LightText>
-            </View>
+            {meanRating !== 0 && (
+              <View style={styles.ratingContainer}>
+                <Image source={StarFilled} style={styles.starIcon} />
+                <LightText>{meanRating}</LightText>
+              </View>
+            )}
           </View>
           {/* @TODO: Convert coordinates into address */}
           <View style={styles.addressContainer}>
@@ -63,22 +63,24 @@ function MapBottomCard({ navigation }) {
           <View style={styles.footerContainer}>
             {/* @TODO: Convert distance in km to mi or feet */}
 
-            { (distance < 2640) ? (
             <View style={styles.distanceContainer}>
-              <DistancePersonIcon style={styles.distanceIcon} />
-              <LightText>{" "}{distance} {" feet away"}</LightText>
+              {distance < 2640 ? (
+                <>
+                  <DistancePersonIcon style={styles.distanceIcon} />
+                  <LightText>{`${distance} ft`}</LightText>
+                </>
+              ) : (
+                <>
+                  <FontAwesomeIcon
+                    icon={faCar}
+                    size={22}
+                    color={colors.backgroundLight}
+                    style={styles.distanceIcon}
+                  />
+                  <LightText>{`${(distance / 5280).toFixed(1)} mi`}</LightText>
+                </>
+              )}
             </View>
-            ) : (
-            <View style={styles.distanceContainer}>
-              <FontAwesomeIcon
-                      icon={faCar}
-                      size={22}
-                      color="#CDCDCD"
-                      style={styles.envelope}
-                    />
-              <LightText>{" "}{(distance / 5280).toFixed(1)} {" miles away"}</LightText>
-            </View>
-            )}
             <View style={styles.btnContainer}>
               <View style={{ marginRight: 15 }}>
                 <DirectionsIcon latitude={latitude} longitude={longitude} />
@@ -137,7 +139,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   distanceIcon: {
-    marginRight: 3,
+    marginRight: 6,
   },
   btnContainer: {
     flexDirection: 'row',
