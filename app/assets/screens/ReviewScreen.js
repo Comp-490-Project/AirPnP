@@ -32,10 +32,15 @@ function ReviewScreen({ navigation, route }) {
       rating,
       image,
     };
-
+    if(comment == ""){
+      alert("Review text may not be blank");
+    }else if(rating == 0){
+      alert("please provide a rating");
+    }else{
     dispatch(submitReview(reviewData));
-
+    alert("Review Submitted")
     navigation.navigate('Home');
+    }
   };
 
   return (
