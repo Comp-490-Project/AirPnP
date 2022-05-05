@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'center',
     position: 'relative',
+    overflow: 'hidden',
   },
   headingContainer: {
     width: '100%',
@@ -149,12 +150,12 @@ const styles = StyleSheet.create({
   toiletBackground: {
     position: 'absolute',
     borderTopRightRadius: 20,
-    borderBottomRightRadius: 20,
+    borderBottomRightRadius: 25,
     right: 0,
     bottom: 0,
     top: 0,
     height: '130%',
-    width: '40%',
+    width: '45%',
   },
 });
 
