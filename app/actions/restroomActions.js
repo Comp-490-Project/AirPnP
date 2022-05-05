@@ -15,31 +15,14 @@ import { firebase } from '../firebase';
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
 
 // Get restrooms around passed in latitude and longitude
-export const getRestrooms = (latitude, longitude) => async (dispatch) => {
-  const center = [latitude, longitude];
-  var radiusInM = 2500;
-  var bounds = geohashQueryBounds(center, radiusInM);
-  const promises = [];
+export const getRestrooms =
+  (latitude, longitude) => async (dispatch, getState) => {
+    const { location } = getState().userLocation;
+    const center = [latitude, longitude];
+    var radiusInM = 2500;
+    var bounds = geohashQueryBounds(center, radiusInM);
+    const promises = [];
 
-  for (const b of bounds) {
-    const q = firebase
-      .firestore()
-      .collection('Los-Angeles')
-      .orderBy('geohash')
-      .startAt(b[0])
-      .endAt(b[1]);
-    promises.push(q.get());
-  }
-
-  var snapshots = await Promise.all(promises);
-  const restrooms = [];
-  let closestRestroom;
-  let closestMarker;
-
-  // If no restrooms, increase radius of search
-  if (snapshots[0].docs.length == 0) {
-    radiusInM = 6100;
-    bounds = geohashQueryBounds(center, radiusInM);
     for (const b of bounds) {
       const q = firebase
         .firestore()
@@ -49,50 +32,82 @@ export const getRestrooms = (latitude, longitude) => async (dispatch) => {
         .endAt(b[1]);
       promises.push(q.get());
     }
-    snapshots = await Promise.all(promises);
-  }
 
-  for (const snap of snapshots) {
-    for (const doc of snap.docs) {// this was changed from const to var
-      const lat = doc.get('latitude');
-      const lng = doc.get('longitude');
-      var restroomInfo;
-      if (!closestRestroom) {
-        closestRestroom = [lat, lng];
+    var snapshots = await Promise.all(promises);
+    const restrooms = [];
+    let closestRestroom;
+    let closestMarker;
+
+    // If no restrooms, increase radius of search
+    if (snapshots[0].docs.length == 0) {
+      radiusInM = 6100;
+      bounds = geohashQueryBounds(center, radiusInM);
+      for (const b of bounds) {
+        const q = firebase
+          .firestore()
+          .collection('Los-Angeles')
+          .orderBy('geohash')
+          .startAt(b[0])
+          .endAt(b[1]);
+        promises.push(q.get());
       }
+      snapshots = await Promise.all(promises);
+    }
 
-      const distanceInM = distanceBetween([lat, lng], center) * 1000;
-      
-      
-      
-      const closestDistance = distanceBetween(closestRestroom, center) * 1000;
+    for (const snap of snapshots) {
+      for (const doc of snap.docs) {
+        const lat = doc.get('latitude');
+        const lng = doc.get('longitude');
+        var restroomInfo;
 
-      if (distanceInM <= radiusInM) {
-        restroomInfo = doc.data();//*******************************************here this is added */
-        restroomInfo.distance = Math.round(distanceInM * 3.28084);
-        restrooms.push(restroomInfo);
-      }
+        if (!closestRestroom) {
+          closestRestroom = [lat, lng];
+        }
 
-      if (distanceInM < closestDistance) {
-        closestRestroom = [lat, lng];
-        closestMarker = doc.data();
-        closestMarker.distance = Math.round(distanceInM * 3.28084);//*******************************************here this is added */
+        // Distance to the current closest restroom SO FAR
+        const distanceToClosestSoFar =
+          (distanceBetween(closestRestroom, center) +
+            distanceBetween(center, [location.latitude, location.longitude])) *
+          1000;
+
+        // Distance beteween CURRENT restroom and center plus the distance between your location and center
+        const totalDistanceInM =
+          (distanceBetween([lat, lng], center) +
+            distanceBetween(center, [location.latitude, location.longitude])) *
+          1000;
+
+        // Distance from search center
+        const distanceFromCenterInM =
+          distanceBetween([lat, lng], center) * 1000;
+
+        // Handles whether restroom is within radius of search center (or location center)
+        if (distanceFromCenterInM <= radiusInM) {
+          restroomInfo = doc.data();
+          restroomInfo.distance = Math.round(totalDistanceInM * 3.28084);
+          restrooms.push(restroomInfo);
+        }
+
+        // Handles whether distance to CURRENT restroom is less than that of the closest restroom found SO FAR
+        if (totalDistanceInM < distanceToClosestSoFar) {
+          closestRestroom = [lat, lng];
+          closestMarker = doc.data();
+          closestMarker.distance = Math.round(totalDistanceInM * 3.28084);
+        }
       }
     }
-  }
 
-  dispatch(setMarkerAttributes(closestMarker));
+    dispatch(setMarkerAttributes(closestMarker));
 
-  dispatch({
-    type: RESTROOM_DIRECTIONS_CHANGED,
-    payload: closestRestroom.join(', '),
-  });
+    dispatch({
+      type: RESTROOM_DIRECTIONS_CHANGED,
+      payload: closestRestroom.join(', '),
+    });
 
-  dispatch({
-    type: RESTROOM_MARKERS_LOADED,
-    payload: restrooms,
-  });
-};
+    dispatch({
+      type: RESTROOM_MARKERS_LOADED,
+      payload: restrooms,
+    });
+  };
 
 // Set current marker attributes
 export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
@@ -105,8 +120,7 @@ export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
     meanRating,
     reviews,
     name,
-    distance,//*******************************************here this is added */
-
+    distance,
   } = marker;
 
   const { userFavorites } = getState().userFavorites;
@@ -137,8 +151,7 @@ export const setMarkerAttributes = (marker) => async (dispatch, getState) => {
       name,
       isFavorited,
       isVisited,
-      distance,//*******************************************here this is added */
-
+      distance,
     },
   });
 
