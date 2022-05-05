@@ -24,7 +24,7 @@ function MapBottomCard({ navigation }) {
   const fontsLoaded = useFontLoader();
 
   if (!fontsLoaded) {
-    return <AnimationLoad />;
+    return <></>;
   }
 
   return (

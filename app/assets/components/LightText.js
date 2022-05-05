@@ -15,7 +15,7 @@ const LightText = ({
   const fontsLoaded = useFontLoader();
 
   if (!fontsLoaded) {
-    return <AnimationLoad />;
+    return <></>;
   }
 
   return (

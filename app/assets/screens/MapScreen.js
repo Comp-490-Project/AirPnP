@@ -61,7 +61,7 @@ function MapScreen({ navigation }) {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.mapView}
-        showsUserLocation={true}
+        showsUserLocation
         customMapStyle={mapStyle}
         region={{
           latitude: mapCenterLocation
@@ -73,7 +73,7 @@ function MapScreen({ navigation }) {
           latitudeDelta: 0.0015,
           longitudeDelta: 0.0121,
         }}
-        loadingEnabled={true}
+        loadingEnabled
       >
         {restrooms.map((marker, index) => (
           <MapMarker key={marker.geohash} marker={marker} index={index} />
