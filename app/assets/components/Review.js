@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faUser, faStar } from '@fortawesome/free-solid-svg-icons';
@@ -9,20 +9,20 @@ import LightText from './LightText';
 import colors from '../theme/colors';
 import { firebase } from '../../firebase';
 
-const Review = ({ user, comment, rating }) => {
+const Review = ({ user, comment, rating, image }) => {
   const maxRating = [1, 2, 3, 4, 5];
+  const [username, setUsername] = useState('');
 
-  // const getUsername = async () => {
-  //   const docRef = firebase.firestore().collection('users').doc(user);
+  const getReviewData = async () => {
+    const docRef = firebase.firestore().collection('users').doc(user);
+    const snapshot = await docRef.get();
 
-  //   const snapshot = await docRef.get();
+    setUsername(snapshot.data().username);
+  };
 
-  //   console.log(snapshot.data());
-  // };
-
-  // useEffect(() => {
-  //   getUsername();
-  // }, []);
+  useEffect(() => {
+    getReviewData();
+  }, []);
 
   return (
     <View style={styles.reviewContainer}>
@@ -34,7 +34,7 @@ const Review = ({ user, comment, rating }) => {
           <View style={styles.postInfo}>
             <View style={styles.username}>
               <LightText lineHeight={15} fontWeight="bold">
-                {user}
+                {username}
               </LightText>
             </View>
             {/* TODO: CreatedAt field in review */}
@@ -73,15 +73,11 @@ const Review = ({ user, comment, rating }) => {
       <View style={styles.reviewBody}>
         <LightText lineHeight={25}>{comment}</LightText>
       </View>
-      {/* TODO: image URI reference in review */}
-      <View style={styles.reviewImage}>
-        <Image
-          source={{
-            uri: 'https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          }}
-          style={styles.reviewImage}
-        />
-      </View>
+      {image && (
+        <View style={styles.reviewImage}>
+          <Image source={{ uri: image }} style={styles.reviewImage} />
+        </View>
+      )}
     </View>
   );
 };
@@ -91,7 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#303645',
     paddingHorizontal: 20,
     paddingTop: 20,
-    paddingBottom: 75,
+    paddingBottom: '10%',
     borderRadius: 5,
     marginBottom: 12,
   },
@@ -130,8 +126,8 @@ const styles = StyleSheet.create({
     color: '#FDC630',
   },
   reviewImage: {
-    marginTop: 8,
-    height: HEIGHT * 0.1,
+    marginTop: '5%',
+    height: HEIGHT * 0.2,
     width: WIDTH * 0.4,
     marginRight: 10,
     borderRadius: 5,

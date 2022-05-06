@@ -17,6 +17,7 @@ import {
   USER_VISITED_RESTROOMS_LOADED,
   USER_VISITED_ADDED,
   USER_VISITED_REMOVED,
+  USER_VISITED_CLEAR,
 } from '../constants/userTypes';
 
 export const userLocationReducer = (state = {}, action) => {
@@ -149,6 +150,11 @@ export const userVisitedReducer = (state = { userVisited: [] }, action) => {
         userVisited: state.userVisited.filter(
           (visit) => visit.geohash !== action.payload
         ),
+      };
+    case USER_VISITED_CLEAR:
+      return {
+        ...state,
+        userVisited: [],
       };
     default:
       return state;

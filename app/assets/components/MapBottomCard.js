@@ -45,7 +45,7 @@ function MapBottomCard({ navigation }) {
             {meanRating !== 0 && (
               <View style={styles.ratingContainer}>
                 <Image source={StarFilled} style={styles.starIcon} />
-                <LightText>{meanRating}</LightText>
+                <LightText>{meanRating.toFixed(1)}</LightText>
               </View>
             )}
           </View>

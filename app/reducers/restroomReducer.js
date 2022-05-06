@@ -10,6 +10,8 @@ import {
   RESTROOM_REVIEW_IMAGE_REMOVED,
   RESTROOM_REVIEW_CLEAR,
   RESTROOM_MARKER_ADDED,
+  RESTROOM_REVIEW_ADDED,
+  RESTROOM_REVIEW_EDITED,
 } from '../constants/restroomTypes';
 import {
   RESTROOM_MARKER_FAVORITED,
@@ -78,6 +80,28 @@ export const restroomMarkerReducer = (state = {}, action) => {
         ...state,
         isVisited: false,
       };
+    case RESTROOM_REVIEW_EDITED:
+      return {
+        ...state,
+        reviews: state.reviews.map((review) =>
+          review.user === action.payload.user ? action.payload : review
+        ),
+        meanRating: action.payload.newRating,
+        images: action.payload.image
+          ? state.images.map((image) =>
+              image.includes(action.payload.user) ? action.payload.image : image
+            )
+          : state.images,
+      };
+    case RESTROOM_REVIEW_ADDED:
+      return {
+        ...state,
+        reviews: [...state.reviews, action.payload],
+        meanRating: action.payload.newRating,
+        images: action.payload.image
+          ? [...state.images, action.payload.image]
+          : state.images,
+      };
     default:
       return state;
   }
@@ -105,14 +129,13 @@ export const restroomReviewReducer = (state = {}, action) => {
         ...state,
         image: null,
       };
-    case RESTROOM_REVIEW_CLEAR: {
+    case RESTROOM_REVIEW_CLEAR:
       return {
         ...state,
         region: {},
         rating: 2,
         image: null,
       };
-    }
     default:
       return state;
   }
