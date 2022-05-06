@@ -38,30 +38,20 @@ function Rating() {
     );
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <View >
       <CustomRatingBar></CustomRatingBar>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    justifyContent: 'center',
-  },
-  textStyle: {
-    textAlign: 'center',
-    fontSize: 23,
-  },
   customRatingBarStyle: {
     justifyContent: 'center',
     flexDirection: 'row',
-    marginTop: -30,
   },
   starImgStyle: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     resizeMode: 'cover',
   },
 });

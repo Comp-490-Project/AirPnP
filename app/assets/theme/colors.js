@@ -28,6 +28,7 @@ export default {
   textRight: '#9599E2',
   textLeft: '#8BC6EC',
   greyBackground: '#303645',
+  lighterbackground: '#4D566C',
   firstfavColorLeft: '#9599E2',
   firstfavColorRight: '#747AE8',
   secondFavColorLeft: '#4AA1DA',

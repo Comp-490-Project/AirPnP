@@ -15,6 +15,14 @@ import colors from '../theme/colors';
 import ReviewBottomSheet from '../components/bottomSheets/ReviewBottomSheet';
 import { useSelector, useDispatch } from 'react-redux';
 import { submitReview } from '../../actions/restroomActions';
+import BackButton from '../icons/back-btn.png';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import {
+  faCamera,
+  faFile, 
+} from '@fortawesome/free-solid-svg-icons';
+import { openCamera, openLibrary } from '../../helpers/mediaPermissions';
+import { handleImageInUI } from '../../actions/restroomActions';
 
 function ReviewScreen({ navigation, route }) {
   const reference = useRef(null);
@@ -24,6 +32,16 @@ function ReviewScreen({ navigation, route }) {
 
   const [comment, setComment] = useState('');
   const { rating, image } = useSelector((state) => state.restroomReview);
+  
+  const handleCamera = async () => {
+    const image = await openCamera();
+    dispatch(handleImageInUI(image));
+  };
+
+  const handleLibrary = async () => {
+    const image = await openLibrary();
+    dispatch(handleImageInUI(image));
+  };
 
   const submitHandler = () => {
     const reviewData = {
@@ -45,7 +63,10 @@ function ReviewScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{color: colors.white}}>
+      <TouchableOpacity onPress={() => navigation.pop()}>
+          <Image style={styles.backButton} source={BackButton} />
+      </TouchableOpacity>
+      <View style={{color: colors.white}}>
         <View style={styles.titlecontainer}>
           <Text style={styles.title}>Review</Text>
           <View style={styles.TextInput}>
@@ -53,32 +74,50 @@ function ReviewScreen({ navigation, route }) {
               label="Review"
               onChangeText={(text) => setComment(text)}
               placeholder="How Was It?"
+              placeholderTextColor={"white"}
               mode="outlined"
               multiline
-              color= 'white'
+              color= "white"
             />
           </View>
-          <Text style={styles.title}>Rating</Text>
-          <SafeAreaView style={styles.ratingcontainer}>
-            <Rating />
-          </SafeAreaView>
-          <TouchableOpacity style={{ margin: 5 }}>
-            <AppButton
-              title="Add Photo"
-              onPress={() => reference.current.snapTo(0)}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ margin: 5 }}>
-            <AppButton title="Submit Review" onPress={submitHandler} />
-          </TouchableOpacity>
+          <View style= {styles.ratingView}>
+            <Text style={{color: colors.white, marginLeft: 20}} >Rating</Text>
+            <View style={styles.ratingcontainer}>
+              <Rating />
+            </View>
+          </View>
+
+          <View style={styles.buttonView}>
+            <TouchableOpacity style= {{marginTop:15}}
+                      onPress={handleCamera}
+                    >
+              <FontAwesomeIcon
+                icon={faCamera}
+                size={30}
+                color= {colors.backgroundLight}   
+                      />
+            </TouchableOpacity>
+            <TouchableOpacity style= {{marginTop:15, marginLeft:15}}
+                      onPress={handleLibrary}
+                    >
+              <FontAwesomeIcon
+                icon={faFile}
+                size={30}
+                color= {colors.backgroundLight}   
+                      />
+            </TouchableOpacity>
+            <TouchableOpacity style ={{marginLeft:15}} >
+              <AppButton title="Submit Review" onPress={submitHandler} />
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.imageContainer}>
             {image !== '' && (
               <Image source={{ uri: image }} style={styles.image} />
             )}
           </View>
         </View>
-      </ScrollView>
-      <ReviewBottomSheet reference={reference} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -86,21 +125,19 @@ function ReviewScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     backgroundColor: colors.greyBackground,
     color: colors.white,
   },
 
   titlecontainer: {
-    flex: 1,
     backgroundColor: colors.greyBackground,
     color: colors.white,
     width: '100%',
     paddingHorizontal: 20,
   },
   ratingcontainer: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
+    marginLeft: 15
   },
   title: {
     fontSize: 35,
@@ -108,14 +145,25 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     color: colors.white,
   },
+  ratingView: {
+    marginTop:15,
+    marginBottom:15,
+    color: colors.white,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   TextInput: {
+    marginTop: 20,
+    marginBottom: 10,
+    borderColor: "#8BC6EC",
+    borderRadius: 4,
+    borderWidth: 1,
     height: 200,
-    borderWidth: 3,
-    borderRadius: 7.5,
+    backgroundColor: colors.greyBackground,
     paddingTop: 10,
     paddingLeft: 10,
     paddingRight: 10,
-    color: colors.white,
+    
   },
   imageContainer: {
     width: '100%',
@@ -123,8 +171,17 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   image: {
+    marginTop:10,
     width: '100%',
-    height: 350,
+    height: 250
+  },
+  backButton: {
+    marginTop: 45,
+    marginLeft: 15,
+    marginBottom: 15,
+  },
+  buttonView: {
+    flexDirection: 'row',
   },
 });
 
