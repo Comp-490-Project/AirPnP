@@ -8,6 +8,8 @@ import {
   RESTROOM_REVIEW_IMAGE_UPLOADED,
   RESTROOM_REVIEW_IMAGE_REMOVED,
   RESTROOM_REVIEW_STARS_CHANGED,
+  RESTROOM_REVIEW_EDITED,
+  RESTROOM_REVIEW_ADDED,
   RESTROOM_REVIEW_CLEAR,
   RESTROOM_MARKER_ADDED,
 } from '../constants/restroomTypes';
@@ -274,11 +276,8 @@ export const submitReview = (review) => async (dispatch, getState) => {
 
   // Get reference to Firebase document
   const docRef = firebase.firestore().collection('Los-Angeles').doc(geohash);
-
   const query = await docRef.get();
-
   const restroomDoc = query.data();
-
   const restroomReviews = restroomDoc.reviews;
 
   // Calculate new meanRating assuming user has not yet reviewed
@@ -286,44 +285,69 @@ export const submitReview = (review) => async (dispatch, getState) => {
     (restroomDoc.meanRating * restroomReviews?.length + rating) /
     (restroomReviews?.length + 1);
 
-  if (restroomReviews) {
-    // For each review, check if user has already reviewed
-    for (const review of restroomReviews) {
-      if (review.user === user) {
-        // Remove previous review
-        await docRef.update({
-          reviews: restroomReviews.filter((review) => review.user !== user),
-        });
+  // For each review, check if user has already reviewed
+  for (const review of restroomReviews) {
+    if (review.user === user) {
+      // Remove previous review
+      await docRef.update({
+        reviews: restroomReviews.filter((review) => review.user !== user),
+      });
 
-        // Calculate new meanRating according to previous user review
-        newRating =
-          (restroomDoc.meanRating * restroomReviews.length -
-            review.rating +
-            rating) /
-          restroomReviews.length;
+      // Calculate new meanRating according to previous user review
+      newRating =
+        (restroomDoc.meanRating * restroomReviews.length -
+          review.rating +
+          rating) /
+        restroomReviews.length;
+
+      // Update doc with new meanRating and add new/updated review
+      await docRef.update({
+        meanRating: newRating,
+        reviews: firebase.firestore.FieldValue.arrayUnion({
+          comment,
+          rating,
+          user,
+        }),
+      });
+
+      if (image) {
+        const response = await fetch(image);
+        // Responsible for containing the URI's data in bytes
+        const blob = await response.blob();
+        const pathRef = firebase.storage().ref(geohash).child(user);
+        await pathRef.put(blob);
       }
-    }
 
-    // Update doc with new meanRating and add new/updated review
-    await docRef.update({
-      meanRating: newRating,
-      reviews: firebase.firestore.FieldValue.arrayUnion({
-        comment,
-        rating,
-        user,
-      }),
-    });
-  } else {
-    // First review of restroom
-    await docRef.update({
-      meanRating: rating,
-      reviews: firebase.firestore.FieldValue.arrayUnion({
-        comment,
-        rating,
-        user,
-      }),
-    });
+      const downloadURL = await firebase
+        .storage()
+        .ref(geohash)
+        .child(user)
+        .getDownloadURL();
+
+      dispatch({
+        type: RESTROOM_REVIEW_EDITED,
+        payload: {
+          comment,
+          rating,
+          newRating,
+          user,
+          image: image && downloadURL,
+        },
+      });
+
+      return;
+    }
   }
+
+  // Update doc with new meanRating and add new/updated review
+  await docRef.update({
+    meanRating: newRating,
+    reviews: firebase.firestore.FieldValue.arrayUnion({
+      comment,
+      rating,
+      user,
+    }),
+  });
 
   if (image) {
     const response = await fetch(image);
@@ -332,6 +356,23 @@ export const submitReview = (review) => async (dispatch, getState) => {
     const pathRef = firebase.storage().ref(geohash).child(user);
     await pathRef.put(blob);
   }
+
+  const downloadURL = await firebase
+    .storage()
+    .ref(geohash)
+    .child(user)
+    .getDownloadURL();
+
+  dispatch({
+    type: RESTROOM_REVIEW_ADDED,
+    payload: {
+      comment,
+      rating,
+      newRating,
+      user,
+      image: image && downloadURL,
+    },
+  });
 
   dispatch({
     type: RESTROOM_REVIEW_CLEAR,

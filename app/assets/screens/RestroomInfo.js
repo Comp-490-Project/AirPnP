@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -141,7 +141,11 @@ function RestroomInfo({ navigation }) {
         <View style={styles.btnContainer}>
           <TouchableOpacity
             style={{ width: '48%' }}
-            onPress={() => navigation.navigate('Review', { geohash })}
+            onPress={() =>
+              user
+                ? navigation.navigate('Review', { geohash })
+                : navigation.navigate('Login')
+            }
           >
             <LinearGradient
               start={{ x: 0, y: 0 }}
@@ -221,7 +225,7 @@ function RestroomInfo({ navigation }) {
             </View>
             <View style={styles.ratingText}>
               {meanRating ? (
-                <LightText>{`${meanRating} out of 5`}</LightText>
+                <LightText>{`${meanRating.toFixed(1)} out of 5`}</LightText>
               ) : (
                 <LightText>Be the first to leave a review!</LightText>
               )}
@@ -254,9 +258,10 @@ function RestroomInfo({ navigation }) {
             {reviews.map((review, index) => (
               <Review
                 key={index}
-                user={review.user || review.userID}
-                comment={review.comment || review.Comment}
-                rating={review.rating || review.Rating}
+                user={review.user}
+                comment={review.comment}
+                rating={review.rating}
+                image={images.find((image) => image.includes(review.user))}
               />
             ))}
           </View>

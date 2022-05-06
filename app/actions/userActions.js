@@ -17,6 +17,7 @@ import {
   USER_VISITED_RESTROOMS_LOADED,
   USER_VISITED_ADDED,
   USER_VISITED_REMOVED,
+  USER_VISITED_CLEAR,
   RESTROOM_MARKER_VISITED,
   RESTROOM_MARKER_UNVISITED,
   USER_FEED_STATE_CHANGED,
@@ -94,6 +95,10 @@ export const logout = (user) => (dispatch) => {
   try {
     dispatch({
       type: USER_LOGGED_OUT,
+    });
+
+    dispatch({
+      type: USER_VISITED_CLEAR,
     });
   } catch (error) {
     dispatch({

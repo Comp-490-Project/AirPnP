@@ -32,20 +32,20 @@ function ReviewScreen({ navigation, route }) {
       rating,
       image,
     };
-    if(comment == ""){
-      alert("Review text may not be blank");
-    }else if(rating == 0){
-      alert("please provide a rating");
-    }else{
-    dispatch(submitReview(reviewData));
-    alert("Review Submitted")
-    navigation.navigate('Home');
+    if (comment == '') {
+      alert('Review text may not be blank');
+    } else if (rating == 0) {
+      alert('please provide a rating');
+    } else {
+      dispatch(submitReview(reviewData));
+      alert('Review Submitted');
+      navigation.navigate('Home');
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{color: colors.white}}>
+      <ScrollView style={{ color: colors.white }}>
         <View style={styles.titlecontainer}>
           <Text style={styles.title}>Review</Text>
           <View style={styles.TextInput}>
@@ -55,7 +55,7 @@ function ReviewScreen({ navigation, route }) {
               placeholder="How Was It?"
               mode="outlined"
               multiline
-              color= 'white'
+              color="white"
             />
           </View>
           <Text style={styles.title}>Rating</Text>

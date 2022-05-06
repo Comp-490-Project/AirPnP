@@ -43,7 +43,7 @@ function ProfileScreen({ navigation }) {
     if (user) {
       getUserAddedRestrooms();
     }
-  }, []);
+  }, [user]);
 
   if (!user) {
     return (
