@@ -66,14 +66,10 @@ function ReviewScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-<<<<<<< HEAD
       <TouchableOpacity onPress={() => navigation.pop()}>
           <Image style={styles.backButton} source={BackButton} />
       </TouchableOpacity>
       <View style={{color: colors.white}}>
-=======
-      <ScrollView style={{ color: colors.white }}>
->>>>>>> 9f9462c299f4e19bccc1ea85b266baa3d79b52d5
         <View style={styles.titlecontainer}>
           <Text style={styles.title}>Review</Text>
           <View style={styles.TextInput}>
@@ -84,11 +80,7 @@ function ReviewScreen({ navigation, route }) {
               placeholderTextColor={"white"}
               mode="outlined"
               multiline
-<<<<<<< HEAD
               color= "white"
-=======
-              color="white"
->>>>>>> 9f9462c299f4e19bccc1ea85b266baa3d79b52d5
             />
           </View>
           <View style= {styles.ratingView}>
