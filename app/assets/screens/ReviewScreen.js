@@ -19,10 +19,13 @@ import BackButton from '../icons/back-btn.png';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faCamera,
-  faFile, 
+  faFile,
+  faArrowRight
 } from '@fortawesome/free-solid-svg-icons';
 import { openCamera, openLibrary } from '../../helpers/mediaPermissions';
 import { handleImageInUI } from '../../actions/restroomActions';
+import { LinearGradient } from 'expo-linear-gradient';
+import LightText from '../components/LightText';
 
 function ReviewScreen({ navigation, route }) {
   const reference = useRef(null);
@@ -88,7 +91,7 @@ function ReviewScreen({ navigation, route }) {
           </View>
 
           <View style={styles.buttonView}>
-            <TouchableOpacity style= {{marginTop:15}}
+            <TouchableOpacity style= {{marginTop:10, marginLeft:15}}
                       onPress={handleCamera}
                     >
               <FontAwesomeIcon
@@ -97,7 +100,7 @@ function ReviewScreen({ navigation, route }) {
                 color= {colors.backgroundLight}   
                       />
             </TouchableOpacity>
-            <TouchableOpacity style= {{marginTop:15, marginLeft:15}}
+            <TouchableOpacity style= {{marginTop:10, marginLeft:15}}
                       onPress={handleLibrary}
                     >
               <FontAwesomeIcon
@@ -106,8 +109,27 @@ function ReviewScreen({ navigation, route }) {
                 color= {colors.backgroundLight}   
                       />
             </TouchableOpacity>
-            <TouchableOpacity style ={{marginLeft:15}} >
-              <AppButton title="Submit Review" onPress={submitHandler} />
+            <TouchableOpacity
+            style={{ width: '48%', marginLeft: 20 }}
+            onPress={submitHandler}
+            >
+              <LinearGradient
+              start={{ x: 0, y: 0 }}
+               end={{ x: 1, y: 0 }}
+                colors={[colors.secondary, colors.primary]}
+                locations={[0, 1]}
+               style={styles.gradientSubmit}
+              >
+                <View style={styles.btnSubmit}>
+                 <FontAwesomeIcon
+                    icon={faArrowRight}
+                   size={20}
+                   color={colors.backgroundLight}
+                   style={styles.faArrowRight}
+                 />
+                  <LightText fontSize={16}>Submit Review</LightText>
+                </View>
+              </LinearGradient>
             </TouchableOpacity>
           </View>
 
@@ -182,6 +204,27 @@ const styles = StyleSheet.create({
   },
   buttonView: {
     flexDirection: 'row',
+  },
+  gradientSubmit: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    width: '100%',
+    overflow: 'hidden',
+  },
+  btnSubmit: {
+    width: '98.5%',
+    paddingVertical: 7,
+    paddingHorizontal: 25,
+    marginVertical: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.backgroundDark,
+    borderRadius: 4,
+  },
+  faArrowRight: {
+    marginRight: 8,
   },
 });
 
