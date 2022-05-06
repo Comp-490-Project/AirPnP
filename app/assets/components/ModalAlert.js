@@ -53,10 +53,11 @@ const styles = StyleSheet.create({
       },
     modalContainer: {
         width: '80%',
+        height: '40%',
         backgroundColor: 'white',
         paddingHorizontal: 20,
         paddingVertical: 30,
-        borderRadius: 20,
+        borderRadius: 30,
         elevation: 20,
     },
 })
