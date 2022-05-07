@@ -22,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnimationLoad from '../assets/components/AnimationLoad';
 import SearchScreen from '../assets/screens/SearchScreen';
 import SubmitScreen from '../assets/screens/SubmitScreen';
+import AddScreen from '../assets/screens/AddScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -86,6 +87,7 @@ const RootStackNavigator = () => {
           <Stack.Screen name="Feed" component={FeedScreen} />
           <Stack.Screen name="Camera" component={CameraScreen} />
           <Stack.Screen name="Search" component={SearchScreen} />
+          <Stack.Screen name="Add" component={AddScreen}/>
           <Stack.Screen name="Submit" component={SubmitScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
@@ -113,6 +115,7 @@ const RootStackNavigator = () => {
           <Stack.Screen name="Feed" component={FeedScreen} />
           <Stack.Screen name="Camera" component={CameraScreen} />
           <Stack.Screen name="Search" component={SearchScreen} />
+          <Stack.Screen name="Add" component={AddScreen}/>
           <Stack.Screen name="Submit" component={SubmitScreen}/>
 
         </Stack.Navigator>
@@ -139,6 +142,7 @@ const RootStackNavigator = () => {
         <Stack.Screen name="Feed" component={FeedScreen} />
         <Stack.Screen name="Camera" component={CameraScreen} />
         <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="Add" component={AddScreen}/>
         <Stack.Screen name="Submit" component={SubmitScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
