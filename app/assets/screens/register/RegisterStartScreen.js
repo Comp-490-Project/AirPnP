@@ -30,7 +30,7 @@ const RegisterStartScreen = ({ navigation }) => {
         </TouchableOpacity>
         <View style={styles.screenContainer}>
           <LightText fontSize={20} fontWeight="bold">
-            Please choose one of the following options to create an account:
+            Please create an account to continue:
           </LightText>
           <TouchableOpacity
             onPress={() => navigation.navigate('RegisterEmail')}
