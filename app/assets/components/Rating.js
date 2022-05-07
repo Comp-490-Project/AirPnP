@@ -3,6 +3,7 @@ import { SafeAreaView, StyleSheet, View, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { handleReviewStars } from '../../actions/restroomActions';
+import { HEIGHT, WIDTH } from '../../constants/Dimensions';
 
 function Rating() {
   const dispatch = useDispatch();
@@ -45,23 +46,13 @@ function Rating() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    justifyContent: 'center',
-  },
-  textStyle: {
-    textAlign: 'center',
-    fontSize: 23,
-  },
   customRatingBarStyle: {
     justifyContent: 'center',
     flexDirection: 'row',
-    marginTop: -30,
   },
   starImgStyle: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     resizeMode: 'cover',
   },
 });
