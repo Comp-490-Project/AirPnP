@@ -258,10 +258,11 @@ function RestroomInfo({ navigation }) {
             {reviews.map((review, index) => (
               <Review
                 key={index}
-                user={review.user}
                 comment={review.comment}
                 rating={review.rating}
+                createdAt={review.createdAt}
                 image={images.find((image) => image.includes(review.user))}
+                user={review.user}
               />
             ))}
           </View>

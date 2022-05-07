@@ -274,6 +274,10 @@ export const submitReview = (review) => async (dispatch, getState) => {
 
   const { geohash, comment, rating, image } = review;
 
+  const newDate = new Date().toString().slice(4, 15).split('');
+  newDate.splice(6, 0, ',');
+  const createdAt = newDate.join('');
+
   // Get reference to Firebase document
   const docRef = firebase.firestore().collection('Los-Angeles').doc(geohash);
   const query = await docRef.get();
@@ -306,6 +310,7 @@ export const submitReview = (review) => async (dispatch, getState) => {
         reviews: firebase.firestore.FieldValue.arrayUnion({
           comment,
           rating,
+          createdAt,
           user,
         }),
       });
@@ -316,26 +321,48 @@ export const submitReview = (review) => async (dispatch, getState) => {
         const blob = await response.blob();
         const pathRef = firebase.storage().ref(geohash).child(user);
         await pathRef.put(blob);
+
+        const downloadURL = await firebase
+          .storage()
+          .ref(geohash)
+          .child(user)
+          .getDownloadURL();
+
+        dispatch({
+          type: RESTROOM_REVIEW_EDITED,
+          payload: {
+            comment,
+            rating,
+            newRating,
+            createdAt,
+            image: image && downloadURL,
+            user,
+          },
+        });
+
+        dispatch({
+          type: RESTROOM_REVIEW_CLEAR,
+        });
+
+        return;
+      } else {
+        dispatch({
+          type: RESTROOM_REVIEW_EDITED,
+          payload: {
+            comment,
+            rating,
+            newRating,
+            createdAt,
+            user,
+          },
+        });
+
+        dispatch({
+          type: RESTROOM_REVIEW_CLEAR,
+        });
+
+        return;
       }
-
-      const downloadURL = await firebase
-        .storage()
-        .ref(geohash)
-        .child(user)
-        .getDownloadURL();
-
-      dispatch({
-        type: RESTROOM_REVIEW_EDITED,
-        payload: {
-          comment,
-          rating,
-          newRating,
-          user,
-          image: image && downloadURL,
-        },
-      });
-
-      return;
     }
   }
 
@@ -345,6 +372,7 @@ export const submitReview = (review) => async (dispatch, getState) => {
     reviews: firebase.firestore.FieldValue.arrayUnion({
       comment,
       rating,
+      createdAt,
       user,
     }),
   });
@@ -355,24 +383,36 @@ export const submitReview = (review) => async (dispatch, getState) => {
     const blob = await response.blob();
     const pathRef = firebase.storage().ref(geohash).child(user);
     await pathRef.put(blob);
+
+    const downloadURL = await firebase
+      .storage()
+      .ref(geohash)
+      .child(user)
+      .getDownloadURL();
+
+    dispatch({
+      type: RESTROOM_REVIEW_ADDED,
+      payload: {
+        comment,
+        rating,
+        newRating,
+        createdAt,
+        image: image && downloadURL,
+        user,
+      },
+    });
+  } else {
+    dispatch({
+      type: RESTROOM_REVIEW_ADDED,
+      payload: {
+        comment,
+        rating,
+        newRating,
+        createdAt,
+        user,
+      },
+    });
   }
-
-  const downloadURL = await firebase
-    .storage()
-    .ref(geohash)
-    .child(user)
-    .getDownloadURL();
-
-  dispatch({
-    type: RESTROOM_REVIEW_ADDED,
-    payload: {
-      comment,
-      rating,
-      newRating,
-      user,
-      image: image && downloadURL,
-    },
-  });
 
   dispatch({
     type: RESTROOM_REVIEW_CLEAR,

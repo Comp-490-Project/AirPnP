@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,12 +7,9 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native';
 import Rating from '../components/Rating';
-import AppButton from '../components/AppButton';
 import colors from '../theme/colors';
-import ReviewBottomSheet from '../components/bottomSheets/ReviewBottomSheet';
 import { useSelector, useDispatch } from 'react-redux';
 import { submitReview } from '../../actions/restroomActions';
 import BackButton from '../icons/back-btn.png';
@@ -20,7 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faCamera,
   faFile,
-  faArrowRight
+  faArrowRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { openCamera, openLibrary } from '../../helpers/mediaPermissions';
 import { handleImageInUI } from '../../actions/restroomActions';
@@ -28,14 +25,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import LightText from '../components/LightText';
 
 function ReviewScreen({ navigation, route }) {
-  const reference = useRef(null);
   const dispatch = useDispatch();
 
   const { geohash } = route.params;
 
   const [comment, setComment] = useState('');
   const { rating, image } = useSelector((state) => state.restroomReview);
-  
+
   const handleCamera = async () => {
     const image = await openCamera();
     dispatch(handleImageInUI(image));
@@ -67,9 +63,9 @@ function ReviewScreen({ navigation, route }) {
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.pop()}>
-          <Image style={styles.backButton} source={BackButton} />
+        <Image style={styles.backButton} source={BackButton} />
       </TouchableOpacity>
-      <View style={{color: colors.white}}>
+      <View style={{ color: colors.white }}>
         <View style={styles.titlecontainer}>
           <Text style={styles.title}>Review</Text>
           <View style={styles.TextInput}>
@@ -77,56 +73,58 @@ function ReviewScreen({ navigation, route }) {
               label="Review"
               onChangeText={(text) => setComment(text)}
               placeholder="How Was It?"
-              placeholderTextColor={"white"}
+              placeholderTextColor={'white'}
               mode="outlined"
               multiline
-              color= "white"
+              color="white"
             />
           </View>
-          <View style= {styles.ratingView}>
-            <Text style={{color: colors.white, marginLeft: 20}} >Rating</Text>
+          <View style={styles.ratingView}>
+            <Text style={{ color: colors.white, marginLeft: 20 }}>Rating</Text>
             <View style={styles.ratingcontainer}>
               <Rating />
             </View>
           </View>
 
           <View style={styles.buttonView}>
-            <TouchableOpacity style= {{marginTop:10, marginLeft:15}}
-                      onPress={handleCamera}
-                    >
+            <TouchableOpacity
+              style={{ marginTop: 10, marginLeft: 15 }}
+              onPress={handleCamera}
+            >
               <FontAwesomeIcon
                 icon={faCamera}
                 size={30}
-                color= {colors.backgroundLight}   
-                      />
+                color={colors.backgroundLight}
+              />
             </TouchableOpacity>
-            <TouchableOpacity style= {{marginTop:10, marginLeft:15}}
-                      onPress={handleLibrary}
-                    >
+            <TouchableOpacity
+              style={{ marginTop: 10, marginLeft: 15 }}
+              onPress={handleLibrary}
+            >
               <FontAwesomeIcon
                 icon={faFile}
                 size={30}
-                color= {colors.backgroundLight}   
-                      />
+                color={colors.backgroundLight}
+              />
             </TouchableOpacity>
             <TouchableOpacity
-            style={{ width: '48%', marginLeft: 20 }}
-            onPress={submitHandler}
+              style={{ width: '48%', marginLeft: 20 }}
+              onPress={submitHandler}
             >
               <LinearGradient
-              start={{ x: 0, y: 0 }}
-               end={{ x: 1, y: 0 }}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
                 colors={[colors.secondary, colors.primary]}
                 locations={[0, 1]}
-               style={styles.gradientSubmit}
+                style={styles.gradientSubmit}
               >
                 <View style={styles.btnSubmit}>
-                 <FontAwesomeIcon
+                  <FontAwesomeIcon
                     icon={faArrowRight}
-                   size={20}
-                   color={colors.backgroundLight}
-                   style={styles.faArrowRight}
-                 />
+                    size={20}
+                    color={colors.backgroundLight}
+                    style={styles.faArrowRight}
+                  />
                   <LightText fontSize={16}>Submit Review</LightText>
                 </View>
               </LinearGradient>
@@ -159,7 +157,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   ratingcontainer: {
-    marginLeft: 15
+    marginLeft: 15,
   },
   title: {
     fontSize: 35,
@@ -168,8 +166,8 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   ratingView: {
-    marginTop:15,
-    marginBottom:15,
+    marginTop: 15,
+    marginBottom: 15,
     color: colors.white,
     flexDirection: 'row',
     alignItems: 'center',
@@ -177,7 +175,7 @@ const styles = StyleSheet.create({
   TextInput: {
     marginTop: 20,
     marginBottom: 10,
-    borderColor: "#8BC6EC",
+    borderColor: '#8BC6EC',
     borderRadius: 4,
     borderWidth: 1,
     height: 200,
@@ -185,7 +183,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingLeft: 10,
     paddingRight: 10,
-    
   },
   imageContainer: {
     width: '100%',
@@ -193,9 +190,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   image: {
-    marginTop:10,
+    marginTop: 10,
     width: '100%',
-    height: 250
+    height: 250,
   },
   backButton: {
     marginTop: 45,

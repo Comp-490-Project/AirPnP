@@ -9,7 +9,7 @@ import LightText from './LightText';
 import colors from '../theme/colors';
 import { firebase } from '../../firebase';
 
-const Review = ({ user, comment, rating, image }) => {
+const Review = ({ comment, rating, createdAt, image, user }) => {
   const maxRating = [1, 2, 3, 4, 5];
   const [username, setUsername] = useState('');
 
@@ -37,10 +37,9 @@ const Review = ({ user, comment, rating, image }) => {
                 {username}
               </LightText>
             </View>
-            {/* TODO: CreatedAt field in review */}
             <View style={styles.createdAt}>
               <LightText color="#A8A8A8" lineHeight={15}>
-                August 19, 2021
+                {createdAt}
               </LightText>
             </View>
           </View>

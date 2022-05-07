@@ -87,7 +87,7 @@ export const restroomMarkerReducer = (state = {}, action) => {
           review.user === action.payload.user ? action.payload : review
         ),
         meanRating: action.payload.newRating,
-        images: action.payload.image
+        images: action.payload?.image
           ? state.images.map((image) =>
               image.includes(action.payload.user) ? action.payload.image : image
             )
@@ -98,7 +98,7 @@ export const restroomMarkerReducer = (state = {}, action) => {
         ...state,
         reviews: [...state.reviews, action.payload],
         meanRating: action.payload.newRating,
-        images: action.payload.image
+        images: action.payload?.image
           ? [...state.images, action.payload.image]
           : state.images,
       };
