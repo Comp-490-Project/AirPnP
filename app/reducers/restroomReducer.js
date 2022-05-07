@@ -12,6 +12,8 @@ import {
   RESTROOM_MARKER_ADDED,
   RESTROOM_REVIEW_ADDED,
   RESTROOM_REVIEW_EDITED,
+  RESTROOM_REVIEW_DATA_EDITED,
+  RESTROOM_REVIEW_DATA_ADDED,
 } from '../constants/restroomTypes';
 import {
   RESTROOM_MARKER_FAVORITED,
@@ -41,6 +43,53 @@ export const mapReducer = (state = { restrooms: [] }, action) => {
       return {
         ...state,
         restrooms: [...state.restrooms, action.payload],
+      };
+    case RESTROOM_REVIEW_DATA_EDITED:
+      return {
+        ...state,
+        restrooms: state.restrooms.map((restroom) => {
+          if (restroom.geohash === action.payload.geohash) {
+            return {
+              ...restroom,
+              meanRating: action.payload.newRating,
+              reviews: restroom.reviews.map((review) =>
+                review.user === action.payload.user
+                  ? {
+                      comment: action.payload.comment,
+                      rating: action.payload.rating,
+                      createdAt: action.payload.createdAt,
+                      user: action.payload.user,
+                    }
+                  : review
+              ),
+            };
+          } else {
+            return restroom;
+          }
+        }),
+      };
+    case RESTROOM_REVIEW_DATA_ADDED:
+      return {
+        ...state,
+        restrooms: state.restrooms.map((restroom) => {
+          if (restroom.geohash === action.payload.geohash) {
+            return {
+              ...restroom,
+              meanRating: action.payload.newRating,
+              reviews: [
+                ...restroom.reviews,
+                {
+                  comment: action.payload.comment,
+                  rating: action.payload.rating,
+                  createdAt: action.payload.createdAt,
+                  user: action.payload.user,
+                },
+              ],
+            };
+          } else {
+            return restroom;
+          }
+        }),
       };
     default:
       return state;

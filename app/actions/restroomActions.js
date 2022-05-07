@@ -11,6 +11,8 @@ import {
   RESTROOM_REVIEW_EDITED,
   RESTROOM_REVIEW_ADDED,
   RESTROOM_REVIEW_CLEAR,
+  RESTROOM_REVIEW_DATA_EDITED,
+  RESTROOM_REVIEW_DATA_ADDED,
   RESTROOM_MARKER_ADDED,
 } from '../constants/restroomTypes';
 import { firebase } from '../firebase';
@@ -315,6 +317,18 @@ export const submitReview = (review) => async (dispatch, getState) => {
         }),
       });
 
+      dispatch({
+        type: RESTROOM_REVIEW_DATA_EDITED,
+        payload: {
+          geohash,
+          comment,
+          rating,
+          newRating,
+          createdAt,
+          user,
+        },
+      });
+
       if (image) {
         const response = await fetch(image);
         // Responsible for containing the URI's data in bytes
@@ -375,6 +389,18 @@ export const submitReview = (review) => async (dispatch, getState) => {
       createdAt,
       user,
     }),
+  });
+
+  dispatch({
+    type: RESTROOM_REVIEW_DATA_ADDED,
+    payload: {
+      geohash,
+      comment,
+      rating,
+      newRating,
+      createdAt,
+      user,
+    },
   });
 
   if (image) {
