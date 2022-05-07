@@ -45,12 +45,16 @@ export default function SubmitScreen({navigation,route}) {
 
     
     const handleSubmit = () =>{
-        console.log(geohashForLocation([region.latitude, region.longitude]))
-        console.log(region.latitude)
-        console.log(region.longitude)
-        console.log(rating)
-        console.log(user.uid)
-        console.log(image)
+        dispatch(
+            addRestroom({
+                geohash: geohashForLocation([region.latitude, region.longitude]),
+                latitude: region.latitude,
+                longitude: region.longitude,
+                meanRating: rating,
+                user: user.uid,
+                image,
+            })
+        )
     }
 
     return (
