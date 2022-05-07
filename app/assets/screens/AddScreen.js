@@ -19,19 +19,14 @@ import SubmitScreen from './SubmitScreen';
 
 
 
-function AddScreen({ navigation }) {
+export default function AddScreen({ navigation }) {
   const dispatch = useDispatch();
   const {user} = useSelector((state) => state.userAuth);
   const {location} = useSelector((state) => state.userLocation);
   const {region} = useSelector((state) => state.restroomReview);
 
   const [visible, setVisible] = useState(false);
-  const [radius, setRadius] = useState();
 
-
-  function navigate(){
-    navigation.navigate("Add");
-  }
 
   function validate(){ //Returns boolean based on geolib calculation.
     const radius = isPointWithinRadius(
@@ -39,13 +34,11 @@ function AddScreen({ navigation }) {
       {latitude: location.latitude, longitude: location.longitude},
       50
     )
-
     if(radius){
       console.log('IN RADIUS')
-      setRadius(true)
+      navigation.navigate("Submit",{location});
     }else{
       console.log('NOT IN RADIUS');
-      setRadius(false);
       setVisible(true);
     }
   }
@@ -88,10 +81,6 @@ function AddScreen({ navigation }) {
   }
 
   return (
-    <>
-    {radius ? (
-      <SubmitScreen/>
-      ):(
         <View style={{flex: 1, justifyConetnt: 'center', alignItems: 'center'}}>
           <ModalAlert visible={visible}>
             <View style={{alignItems:'center'}}> 
@@ -99,7 +88,7 @@ function AddScreen({ navigation }) {
                 <TouchableOpacity onPress={() => setVisible(false)}>
                   <Image
                     source={require('../icons/cancel.png')}
-                    style={{height: 30, width: 30}}
+                    style={{height: 40, width: 40}}
                   />
                 </TouchableOpacity>
               </View>
@@ -107,7 +96,7 @@ function AddScreen({ navigation }) {
             <View style={{alignItems: 'center'}}>
               <Image
                 source={require('../icons/poop-emoji.png')}
-                style={{height: 100, width: 100, marginVertical:  10}}
+                style={{height: 90, width: 90, marginVertical:  10}}
               />
             </View>
             <Text style={{marginVertical: 30, fontSize: 20, textAlign: 'center'}}>
@@ -143,9 +132,7 @@ function AddScreen({ navigation }) {
           <AppButton onPress={validate} title="Validate"></AppButton>
         </View>
         </View>
-    )}  
 
-    </>
 
   );
 }
@@ -187,4 +174,3 @@ const styles = StyleSheet.create({
 
 });
 
-export default AddScreen;
