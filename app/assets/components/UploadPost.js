@@ -21,17 +21,9 @@ export default function UploadPost({ navigation, route }) {
 
     const uploadProgress = (snapshot) => {
       //TODO FRONTEND: Display Progress Bar/Animation When Uploading.
+      console.log(snapshot)
     };
 
-    const updateUserGeohash = () => {
-      firebase
-        .firestore()
-        .collection('users')
-        .doc(user.uid)
-        .update({
-          imageGeo: firebase.firestore.FieldValue.arrayUnion(geohash),
-        });
-    };
 
     const taskCompleted = () => {
       task.snapshot.ref.getDownloadURL().then((snapshot) => {
@@ -45,6 +37,9 @@ export default function UploadPost({ navigation, route }) {
     };
 
     task.on('state_changed', uploadProgress, taskError, taskCompleted);
+
+
+    
   };
 
   const savePostData = (downloadURL) => {
@@ -55,6 +50,7 @@ export default function UploadPost({ navigation, route }) {
       .update({
         userPosts: firebase.firestore.FieldValue.arrayUnion({
           user: user.uid,
+          username: user.displayName,
           downloadURL,
           caption,
           creation: firebase.firestore.Timestamp.now(), //Firestore places a timestamp for creation date. Serverside action.
