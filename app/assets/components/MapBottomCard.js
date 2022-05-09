@@ -84,7 +84,7 @@ function MapBottomCard({ navigation }) {
               )}
             </View>
             <View style={styles.btnContainer}>
-              {user && distance < 10000 ? (
+              {user && distance < 500 ? (
                 <>
                   <View style={{ marginRight: 15 }}>
                     <DirectionsIcon latitude={latitude} longitude={longitude} />
