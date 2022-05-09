@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faUser,
@@ -11,39 +10,22 @@ import {
   faAngleRight,
 } from '@fortawesome/free-solid-svg-icons';
 import SafeView from '../components/SafeView';
+import LightText from '../components/LightText';
 import colors from '../theme/colors';
 import { HEIGHT, WIDTH } from '../../constants/Dimensions';
 import { firebase } from '../../firebase';
+import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../actions/userActions';
-import LightText from '../components/LightText';
 
 function ProfileScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.userAuth);
+  const { userFavorites } = useSelector((state) => state.userFavorites);
+  const { userAddedRestrooms } = useSelector(
+    (state) => state.userAddedRestrooms
+  );
   const { userVisited } = useSelector((state) => state.userVisited);
-
-  const [addedRestrooms, setAddedRestrooms] = useState([]);
-
-  // Get user added restrooms (development: testing, production: Los-Angeles)
-  const getUserAddedRestrooms = async () => {
-    const addedRestroomsRef = firebase.firestore().collection('testing');
-    const addedRestroomsQuery = addedRestroomsRef.where('user', '==', user.uid);
-    const addedRestroomsSnapshot = await addedRestroomsQuery.get();
-
-    // Clear array
-    setAddedRestrooms([]);
-
-    addedRestroomsSnapshot.forEach((snap) =>
-      setAddedRestrooms((addedRestrooms) => [...addedRestrooms, snap.data()])
-    );
-  };
-
-  useEffect(() => {
-    if (user) {
-      getUserAddedRestrooms();
-    }
-  }, [user]);
 
   if (!user) {
     return (
@@ -85,7 +67,7 @@ function ProfileScreen({ navigation }) {
           </View>
           <View style={styles.stat}>
             <LightText fontWeight="bold" fontSize={18}>
-              {addedRestrooms.length}
+              {userAddedRestrooms.length}
             </LightText>
             <LightText textAlign="center" lineHeight={20}>
               Restrooms{'\n'}Added
@@ -93,10 +75,11 @@ function ProfileScreen({ navigation }) {
           </View>
           <View style={styles.stat}>
             <LightText fontWeight="bold" fontSize={18}>
-              193
+              {userFavorites.length}
             </LightText>
             <LightText textAlign="center" lineHeight={20}>
-              Reviews{'\n'}Submitted
+              Favorites{'\n'}
+              Added
             </LightText>
           </View>
         </View>

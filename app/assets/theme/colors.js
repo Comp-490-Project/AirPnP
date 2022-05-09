@@ -33,4 +33,6 @@ export default {
   firstfavColorRight: '#747AE8',
   secondFavColorLeft: '#4AA1DA',
   secondFavColorRight: '#338FCA',
+  green: '#66ed8a',
+  
 };

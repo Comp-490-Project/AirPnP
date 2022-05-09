@@ -27,6 +27,7 @@
     "firebase": "8.2.3",
     "formik": "^2.2.9",
     "geofire-common": "^5.2.0",
+    "geolib": "^3.3.3",
     "lottie-react-native": "4.0.2",
     "react": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
