@@ -39,7 +39,7 @@ export default function FeedScreen({navgigation, route}) {
                         <View style={styles.postView}>
                             <View style={styles.postTitle}>
                                 <View style={styles.titleView}>
-                                    <Text style={styles.userName}>{item.userName}</Text>
+                                    <Text style={styles.userName}>{item.username}</Text>
                                     <Text style={styles.caption}>{item.caption}</Text>
                                 </View>
                                 <View>
@@ -64,7 +64,7 @@ export default function FeedScreen({navgigation, route}) {
 const styles = StyleSheet.create({
     mainView:{
         flex: 1,
-        backgroundColor: colors.white,
+        backgroundColor: colors.greyBackground,
     },
 
     heading:{
@@ -72,20 +72,21 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         paddingTop: 25,
         textAlign: 'center',
-        backgroundColor: colors.white,
-        borderRadius: 3
+        backgroundColor: colors.greyBackground,
+        borderRadius: 3,
+        color: colors.white,
     },
 
     userName:{
         fontSize: 20,
         fontWeight: 'bold',
-        color: colors.black,
+        color: colors.white,
         marginTop: 10,
     },
 
     caption:{
         fontSize: 12,
-        color: colors.textDark
+        color: colors.white
            
     },
 
