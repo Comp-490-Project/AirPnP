@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import AppButton from '../components/AppButton';
 import { setRestroomLocation } from '../../actions/restroomActions';
-
 import mapStyle from '../../constants/mapStyle';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,6 +12,7 @@ import { isPointWithinRadius } from 'geolib';
 import ModalAlert from '../components/ModalAlert';
 import SafeView from '../components/SafeView';
 import LightText from '../components/LightText';
+import MarkerImage from '../icons/marker.png';
 
 export default function AddScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -114,8 +114,8 @@ export default function AddScreen({ navigation }) {
           radius={50}
           fillColor={'rgba(149, 153, 226, 0.5)'}
           stokeWidth={5}
-        ></MapView.Circle>
-        <Marker.Animated coordinate={region}></Marker.Animated>
+        />
+        <Marker.Animated image={MarkerImage} coordinate={region} />
       </MapView>
       <View style={styles.addButton}>
         <AppButton onPress={validate} title="Validate"></AppButton>

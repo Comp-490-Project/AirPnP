@@ -29,6 +29,7 @@ import { favoriteHandler, visitHandler } from '../../actions/userActions';
 import colors from '../theme/colors';
 import Review from '../components/Review';
 import mapStyle from '../../constants/mapStyle';
+import MainMarkerImage from '../icons/main-marker.png';
 
 function RestroomInfo({ navigation }) {
   const dispatch = useDispatch();
@@ -131,6 +132,7 @@ function RestroomInfo({ navigation }) {
             }}
           >
             <Marker
+              image={MainMarkerImage}
               coordinate={{
                 latitude: latitude,
                 longitude: longitude,

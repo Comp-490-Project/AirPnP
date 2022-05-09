@@ -41,7 +41,6 @@ function MapBottomCard({ navigation }) {
             <LightText fontSize={28} fontWeight={'700'}>
               {name}
             </LightText>
-            {/* TODO: Count number of reviews */}
             {meanRating !== 0 && (
               <View style={styles.ratingContainer}>
                 <Image source={StarFilled} style={styles.starIcon} />
@@ -49,7 +48,6 @@ function MapBottomCard({ navigation }) {
               </View>
             )}
           </View>
-          {/* @TODO: Convert coordinates into address */}
           <View style={styles.addressContainer}>
             <LightText fontWeight="500" lineHeight={20}>
               {address}
@@ -57,12 +55,14 @@ function MapBottomCard({ navigation }) {
           </View>
           {/* @TODO: Check if restaurant description contains word restaurant */}
           <View style={styles.attributeContainer}>
-            <AttributeButton attribute="free" />
-            <AttributeButton attribute="restaurant" />
+            <View style={styles.attribute}>
+              <AttributeButton attribute="free" />
+            </View>
+            <View style={styles.attribute}>
+              <AttributeButton attribute="restaurant" />
+            </View>
           </View>
           <View style={styles.footerContainer}>
-            {/* @TODO: Convert distance in km to mi or feet */}
-
             <View style={styles.distanceContainer}>
               {distance < 2640 ? (
                 <>
@@ -130,6 +130,9 @@ const styles = StyleSheet.create({
   attributeContainer: {
     marginBottom: 5,
     flexDirection: 'row',
+  },
+  attribute: {
+    marginRight: 8,
   },
   footerContainer: {
     flexDirection: 'row',

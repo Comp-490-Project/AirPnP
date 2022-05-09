@@ -5,8 +5,8 @@ import {
   setMarkerAttributes,
   setMapCenterLocation,
 } from '../../actions/restroomActions';
-import ToiletMarker from '../icons/marker.svg';
-import MainMarker from '../icons/main-marker.svg';
+import MarkerImage from '../icons/marker.png';
+import MainMarkerImage from '../icons/main-marker.png';
 
 function MapMarker({ marker, index }) {
   const dispatch = useDispatch();
@@ -17,25 +17,22 @@ function MapMarker({ marker, index }) {
   const selectedLng = Number(coordinates[1]);
 
   return (
-    <>
-      <Marker
-        key={index}
-        coordinate={{
-          latitude: marker.latitude,
-          longitude: marker.longitude,
-        }}
-        onPress={() => {
-          dispatch(setMarkerAttributes(marker));
-          dispatch(setMapCenterLocation(marker.latitude, marker.longitude));
-        }}
-      >
-        {/* {marker.latitude === selectedLat && marker.longitude === selectedLng ? (
-          <MainMarker width={100} height={40} />
-        ) : (
-          <ToiletMarker width={100} height={40} />
-        )} */}
-      </Marker>
-    </>
+    <Marker
+      key={index}
+      coordinate={{
+        latitude: marker.latitude,
+        longitude: marker.longitude,
+      }}
+      image={
+        marker.latitude === selectedLat && marker.longitude === selectedLng
+          ? MainMarkerImage
+          : MarkerImage
+      }
+      onPress={() => {
+        dispatch(setMarkerAttributes(marker));
+        dispatch(setMapCenterLocation(marker.latitude, marker.longitude));
+      }}
+    />
   );
 }
 
