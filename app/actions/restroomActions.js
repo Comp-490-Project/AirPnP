@@ -176,12 +176,10 @@ export const addRestroom = (restroom) => async (dispatch) => {
   const restroomRef = firebase.firestore().collection('testing');
 
   await restroomRef.doc(restroom.geohash).set({
-    description: restroom.description,
     geohash: restroom.geohash,
     latitude: restroom.latitude,
     longitude: restroom.longitude,
     meanRating: restroom.meanRating,
-    name: restroom.name,
     user: restroom.user,
   });
 

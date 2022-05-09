@@ -12,7 +12,6 @@ import {
 import Rating from '../components/Rating';
 import AppButton from '../components/AppButton';
 import colors from '../theme/colors';
-import ReviewBottomSheet from '../components/bottomSheets/ReviewBottomSheet';
 import { useSelector, useDispatch } from 'react-redux';
 import { submitReview } from '../../actions/restroomActions';
 

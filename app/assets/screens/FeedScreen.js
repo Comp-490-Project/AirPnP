@@ -1,113 +1,145 @@
-import {
-  View,
-  StyleSheet,
-  Animated,
-  FlatList,
-  Text,
-  Image,
-  Dimensions,
-  StatusBar,
-} from 'react-native';
-import React, { useState, useCallback, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { getUserFeed, clearUserFeed } from '../../actions/userActions';
+import React, {useEffect, useState, useRef} from 'react'
+import {Text, View, FlatList, StyleSheet, TouchableOpacity, Image} from 'react-native'
+import { TextInput } from 'react-native-gesture-handler';
+import colors from '../theme/colors';
+import { useSelector, useDispatch} from 'react-redux';
+import { getUserFeed } from '../../actions/userActions';
+import AnimationLoad from '../components/AnimationLoad';
+import { Entypo } from '@expo/vector-icons';
+import { useScrollToTop } from '@react-navigation/native';
 
-const { width, height } = Dimensions.get('screen');
 
-const imageWidth = width * 0.7;
-
-const imageHeight = imageWidth * 1.54;
-
-export default function FeedScreen({ navigation, route }) {
-  const scrollX = React.useRef(new Animated.Value(0)).current;
-
-  const { geohash } = route.params;
+export default function FeedScreen({navgigation, route}) {
   const { userPosts, loading } = useSelector((state) => state.feed);
-
+  const ref= useRef(null);
+  const {geohash} = route.params;
   const dispatch = useDispatch();
+  useScrollToTop(ref)
 
-  useEffect(() => {
-    if (!loading) {
-      dispatch(getUserFeed(geohash));
-    }
-  }, [loading]);
+  
+  useEffect(()=>{
+      if(!loading){
+          dispatch(getUserFeed(geohash))
+      }
+  },[loading])
 
   return (
-    <View style={styles.container}>
-      <StatusBar hidden />
-      <View style={StyleSheet.absoluteFillObject}>
-        {userPosts.map((image, index) => {
-          const inputRange = [
-            (index - 1) * width,
-            index * width,
-            (index + 1) * width,
-          ];
-          const opacity = scrollX.interpolate({
-            inputRange,
-            outputRange: [0, 1, 0],
-          });
-          return (
-            <Animated.Image
-              key={`image-${index}`}
-              source={{ uri: image.downloadURL }}
-              style={[
-                StyleSheet.absoluteFillObject,
-                {
-                  opacity,
-                },
-              ]}
-              blurRadius={20}
-            />
-          );
-        })}
-      </View>
-      <Animated.FlatList
-        data={userPosts}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: true }
-        )}
-        keyExtractor={(_, index) => index.toString()}
-        horizontal
-        pagingEnabled
-        renderItem={({ item }) => {
-          return (
-            <View style={styles.photoContainer}>
-              <Image
-                source={{ uri: item.downloadURL }}
-                style={styles.photo}
-              ></Image>
-            </View>
-          );
-        }}
-      ></Animated.FlatList>
+    <View style={styles.mainView}>
+        <Text style={styles.heading}>Feed</Text>
+
+       <View style={styles.postsContainer}>
+           {userPosts.length < 1 ?
+                <AnimationLoad></AnimationLoad>
+                :
+                <FlatList
+                    data={userPosts}
+                    ref={ref}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={({item})=>(
+                        <View style={styles.postView}>
+                            <View style={styles.postTitle}>
+                                <View style={styles.titleView}>
+                                    <Text style={styles.userName}>userName</Text>
+                                    <Text style={styles.caption}>caption</Text>
+                                </View>
+                                <View>
+                                    <Entypo
+                                        name='dots-three-vertical'
+                                        color={colors.black}
+                                    />
+                                </View>
+                            </View>
+                            <Image style={styles.coverPhoto} source={{uri: item.downloadURL}}></Image>
+                        </View>
+                    )}
+                >
+                </FlatList>
+            }
+       </View>
+
     </View>
-  );
+  )
 }
+
 const styles = StyleSheet.create({
-  photo: {
-    width: imageWidth,
-    height: imageHeight,
-    resizeMode: 'cover',
-    borderRadius: 16,
-  },
-
-  photoContainer: {
-    width,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 1,
-    shadowOffset: {
-      width: 0,
-      height: 0,
+    mainView:{
+        flex: 1,
+        backgroundColor: colors.white,
     },
-    shadowRadius: 20,
-  },
 
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-    alignItems: 'center',
-  },
-});
+    heading:{
+        fontSize: 32,
+        fontWeight: 'bold',
+        paddingTop: 25,
+        textAlign: 'center',
+        backgroundColor: colors.white,
+        borderRadius: 3
+    },
+
+    userName:{
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: colors.black,
+        marginTop: 10,
+    },
+
+    caption:{
+        fontSize: 12,
+        color: colors.textDark
+           
+    },
+
+    titleView:{
+        marginLeft: 15,
+    },
+
+    textContainer:{
+        display: 'flex',
+        alignItems: 'center',
+    },
+
+    textInput:{
+        height: 40, 
+        width: '90%',
+        backgroundColor: colors.white,
+        borderRadius: 20,
+        paddingLeft: 15,
+        marginTop: 20,
+        marginBottom: 20,
+    },
+
+    postsContainer:{
+        width: '100%',
+        paddingBottom: "20%",
+    },
+
+    postView:{
+      width: "100%",
+      alignItems: 'center'
+
+    },
+
+    postTitle:{
+        width: '90%',
+        justifyContent: 'space-between',
+        display: 'flex', 
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+
+    feedContainer:{
+        width: '100%', 
+        alignItems: 'center',
+        marginTop: 40,
+    },
+
+
+    coverPhoto:{
+        width: '90%',
+        height: 200,
+        backgroundColor: colors.black,
+        marginTop: 20,
+        borderRadius: 10,
+    }
+
+})

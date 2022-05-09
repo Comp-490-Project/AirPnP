@@ -11,6 +11,7 @@ import LightText from './LightText';
 import AttributeButton from './AttributeButton';
 import DirectionsIcon from './DirectionsIcon';
 import FeedIcon from './FeedIcon';
+import CameraIcon from './CameraIcon'; 
 import ToiletIcon from '../icons/toilet-icon.png';
 import DistancePersonIcon from '../icons/distance-person-icon.svg';
 import { WIDTH } from '../../constants/Dimensions';
@@ -68,6 +69,7 @@ function MapBottomCard({ navigation }) {
             <View style={styles.btnContainer}>
               <DirectionsIcon latitude={latitude} longitude={longitude} />
               <FeedIcon navigation={navigation} geohash={geohash} />
+              <CameraIcon navigation={navigation} geohash={geohash}/>
             </View>
           </View>
           <Image source={ToiletIcon} style={styles.toiletBackground} />
