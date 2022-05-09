@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -10,11 +10,7 @@ import {
 
 const WIDTH = Dimensions.get('window').width;
 
-export const SearchScreen = function ({
-  setDestinationPlace,
-  setSearchAlert,
-  navigation,
-}) {
+export const SearchScreen = function ({ navigation }) {
   const dispatch = useDispatch();
 
   return (
@@ -47,7 +43,7 @@ export const SearchScreen = function ({
           }}
           fetchDetails={true}
           query={{
-            key: 'AIzaSyDOeEKbcngBARFdVV8a5K75fakxbrS3Kro', //TODO: Hide Keys with Enviornment Variables
+            key: 'AIzaSyDOeEKbcngBARFdVV8a5K75fakxbrS3Kro',
             language: 'en',
           }}
         />
@@ -62,25 +58,20 @@ export const SearchScreen = function ({
 
 const styles = StyleSheet.create({
   container: {
-    //centerCol container
-    //zIndex: 5,
     position: 'absolute',
     flexDirection: 'row',
-    width: WIDTH - 30, //width of window so its dynamic
+    width: WIDTH - 30,
     top: 40,
     left: 15,
-    //borderRadius: 2,
     backgroundColor: 'white',
     elevation: 7,
     flex: 10,
     borderRadius: 25,
   },
-
   rightCol: {
     flex: 1,
     alignSelf: 'center',
   },
-
   leftCol: {
     flex: 1,
     borderLeftWidth: 1,
@@ -89,7 +80,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
   },
-
   centerCol: {
     flex: 10,
     top: 0,
