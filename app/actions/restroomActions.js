@@ -213,6 +213,8 @@ export const addRestroom = (restroom) => async (dispatch) => {
 
   await restroomRef.doc(restroom.geohash).set({
     geohash: restroom.geohash,
+    name: restroom.name,
+    address: restroom.address || '',
     latitude: restroom.latitude,
     longitude: restroom.longitude,
     meanRating: restroom.meanRating,

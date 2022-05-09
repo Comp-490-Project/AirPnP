@@ -200,7 +200,7 @@ export const getUserAddedRestrooms = () => async (dispatch, getState) => {
   const addedRRData = await addedRRQuery.get();
 
   const addedRestrooms = [];
-  addedRRData.forEach((addedRR) => addedRestrooms.push(addedRR));
+  addedRRData.forEach((addedRR) => addedRestrooms.push(addedRR.data()));
 
   dispatch({
     type: USER_ADDED_RESTROOMS_LOADED,
