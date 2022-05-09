@@ -8,35 +8,34 @@ import RestroomCard from '../components/RestroomCard';
 import BackButton from '../icons/back-btn.png';
 import colors from '../theme/colors';
 
-
-/* todo 
-
-get userAdded array into store and access with use selector
-*/
-
-function FavoritesScreen({navigation, route}) {
+function FavoritesScreen({ navigation, route }) {
   const { userFavorites } = useSelector((state) => state.userFavorites);
   const { userVisited } = useSelector((state) => state.userVisited);
+  const { userAddedRestrooms } = useSelector(
+    (state) => state.userAddedRestrooms
+  );
+
   var title;
   var screenMode;
   var arrayInUse;
-switch(route.params.key){
-  case "favorites":
-    title = "Favorites";
-    screenMode = 1;
-    arrayInUse = userFavorites;
-  break;
-  case "visited":
-    title = "Visited Restrooms";
-    screenMode = 2;
-    arrayInUse = userVisited;
-  break; 
-  case "added":
-    title = "Added Restrooms";
-    screenMode = 3;
-    arrayInUse = userAdded;
-  break;
-}
+  switch (route.params.key) {
+    case 'favorites':
+      title = 'Favorites';
+      screenMode = 1;
+      arrayInUse = userFavorites;
+      break;
+    case 'visited':
+      title = 'Visited Restrooms';
+      screenMode = 2;
+      arrayInUse = userVisited;
+      break;
+    case 'added':
+      title = 'Added Restrooms';
+      screenMode = 3;
+      arrayInUse = userAddedRestrooms;
+      break;
+  }
+
   return (
     <SafeView>
       <>
@@ -67,9 +66,9 @@ switch(route.params.key){
                   latitude={restroom.latitude}
                   longitude={restroom.longitude}
                   geohash={restroom.geohash}
-                  favorited= {restroom.favoriteCounter}
-                  visited= {restroom.visitedCounter}
-                  cardMode= {screenMode}
+                  favorited={restroom.favoriteCounter}
+                  visited={restroom.visitedCounter}
+                  cardMode={screenMode}
                 />
               ))
             )}

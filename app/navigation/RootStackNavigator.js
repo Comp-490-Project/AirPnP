@@ -17,12 +17,11 @@ import UploadPost from '../assets/components/UploadPost';
 import FeedScreen from '../assets/screens/FeedScreen';
 import CameraScreen from '../assets/screens/CameraScreen';
 import TutorialScreen from '../assets/screens/TutorialScreen';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import AnimationLoad from '../assets/components/AnimationLoad';
 import SearchScreen from '../assets/screens/SearchScreen';
 import SubmitScreen from '../assets/screens/SubmitScreen';
 import AddScreen from '../assets/screens/AddScreen';
+import AnimationLoad from '../assets/components/AnimationLoad';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,11 +61,11 @@ const RootStackNavigator = () => {
       }
     });
     return unsubscribe;
-  }, []);
+  }, [isAuthenticated]);
 
   if (loading) return <AnimationLoad />;
 
-  if (isAuthenticated || skipAuth)
+  if (isAuthenticated || skipAuth) {
     return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -87,13 +86,12 @@ const RootStackNavigator = () => {
           <Stack.Screen name="Feed" component={FeedScreen} />
           <Stack.Screen name="Camera" component={CameraScreen} />
           <Stack.Screen name="Search" component={SearchScreen} />
-          <Stack.Screen name="Add" component={AddScreen}/>
-          <Stack.Screen name="Submit" component={SubmitScreen}/>
+          <Stack.Screen name="Add" component={AddScreen} />
+          <Stack.Screen name="Submit" component={SubmitScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );
-
-  if (!viewed)
+  } else if (!viewed) {
     return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -115,38 +113,38 @@ const RootStackNavigator = () => {
           <Stack.Screen name="Feed" component={FeedScreen} />
           <Stack.Screen name="Camera" component={CameraScreen} />
           <Stack.Screen name="Search" component={SearchScreen} />
-          <Stack.Screen name="Add" component={AddScreen}/>
-          <Stack.Screen name="Submit" component={SubmitScreen}/>
-
+          <Stack.Screen name="Add" component={AddScreen} />
+          <Stack.Screen name="Submit" component={SubmitScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );
-
-  return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Register" component={RegisterStartScreen} />
-        <Stack.Screen name="RegisterEmail" component={RegisterEmailScreen} />
-        <Stack.Screen name="RegisterUser" component={RegisterUserScreen} />
-        <Stack.Screen
-          name="RegisterPassword"
-          component={RegisterPasswordScreen}
-        />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Forgot" component={ForgotPasswordScreen} />
-        <Stack.Screen name="Tabs" component={TabNavigator} />
-        <Stack.Screen name="RestroomInfo" component={RestroomInfo} />
-        <Stack.Screen name="Favorites" component={FavoritesScreen} />
-        <Stack.Screen name="Review" component={ReviewScreen} />
-        <Stack.Screen name="Save" component={UploadPost} />
-        <Stack.Screen name="Feed" component={FeedScreen} />
-        <Stack.Screen name="Camera" component={CameraScreen} />
-        <Stack.Screen name="Search" component={SearchScreen} />
-        <Stack.Screen name="Add" component={AddScreen}/>
-        <Stack.Screen name="Submit" component={SubmitScreen}/>
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  } else {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Register" component={RegisterStartScreen} />
+          <Stack.Screen name="RegisterEmail" component={RegisterEmailScreen} />
+          <Stack.Screen name="RegisterUser" component={RegisterUserScreen} />
+          <Stack.Screen
+            name="RegisterPassword"
+            component={RegisterPasswordScreen}
+          />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Forgot" component={ForgotPasswordScreen} />
+          <Stack.Screen name="Tabs" component={TabNavigator} />
+          <Stack.Screen name="RestroomInfo" component={RestroomInfo} />
+          <Stack.Screen name="Favorites" component={FavoritesScreen} />
+          <Stack.Screen name="Review" component={ReviewScreen} />
+          <Stack.Screen name="Save" component={UploadPost} />
+          <Stack.Screen name="Feed" component={FeedScreen} />
+          <Stack.Screen name="Camera" component={CameraScreen} />
+          <Stack.Screen name="Search" component={SearchScreen} />
+          <Stack.Screen name="Add" component={AddScreen} />
+          <Stack.Screen name="Submit" component={SubmitScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
 };
 
 export default RootStackNavigator;

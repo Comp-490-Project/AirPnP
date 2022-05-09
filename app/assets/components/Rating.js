@@ -39,7 +39,7 @@ function Rating() {
     );
   };
   return (
-    <View >
+    <View>
       <CustomRatingBar></CustomRatingBar>
     </View>
   );

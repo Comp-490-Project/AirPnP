@@ -5,6 +5,7 @@ import {
   userLocationReducer,
   userAuthReducer,
   userFeedReducer,
+  userAddedRestroomsReducer,
   userVisitedReducer,
 } from './reducers/userReducer';
 import {
@@ -17,6 +18,7 @@ const reducer = combineReducers({
   userLocation: userLocationReducer,
   userAuth: userAuthReducer,
   userFavorites: userFavoritesReducer,
+  userAddedRestrooms: userAddedRestroomsReducer,
   userVisited: userVisitedReducer,
   map: mapReducer,
   restroomMarker: restroomMarkerReducer,

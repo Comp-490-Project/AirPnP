@@ -1,52 +1,48 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import AppButton from '../components/AppButton';
 import { setRestroomLocation } from '../../actions/restroomActions';
 
-
-import mapStyle from '../../constants/mapStyle'
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {useSelector, useDispatch} from 'react-redux'
-import {getUserLocation} from '../../actions/userActions'
+import mapStyle from '../../constants/mapStyle';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { useSelector, useDispatch } from 'react-redux';
+import { getUserLocation } from '../../actions/userActions';
 import AnimationLoad from '../components/AnimationLoad';
 import { HEIGHT, WIDTH } from '../../constants/Dimensions';
 import colors from '../theme/colors';
-import {isPointWithinRadius} from 'geolib'
+import { isPointWithinRadius } from 'geolib';
 import ModalAlert from '../components/ModalAlert';
 import SafeView from '../components/SafeView';
 import LightText from '../components/LightText';
 import SubmitScreen from './SubmitScreen';
 
-
-
 export default function AddScreen({ navigation }) {
   const dispatch = useDispatch();
-  const {user} = useSelector((state) => state.userAuth);
-  const {location} = useSelector((state) => state.userLocation);
-  const {region} = useSelector((state) => state.restroomReview);
+  const { user } = useSelector((state) => state.userAuth);
+  const { location } = useSelector((state) => state.userLocation);
+  const { region } = useSelector((state) => state.restroomReview);
 
   const [visible, setVisible] = useState(false);
 
-
-  function validate(){ //Returns boolean based on geolib calculation.
+  function validate() {
+    //Returns boolean based on geolib calculation.
     const radius = isPointWithinRadius(
-      {latitude: region.latitude, longitude: region.longitude },
-      {latitude: location.latitude, longitude: location.longitude},
+      { latitude: region.latitude, longitude: region.longitude },
+      { latitude: location.latitude, longitude: location.longitude },
       50
-    )
-    if(radius){
-      console.log('IN RADIUS')
-      navigation.navigate("Submit",{location});
-    }else{
-      console.log('NOT IN RADIUS');
+    );
+    if (radius) {
+      navigation.navigate('Submit', { location });
+    } else {
       setVisible(true);
     }
   }
-  
-  useEffect(()=>{ //Fetch location, catch err.
-    if(!location){
+
+  useEffect(() => {
+    //Fetch location, catch err.
+    if (!location) {
       dispatch(getUserLocation());
-    } else if (!region.latitude || !region.longitude){
+    } else if (!region.latitude || !region.longitude) {
       dispatch(
         setRestroomLocation({
           latitude: location.latitude,
@@ -54,19 +50,19 @@ export default function AddScreen({ navigation }) {
           latitudeDelta: 0.002,
           longitudeDelta: 0.002,
         })
-      )
+      );
     }
     <View>
-      <AnimationLoad></AnimationLoad>
-    </View>
-  },[location,region])
+      <AnimationLoad />
+    </View>;
+  }, [location, region]);
 
-
-  if(!region.latitude || !region.longitude){
-    return <AnimationLoad></AnimationLoad>
+  if (!region.latitude || !region.longitude) {
+    return <AnimationLoad />;
   }
 
-  if (!user) { //Prompt user to log in if they aren't 
+  if (!user) {
+    //Prompt user to log in if they aren't
     return (
       <SafeView>
         <View style={styles.contentContainer}>
@@ -81,73 +77,64 @@ export default function AddScreen({ navigation }) {
   }
 
   return (
-        <View style={{flex: 1, justifyConetnt: 'center', alignItems: 'center'}}>
-          <ModalAlert visible={visible}>
-            <View style={{alignItems:'center'}}> 
-              <View style={styles.header}>
-                <TouchableOpacity onPress={() => setVisible(false)}>
-                  <Image
-                    source={require('../icons/cancel.png')}
-                    style={{height: 40, width: 40}}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={{alignItems: 'center'}}>
+    <View style={{ flex: 1, justifyConetnt: 'center', alignItems: 'center' }}>
+      <ModalAlert visible={visible}>
+        <View style={{ alignItems: 'center' }}>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => setVisible(false)}>
               <Image
-                source={require('../icons/poop-emoji.png')}
-                style={{height: 90, width: 90, marginVertical:  10}}
+                source={require('../icons/cancel.png')}
+                style={{ height: 40, width: 40 }}
               />
-            </View>
-            <Text style={{marginVertical: 30, fontSize: 20, textAlign: 'center'}}>
-              Try again, the position is too far from the allowed radius. 
-            </Text>
-          </ModalAlert>
-          <MapView
-          provider={PROVIDER_GOOGLE}
-          style={styles.mapView}
-          showsUserLocation={true}
-          showsMyLocationButton={false}
-          customMapStyle={mapStyle}
-          loadingEnabled={true}
-          initialRegion={region}
-          onRegionChangeComplete={(region)=>
-            dispatch(setRestroomLocation(region))
-          }
-          
-        >
-          <MapView.Circle
-            center = {location}
-            radius={50}
-            fillColor ={'rgba(149, 153, 226, 0.5)'} 
-            stokeWidth={5}
-          >
-          </MapView.Circle>
-          <Marker.Animated
-            coordinate={(region)}    
-          >
-          </Marker.Animated>
-        </MapView>
-        <View style={styles.addButton}>
-          <AppButton onPress={validate} title="Validate"></AppButton>
+            </TouchableOpacity>
+          </View>
         </View>
+        <View style={{ alignItems: 'center' }}>
+          <Image
+            source={require('../icons/poop-emoji.png')}
+            style={{ height: 90, width: 90, marginVertical: 10 }}
+          />
         </View>
-
-
+        <Text style={{ marginVertical: 30, fontSize: 20, textAlign: 'center' }}>
+          Try again, the position is too far from the allowed radius.
+        </Text>
+      </ModalAlert>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        style={styles.mapView}
+        showsUserLocation={true}
+        showsMyLocationButton={false}
+        customMapStyle={mapStyle}
+        loadingEnabled={true}
+        initialRegion={region}
+        onRegionChangeComplete={(region) =>
+          dispatch(setRestroomLocation(region))
+        }
+      >
+        <MapView.Circle
+          center={location}
+          radius={50}
+          fillColor={'rgba(149, 153, 226, 0.5)'}
+          stokeWidth={5}
+        ></MapView.Circle>
+        <Marker.Animated coordinate={region}></Marker.Animated>
+      </MapView>
+      <View style={styles.addButton}>
+        <AppButton onPress={validate} title="Validate"></AppButton>
+      </View>
+    </View>
   );
 }
 
-
-  
 const styles = StyleSheet.create({
-  mapView:{
+  mapView: {
     width: WIDTH,
-    height: HEIGHT*0.88, 
+    height: HEIGHT,
   },
-  addButton:{
+  addButton: {
     position: 'absolute',
     bottom: 20,
-    width: "100%",
+    width: '100%',
     marginBottom: 125,
     height: 10,
   },
@@ -171,6 +158,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 75,
     borderRadius: 5,
   },
-
 });
-

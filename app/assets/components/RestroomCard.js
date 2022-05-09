@@ -14,12 +14,6 @@ import poopRightIcon from '../icons/poop-right.png';
 import checkLeftIcon from '../icons/check-left.png';
 import checkRightIcon from '../icons/check-right.png';
 
-
-
-
-//cardmode 1 = favs, 2 = visited, 3 = Added 
-
-
 function RestroomCard({
   navigation,
   name,
@@ -30,27 +24,24 @@ function RestroomCard({
   indexValue,
   favorited,
   visited,
-  cardMode
-})
- {
-   var leftIcon;
-   var rightIcon;
-switch(cardMode){
-  case 1 :
-    leftIcon = ToiletIconLeft;
-    rightIcon = ToiletIconRight;
-    break;
-  case 2 :
-    leftIcon = checkLeftIcon;
-    rightIcon = checkRightIcon;
-    break;
-  case 3: 
-  leftIcon = poopLeftIcon;
-  rightIcon = poopRightIcon;
-    break;
-}
-
-
+  cardMode,
+}) {
+  var leftIcon;
+  var rightIcon;
+  switch (cardMode) {
+    case 1:
+      leftIcon = ToiletIconLeft;
+      rightIcon = ToiletIconRight;
+      break;
+    case 2:
+      leftIcon = checkLeftIcon;
+      rightIcon = checkRightIcon;
+      break;
+    case 3:
+      leftIcon = poopLeftIcon;
+      rightIcon = poopRightIcon;
+      break;
+  }
 
   return (
     <LinearGradient
@@ -79,13 +70,17 @@ switch(cardMode){
           <View style={styles.stat}>
             <Image source={require('../icons/favstaticon.png')} />
             <LightText fontWeight="500" lineHeight={20}>
-            {" "}{favorited}{' others have favorited this restroom!'}
+              {' '}
+              {favorited || 0}
+              {' others have favorited this restroom!'}
             </LightText>
           </View>
           <View style={styles.stat}>
             <Image source={require('../icons/visitedcheckmark.png')} />
             <LightText fontWeight="500" lineHeight={20}>
-              {" "}{visited}{' others have visited this restroom!'}
+              {' '}
+              {visited || 0}
+              {' others have visited this restroom!'}
             </LightText>
           </View>
         </View>
@@ -154,7 +149,6 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     height: '105%',
-    
   },
   toiletBackgroundRight: {
     position: 'absolute',
@@ -162,7 +156,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: '105%',
-    
   },
 });
 

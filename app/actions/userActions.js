@@ -14,6 +14,8 @@ import {
   USER_FAVORITE_REMOVED,
   RESTROOM_MARKER_FAVORITED,
   RESTROOM_MARKER_UNFAVORITED,
+  USER_ADDED_RESTROOMS_LOADED,
+  USER_ADDED_RESTROOM_ADDED,
   USER_VISITED_RESTROOMS_LOADED,
   USER_VISITED_ADDED,
   USER_VISITED_REMOVED,
@@ -187,6 +189,31 @@ export const getUserFavorites = () => async (dispatch, getState) => {
       payload: userFavorites,
     });
   }
+};
+
+// Get user added restrooms (development: testing, production: Los-Angeles)
+export const getUserAddedRestrooms = () => async (dispatch, getState) => {
+  const { user } = getState().userAuth;
+
+  const addedRRRef = firebase.firestore().collection('testing');
+  const addedRRQuery = addedRRRef.where('user', '==', user.uid);
+  const addedRRData = await addedRRQuery.get();
+
+  const addedRestrooms = [];
+  addedRRData.forEach((addedRR) => addedRestrooms.push(addedRR));
+
+  dispatch({
+    type: USER_ADDED_RESTROOMS_LOADED,
+    payload: addedRestrooms,
+  });
+};
+
+// Add user added restroom to state array
+export const addUserAddedRestroom = (restroom) => {
+  return {
+    type: USER_ADDED_RESTROOM_ADDED,
+    payload: restroom,
+  };
 };
 
 // Get user visited restrooms

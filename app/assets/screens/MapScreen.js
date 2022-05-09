@@ -11,6 +11,7 @@ import {
   getUserLocation,
   checkUserStatus,
   getUserFavorites,
+  getUserAddedRestrooms,
   getUserVisitedRestrooms,
 } from '../../actions/userActions';
 import { getRestrooms } from '../../actions/restroomActions';
@@ -45,6 +46,7 @@ function MapScreen({ navigation }) {
       // If current exist exists, get user favorites
       if (user) {
         dispatch(getUserFavorites());
+        dispatch(getUserAddedRestrooms());
         dispatch(getUserVisitedRestrooms());
       }
     });
