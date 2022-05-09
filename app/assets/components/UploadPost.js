@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import { View, TextInput, Image, Button } from 'react-native';
 import { firebase } from '../../firebase';
 import { useSelector } from 'react-redux';
+import { set } from 'react-native-reanimated';
+import AnimationLoad from './AnimationLoad';
 
 export default function UploadPost({ navigation, route }) {
   const { image, geohash } = route.params;
-
   const { user } = useSelector((state) => state.userAuth);
   const [caption, setCaption] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const childPath = `posts/${user.uid}/${Math.random().toString(36)}`;
+
   const uploadImage = async () => {
     const uri = image;
     const response = await fetch(uri); //Fetch Image Data
@@ -21,14 +25,14 @@ export default function UploadPost({ navigation, route }) {
 
     const uploadProgress = (snapshot) => {
       //TODO FRONTEND: Display Progress Bar/Animation When Uploading.
-      console.log(snapshot)
+      setLoading(true);
     };
-
 
     const taskCompleted = () => {
       task.snapshot.ref.getDownloadURL().then((snapshot) => {
         //Public url that can be shared.
         savePostData(snapshot);
+        setLoading(false);
       });
     };
 
@@ -37,29 +41,47 @@ export default function UploadPost({ navigation, route }) {
     };
 
     task.on('state_changed', uploadProgress, taskError, taskCompleted);
-
-
-    
   };
 
   const savePostData = (downloadURL) => {
-    firebase
-      .firestore()
-      .collection('posts')
-      .doc(geohash)
-      .update({
-        userPosts: firebase.firestore.FieldValue.arrayUnion({
-          user: user.uid,
-          username: user.displayName,
-          downloadURL,
-          caption,
-          creation: firebase.firestore.Timestamp.now(), //Firestore places a timestamp for creation date. Serverside action.
-        }),
-      })
-      .then(function () {
-        navigation.navigate('Feed', { geohash });
-      });
+    const docRef = firebase.firestore().collection('posts').doc(geohash);
+
+    docRef.get().then((doc) => {
+      if (doc.exists) {
+        docRef
+          .update({
+            userPosts: firebase.firestore.FieldValue.arrayUnion({
+              user: user.uid,
+              username: user.displayName,
+              downloadURL,
+              caption,
+              creation: firebase.firestore.Timestamp.now(), //Firestore places a timestamp for creation date. Serverside action.
+            }),
+          })
+          .then(function () {
+            navigation.navigate('Feed', { geohash });
+          });
+      } else {
+        docRef
+          .set({
+            userPosts: firebase.firestore.FieldValue.arrayUnion({
+              user: user.uid,
+              username: user.displayName,
+              downloadURL,
+              caption,
+              creation: firebase.firestore.Timestamp.now(), //Firestore places a timestamp for creation date. Serverside action.
+            }),
+          })
+          .then(function () {
+            navigation.navigate('Feed', { geohash });
+          });
+      }
+    });
   };
+
+  if (loading) {
+    return <AnimationLoad />;
+  }
 
   return (
     <View style={{ flex: 1, justifyContent: 'center' }}>

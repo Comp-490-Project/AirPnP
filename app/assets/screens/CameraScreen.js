@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 export default function CameraScreen({ navigation, route }) {
   const [image, setImage] = useState(null);
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
+
   const { geohash } = route.params;
 
   const pickImage = async () => {

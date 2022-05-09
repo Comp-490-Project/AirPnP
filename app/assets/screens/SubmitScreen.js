@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  TextInput,
-  ScrollView,
-} from 'react-native';
+import { StyleSheet, View, Image, TextInput, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import colors from '../theme/colors';
 import BackButton from '../icons/back-btn.png';
@@ -37,11 +30,9 @@ export default function SubmitScreen({ navigation, route }) {
   const [name, setName] = useState('');
 
   const { location } = route.params;
-
   const { region, rating, image } = useSelector(
     (state) => state.restroomReview
   );
-
   const { user } = useSelector((state) => state.userAuth);
 
   const handleCamera = async () => {

@@ -84,16 +84,16 @@ function MapBottomCard({ navigation }) {
               )}
             </View>
             <View style={styles.btnContainer}>
-              { user && distance < 500 ? (
+              {user && distance < 10000 ? (
                 <>
                   <View style={{ marginRight: 15 }}>
                     <DirectionsIcon latitude={latitude} longitude={longitude} />
                   </View>
-                  <View>
+                  <View style={{ marginRight: 15 }}>
                     <FeedIcon navigation={navigation} geohash={geohash} />
                   </View>
                   <View>
-                    <CameraIcon navigation={navigation} geohash={geohash}/>
+                    <CameraIcon navigation={navigation} geohash={geohash} />
                   </View>
                 </>
               ) : (
