@@ -16,8 +16,10 @@ import DistancePersonIcon from '../icons/distance-person-icon.svg';
 import { WIDTH } from '../../constants/Dimensions';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCar } from '@fortawesome/free-solid-svg-icons';
+import CameraIcon from './CameraIcon';
 
 function MapBottomCard({ navigation }) {
+  const { user } = useSelector((state) => state.userAuth);
   const { geohash, latitude, longitude, meanRating, name, address, distance } =
     useSelector((state) => state.restroomMarker);
 
@@ -82,12 +84,28 @@ function MapBottomCard({ navigation }) {
               )}
             </View>
             <View style={styles.btnContainer}>
-              <View style={{ marginRight: 15 }}>
-                <DirectionsIcon latitude={latitude} longitude={longitude} />
-              </View>
-              <View>
-                <FeedIcon navigation={navigation} geohash={geohash} />
-              </View>
+              { user && distance < 500 ? (
+                <>
+                  <View style={{ marginRight: 15 }}>
+                    <DirectionsIcon latitude={latitude} longitude={longitude} />
+                  </View>
+                  <View>
+                    <FeedIcon navigation={navigation} geohash={geohash} />
+                  </View>
+                  <View>
+                    <CameraIcon navigation={navigation} geohash={geohash}/>
+                  </View>
+                </>
+              ) : (
+                <>
+                  <View style={{ marginRight: 15 }}>
+                    <DirectionsIcon latitude={latitude} longitude={longitude} />
+                  </View>
+                  <View>
+                    <FeedIcon navigation={navigation} geohash={geohash} />
+                  </View>
+                </>
+              )}
             </View>
           </View>
           <Image source={ToiletIcon} style={styles.toiletBackground} />
