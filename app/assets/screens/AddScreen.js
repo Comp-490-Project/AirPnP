@@ -9,12 +9,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getUserLocation } from '../../actions/userActions';
 import AnimationLoad from '../components/AnimationLoad';
 import { HEIGHT, WIDTH } from '../../constants/Dimensions';
-import colors from '../theme/colors';
 import { isPointWithinRadius } from 'geolib';
 import ModalAlert from '../components/ModalAlert';
 import SafeView from '../components/SafeView';
 import LightText from '../components/LightText';
-import SubmitScreen from './SubmitScreen';
 
 export default function AddScreen({ navigation }) {
   const dispatch = useDispatch();

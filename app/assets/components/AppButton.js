@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import colors from '../theme/colors';
 import { LinearGradient } from 'expo-linear-gradient';
+
 function AppButton({ title, onPress }) {
   return (
     <TouchableOpacity onPress={onPress}>

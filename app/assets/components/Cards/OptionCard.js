@@ -17,7 +17,7 @@ export default function OptionCard({ icon, bg, title }) {
       }}
     >
       <View style={styles.icon}>
-        <Icon name={icon} size={30} color={bg} style={{}} />
+        <Icon name={icon} size={20} color={bg} />
         <Text style={styles.title}>{title}</Text>
       </View>
       <Switch
@@ -26,30 +26,30 @@ export default function OptionCard({ icon, bg, title }) {
         value={isEnabled}
         style={{
           transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
-          paddingLeft: '10%',
+          marginLeft: '8%',
         }}
-      ></Switch>
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    height: HEIGHT * 0.08,
-    width: WIDTH * 0.45,
+    height: HEIGHT * 0.06,
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 12,
+    paddingHorizontal: 5,
   },
   icon: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
-    marginTop: 10,
     color: colors.white,
     fontWeight: 'bold',
     fontSize: 15,
+    marginLeft: 5,
   },
 });

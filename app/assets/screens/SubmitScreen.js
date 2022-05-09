@@ -5,14 +5,14 @@ import {
   Text,
   Image,
   TextInput,
-  TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import colors from '../theme/colors';
 import BackButton from '../icons/back-btn.png';
 import SafeView from '../components/SafeView';
 import LightText from '../components/LightText';
-import OptionCard from '../components/Cards/OptionCard';
+import OptionCard from '../components/cards/OptionCard';
 import { HEIGHT, WIDTH } from '../../constants/Dimensions';
 import mapStyle from '../../constants/mapStyle';
 import MapView, { Marker } from 'react-native-maps';
@@ -29,6 +29,7 @@ import {
   faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import { addUserAddedRestroom } from '../../actions/userActions';
+import AppButton from '../components/AppButton';
 
 export default function SubmitScreen({ navigation, route }) {
   const dispatch = useDispatch();
@@ -89,70 +90,69 @@ export default function SubmitScreen({ navigation, route }) {
 
   return (
     <SafeView>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-            <Image style={styles.backButton} source={BackButton} />
-          </TouchableOpacity>
-          <Text style={styles.text}>Add Details</Text>
-        </View>
-        <View style={{ borderRadius: 4, paddingBottom: 2, overflow: 'hidden' }}>
-          <MapView
-            style={styles.mapView}
-            customMapStyle={mapStyle}
-            showsUserLocation={true}
-            region={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-              latitudeDelta: 0.0006,
-              longitudeDelta: 0.0006,
+      <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        <Image style={styles.backButton} source={BackButton} />
+      </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.container}>
+        <LightText fontSize={24} fontWeight="bold" textAlign="center">
+          Add Details
+        </LightText>
+        <MapView
+          style={styles.mapView}
+          customMapStyle={mapStyle}
+          showsUserLocation
+          showsMyLocationButton={false}
+          region={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.0006,
+            longitudeDelta: 0.0006,
+          }}
+        >
+          <Marker
+            coordinate={{
+              latitude: region.latitude,
+              longitude: region.longitude,
             }}
-            showsMyLocationButton={false}
-          >
-            <Marker
-              coordinate={{
-                latitude: region.latitude,
-                longitude: region.longitude,
-              }}
-            />
-          </MapView>
-        </View>
-        <Text style={styles.label}>Rate This Restroom</Text>
-        <View style={styles.section}>
+          />
+        </MapView>
+        <LightText fontSize={18}>Rate This Restroom</LightText>
+        <View style={styles.ratingContainer}>
           <Rating />
         </View>
-        <Text style={[styles.label, { marginLeft: '5%', marginTop: '3%' }]}>
-          Enter Restroom Name
-        </Text>
-        <TextInput
-          style={{
-            marginLeft: '3%',
-            marginVertical: '3%',
-            borderWidth: 1,
-            borderColor: colors.primary,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-          }}
-          color="white"
-          onChangeText={(text) => setName(text)}
-        />
-
-        <Text style={styles.switchLabel}>Indicate Restroom Details</Text>
-        <ScrollView
-          style={{ marginTop: 5 }}
-          showsHorizontalScrollIndicator={false}
-          horizontal
+        <LightText fontSize={18}>Enter Restroom Name</LightText>
+        <LinearGradient
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={[colors.secondary, colors.primary]}
+          locations={[0, 1]}
+          style={styles.gradientOutline}
         >
-          <OptionCard icon="dollar" title="FREE" bg={colors.textLeft} />
-          <OptionCard icon="wheelchair" title="HANDICAP" bg={colors.textLeft} />
-        </ScrollView>
-        
-        <Text style={styles.mediaLabel}>Upload Restroom Images</Text>
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <TouchableOpacity
-            style={{ width: '45%', marginRight: 15, top: '-18%' }}
-            onPress={handleCamera}
-          >
+          <View style={styles.formGroup}>
+            <TextInput
+              style={styles.formInput}
+              onChangeText={(text) => setName(text)}
+            />
+          </View>
+        </LinearGradient>
+        <LightText fontSize={18}>Indicate Restroom Details</LightText>
+        <View style={styles.optionContainer}>
+          <View style={styles.option}>
+            <OptionCard icon="dollar" title="FREE" bg={colors.secondary} />
+          </View>
+          <View style={styles.option}>
+            <OptionCard
+              icon="wheelchair"
+              title="HANDICAP"
+              bg={colors.secondary}
+            />
+          </View>
+        </View>
+        <LightText fontSize={18}>Upload Restroom Images</LightText>
+        <View
+          style={[styles.mediaContainer, { marginBottom: !image ? 20 : 0 }]}
+        >
+          <TouchableOpacity onPress={handleCamera}>
             <LinearGradient
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
@@ -160,21 +160,18 @@ export default function SubmitScreen({ navigation, route }) {
               locations={[0, 1]}
               style={styles.gradientSubmit}
             >
-              <View style={styles.btnSubmit}>
-                <LightText fontSize={20}>Camera</LightText>
+              <View style={styles.btnContainer}>
                 <FontAwesomeIcon
                   icon={faCamera}
                   size={20}
                   color={colors.white}
                   style={styles.iconLeft}
-                ></FontAwesomeIcon>
+                />
+                <LightText fontSize={18}>Camera</LightText>
               </View>
             </LinearGradient>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{ width: '45%', top: '-18%' }}
-            onPress={handleLibrary}
-          >
+          <TouchableOpacity onPress={handleLibrary}>
             <LinearGradient
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
@@ -182,153 +179,124 @@ export default function SubmitScreen({ navigation, route }) {
               locations={[0, 1]}
               style={styles.gradientSubmit}
             >
-              <View style={styles.btnSubmit}>
+              <View style={styles.btnContainer}>
                 <FontAwesomeIcon
                   icon={faPhotoFilm}
                   size={20}
                   color={colors.white}
-                  style={styles.iconRight}
-                ></FontAwesomeIcon>
-                <LightText fontSize={20}>Photos</LightText>
+                  style={styles.iconLeft}
+                />
+                <LightText fontSize={18}>Photos</LightText>
               </View>
             </LinearGradient>
           </TouchableOpacity>
         </View>
         {image && (
-          <View style={styles.textSection}>
-            <Text style={{ fontSize: 20, color: colors.textRight }}>
-              Uploaded Image
-            </Text>
+          <View style={styles.uploadSuccess}>
+            <LightText fontSize={14}>Uploaded Image</LightText>
             <FontAwesomeIcon
               icon={faCheck}
               size={20}
               color={colors.green}
-              style={styles.iconUpload}
-            ></FontAwesomeIcon>
+              style={styles.iconRight}
+            />
           </View>
         )}
-
-        <TouchableOpacity
-          style={{ width: '70%', top: '-5%', alignSelf: 'center' }}
-          onPress={handleSubmit}
-        >
-          <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={[colors.secondary, colors.primary]}
-            locations={[0, 1]}
-            style={styles.gradientSubmit}
-          >
-            <View style={styles.button}>
-              <LightText fontSize={20}>Submit</LightText>
-            </View>
-          </LinearGradient>
+        <TouchableOpacity onPress={handleSubmit}>
+          <AppButton title="Submit" />
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.darkBackground,
-  },
   backButton: {
+    marginTop: 20,
+    marginBottom: 12,
     marginLeft: 15,
-    marginTop: 25,
   },
-  text: {
-    color: colors.white,
-    fontSize: 30,
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    marginBottom: 5,
-  },
-  column: {
-    flexDirection: 'row',
+  container: {
+    maxWidth: WIDTH,
+    minHeight: HEIGHT,
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+    justifyContent: 'center',
   },
   mapView: {
-    height: HEIGHT * 0.2,
+    height: HEIGHT * 0.3,
+    width: '100%',
+    marginVertical: 12,
   },
-  label: {
-    color: colors.white,
-    fontSize: 20,
-    alignSelf: 'center',
-    right: '25%',
+  ratingContainer: {
+    alignItems: 'flex-start',
+    marginVertical: 12,
   },
-  header: {
-    backgroundColor: '#1c1f28',
+  textInput: {
+    borderColor: colors.secondary,
+    borderWidth: 1,
   },
-  switchLabel: {
-    color: colors.white,
-    fontSize: 20,
-    alignSelf: 'center',
-    right: '18%',
-    
-  },
-  mediaLabel: {
-    color: colors.white,
-    fontSize: 20,
-    alignSelf: 'center',
-    right: '18%',
-    marginBottom: '22%',
-  },
-  section: {
-    backgroundColor: '#1c1f28',
-    borderRadius: 15,
+  gradientOutline: {
+    marginVertical: 12,
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
+    width: '100%',
     height: HEIGHT * 0.05,
-    width: WIDTH * 0.9,
-    alignItems: 'center',
-    justifyContent: 'center',
-    left: 22,
-    marginTop: 10,
+    borderRadius: 4,
   },
-  textSection: {
-    backgroundColor: '#1c1f28',
+  formGroup: {
+    width: '100%',
+    height: '100%',
     alignItems: 'center',
-    alignSelf: 'center',
     justifyContent: 'center',
-    bottom: '13%',
-    borderRadius: 15,
-    width: WIDTH * 0.9,
+  },
+  formInput: {
+    position: 'relative',
+    backgroundColor: colors.backgroundDark,
+    paddingHorizontal: 10,
+    width: '99.3%',
+    height: '93%',
+    borderRadius: 3,
+    color: colors.backgroundLight,
+  },
+  optionContainer: {
     flexDirection: 'row',
+    marginVertical: 12,
+  },
+  option: {
+    marginRight: 10,
+  },
+  mediaContainer: {
+    flexDirection: 'row',
+    marginTop: 12,
   },
   gradientSubmit: {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    width: '100%',
-    overflow: 'hidden',
+    marginRight: 10,
   },
-  btnSubmit: {
-    width: '98.5%',
+  btnContainer: {
+    backgroundColor: colors.backgroundDark,
+    borderRadius: 4,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingVertical: 7,
     paddingHorizontal: 25,
     marginVertical: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.backgroundDark,
-    borderRadius: 4,
-  },
-  button: {
-    width: '98.5%',
-    marginVertical: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.backgroundDark,
-    borderRadius: 4,
-  },
-  iconRight: {
-    marginRight: 10,
+    marginHorizontal: 1.5,
   },
   iconLeft: {
-    marginLeft: 10,
+    marginRight: 5,
   },
-  iconUpload: {
-    marginLeft: 10,
+  iconRight: {
+    marginLeft: 5,
+  },
+  uploadSuccess: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
   },
 });
