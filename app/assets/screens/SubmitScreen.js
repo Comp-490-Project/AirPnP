@@ -12,7 +12,7 @@ import colors from '../theme/colors';
 import BackButton from '../icons/back-btn.png';
 import SafeView from '../components/SafeView';
 import LightText from '../components/LightText';
-import OptionCard from '../components/cards/OptionCard';
+import OptionCard from '../components/Cards/OptionCard';
 import { HEIGHT, WIDTH } from '../../constants/Dimensions';
 import mapStyle from '../../constants/mapStyle';
 import MapView, { Marker } from 'react-native-maps';
@@ -121,15 +121,6 @@ export default function SubmitScreen({ navigation, route }) {
         <View style={styles.section}>
           <Rating />
         </View>
-        <Text style={styles.switchLabel}>Indicate Restroom Details</Text>
-        <ScrollView
-          style={{ marginTop: 5 }}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-        >
-          <OptionCard icon="dollar" title="FREE" bg={colors.textLeft} />
-          <OptionCard icon="wheelchair" title="HANDICAP" bg={colors.textLeft} />
-        </ScrollView>
         <Text style={[styles.label, { marginLeft: '5%', marginTop: '3%' }]}>
           Enter Restroom Name
         </Text>
@@ -145,6 +136,17 @@ export default function SubmitScreen({ navigation, route }) {
           color="white"
           onChangeText={(text) => setName(text)}
         />
+
+        <Text style={styles.switchLabel}>Indicate Restroom Details</Text>
+        <ScrollView
+          style={{ marginTop: 5 }}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+        >
+          <OptionCard icon="dollar" title="FREE" bg={colors.textLeft} />
+          <OptionCard icon="wheelchair" title="HANDICAP" bg={colors.textLeft} />
+        </ScrollView>
+        
         <Text style={styles.mediaLabel}>Upload Restroom Images</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <TouchableOpacity
@@ -239,9 +241,8 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 30,
     fontWeight: 'bold',
-    marginTop: 25,
     alignSelf: 'center',
-    marginBottom: 25,
+    marginBottom: 5,
   },
   column: {
     flexDirection: 'row',
@@ -263,7 +264,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'center',
     right: '18%',
-    marginTop: '3%',
+    
   },
   mediaLabel: {
     color: colors.white,

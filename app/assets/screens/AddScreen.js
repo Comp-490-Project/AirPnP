@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   addButton: {
     position: 'absolute',
     bottom: 20,
-    width: '100%',
+    width: '50%',
     marginBottom: 125,
     height: 10,
   },

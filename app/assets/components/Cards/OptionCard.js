@@ -36,7 +36,7 @@ export default function OptionCard({ icon, bg, title }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: HEIGHT * 0.12,
+    height: HEIGHT * 0.08,
     width: WIDTH * 0.45,
     borderRadius: 15,
     alignItems: 'center',
