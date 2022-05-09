@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { View, TextInput, Image, Button } from 'react-native';
+import { View, TextInput, Image, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { firebase } from '../../firebase';
 import { useSelector } from 'react-redux';
-import { set } from 'react-native-reanimated';
+import SafeView from './SafeView';
+import AppButton from './AppButton';
 import AnimationLoad from './AnimationLoad';
+import { HEIGHT, WIDTH } from '../../constants/Dimensions';
+import colors from '../theme/colors';
 
 export default function UploadPost({ navigation, route }) {
   const { image, geohash } = route.params;
@@ -84,22 +88,53 @@ export default function UploadPost({ navigation, route }) {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center' }}>
-      <Image source={{ uri: image }} />
-      <TextInput
-        placeholder="Label your masterpiece"
-        onChangeText={(caption) => setCaption(caption)}
-      />
-      <Button
-        title="Save"
-        onPress={() => {
-          if (caption.length < 6) {
-            alert('Please enter a caption with at least 6 characters');
-          } else {
-            uploadImage();
-          }
-        }}
-      />
-    </View>
+    <SafeView>
+      <View style={styles.screenContainer}>
+        <Image source={{ uri: image }} style={styles.image} />
+        <TextInput
+          placeholder="Label your masterpiece"
+          placeholderTextColor={colors.backgroundLight}
+          style={styles.textInput}
+          onChangeText={(text) => setCaption(text)}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            if (caption.length < 6) {
+              alert('Please enter a caption with at least 6 characters');
+            } else {
+              uploadImage();
+            }
+          }}
+        >
+          <View style={styles.btnContainer}>
+            <AppButton title="Save" />
+          </View>
+        </TouchableOpacity>
+      </View>
+    </SafeView>
   );
 }
+
+const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+    height: HEIGHT,
+    width: WIDTH,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    height: '50%',
+    width: '100%',
+    borderRadius: 5,
+  },
+  textInput: {
+    marginVertical: 12,
+    fontSize: 18,
+    color: colors.backgroundLight,
+  },
+  btnContainer: {
+    width: WIDTH * 0.95,
+  },
+});
