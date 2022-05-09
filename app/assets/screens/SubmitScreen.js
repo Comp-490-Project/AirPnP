@@ -12,7 +12,7 @@ import colors from '../theme/colors';
 import BackButton from '../icons/back-btn.png';
 import SafeView from '../components/SafeView';
 import LightText from '../components/LightText';
-import OptionCard from '../components/Cards/OptionCard';
+import OptionCard from '../components/cards/OptionCard';
 import { HEIGHT, WIDTH } from '../../constants/Dimensions';
 import mapStyle from '../../constants/mapStyle';
 import MapView, { Marker } from 'react-native-maps';
