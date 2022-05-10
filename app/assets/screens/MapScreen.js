@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { auth } from '../../firebase';
 import { WIDTH, HEIGHT } from '../../constants/Dimensions';
@@ -22,9 +22,10 @@ import mapStyle from '../../constants/mapStyle';
 
 function MapScreen({ navigation }) {
   const dispatch = useDispatch();
+  const mapRef = useRef(null);
 
   const { location } = useSelector((state) => state.userLocation);
-  const { restrooms, restroomWithDirections, mapCenterLocation } = useSelector(
+  const { restrooms, restroomWithDirections } = useSelector(
     (state) => state.map
   );
 
@@ -54,6 +55,30 @@ function MapScreen({ navigation }) {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    if (location && restroomWithDirections) {
+      const destinationArr = restroomWithDirections.split(', ');
+      const formattedDest = {
+        latitude: Number(destinationArr[0]),
+        longitude: Number(destinationArr[1]),
+      };
+
+      mapRef.current.fitToCoordinates(
+        [
+          { latitude: location.latitude, longitude: location.longitude },
+          {
+            latitude: formattedDest.latitude,
+            longitude: formattedDest.longitude,
+          },
+        ],
+        {
+          edgePadding: { top: 150, left: 300, right: 300, bottom: 150 },
+          animated: true,
+        }
+      );
+    }
+  }, [location, restroomWithDirections]);
+
   if (!location || !restroomWithDirections) {
     return <AnimationLoad />;
   }
@@ -61,21 +86,20 @@ function MapScreen({ navigation }) {
   return (
     <>
       <MapView
+        ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={styles.mapView}
         showsUserLocation
         showsMyLocationButton={false}
         customMapStyle={mapStyle}
-        onLocation
-        region={{
-          latitude: mapCenterLocation
-            ? mapCenterLocation.latitude
-            : location.latitude,
-          longitude: mapCenterLocation
-            ? mapCenterLocation.longitude
-            : location.longitude,
+        initialRegion={{
+          latitude: location.latitude,
+          longitude: location.longitude,
           latitudeDelta: 0.0015,
           longitudeDelta: 0.0121,
+        }}
+        mapPadding={{
+          bottom: 500,
         }}
         loadingEnabled
       >
