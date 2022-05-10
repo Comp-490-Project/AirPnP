@@ -7,17 +7,17 @@ export default [
     {
         id: '2',
         title: 'Add Them',
-        description: 'random text',
+        description: 'Add Restrooms To Our Database and Help Map Out Your Community!',
     },
     {
         id: '3',
         title: 'Post Them',
-        description: 'random text',
+        description: 'Give Others Insight On The State Of Your Local Restrooms and Connect In Ways You Never Thought Feasible',
     },
     {
         id: '4',
         title: 'Get Started!',
-        description: 'random text',
+        description: 'Sign Up Now',
     },
 
     
