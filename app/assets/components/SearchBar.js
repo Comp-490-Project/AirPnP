@@ -1,4 +1,5 @@
 import React from 'react';
+import { GOOGLE_APIKEY } from '@env';
 import { View, Text, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -40,7 +41,7 @@ function SearchBar() {
           }}
           fetchDetails={true}
           query={{
-            key: 'AIzaSyDOeEKbcngBARFdVV8a5K75fakxbrS3Kro',
+            key: GOOGLE_APIKEY,
             language: 'en',
           }}
           GooglePlacesDetailsQuery={{

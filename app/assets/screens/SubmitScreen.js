@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { GOOGLE_APIKEY } from '@env';
 import { StyleSheet, View, Image, TextInput, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import colors from '../theme/colors';
 import BackButton from '../icons/back-btn.png';
 import SafeView from '../components/SafeView';
 import LightText from '../components/LightText';
-import OptionCard from '../components/Cards/OptionCard';
+import OptionCard from '../components/cards/OptionCard';
 import { HEIGHT, WIDTH } from '../../constants/Dimensions';
 import mapStyle from '../../constants/mapStyle';
 import MapView, { Marker } from 'react-native-maps';
@@ -47,7 +48,7 @@ export default function SubmitScreen({ navigation, route }) {
 
   const handleSubmit = async () => {
     const res = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${region.latitude},${region.longitude}&key=AIzaSyB42EXr3NqNkoICmr6l2fBQCQ0a9P3yiQI`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${region.latitude},${region.longitude}&key=${GOOGLE_APIKEY}`
     );
 
     res.json().then((data) => {

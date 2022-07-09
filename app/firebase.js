@@ -1,13 +1,22 @@
 import * as firebase from 'firebase';
+import {
+  GOOGLE_APIKEY,
+  FIREBASE_AUTHDOMAIN,
+  FIREBASE_PROJECTID,
+  FIREBASE_STORAGEBUCKET,
+  FIREBASE_MESSINGSENDERID,
+  FIREBASE_APPID,
+  FIREBASE_MEASUREMENTID,
+} from '@env';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDOeEKbcngBARFdVV8a5K75fakxbrS3Kro',
-  authDomain: 'airpnp-327419.firebaseapp.com',
-  projectId: 'airpnp-327419',
-  storageBucket: 'airpnp-327419.appspot.com',
-  messagingSenderId: '138637806118',
-  appId: '1:138637806118:web:4ff5512c5bd7acf14234e7',
-  measurementId: 'G-RNLPTZ7F2C',
+  apiKey: GOOGLE_APIKEY,
+  authDomain: FIREBASE_AUTHDOMAIN,
+  projectId: FIREBASE_PROJECTID,
+  storageBucket: FIREBASE_STORAGEBUCKET,
+  messagingSenderId: FIREBASE_MESSINGSENDERID,
+  appId: FIREBASE_APPID,
+  measurementId: FIREBASE_MEASUREMENTID,
 };
 
 let app; //redid this initializing code

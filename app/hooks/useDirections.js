@@ -1,4 +1,5 @@
 import React from 'react';
+import { GOOGLE_APIKEY } from '@env';
 import MapViewDirections from 'react-native-maps-directions';
 import colors from '../assets/theme/colors';
 
@@ -7,7 +8,7 @@ export const useDirections = (location, destination) => {
     <MapViewDirections
       origin={location}
       destination={destination}
-      apikey={'AIzaSyB65lV0eONvq5_rGwaZm7pMHOJZYM4gVMk'}
+      apikey={GOOGLE_APIKEY}
       strokeColor={colors.directionsStroke}
       strokeWidth={4}
     />

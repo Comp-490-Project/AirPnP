@@ -1,4 +1,5 @@
 import React from 'react';
+import { GOOGLE_APIKEY } from '@env';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
@@ -43,7 +44,7 @@ export const SearchScreen = function ({ navigation }) {
           }}
           fetchDetails={true}
           query={{
-            key: 'AIzaSyDOeEKbcngBARFdVV8a5K75fakxbrS3Kro',
+            key: GOOGLE_APIKEY,
             language: 'en',
           }}
         />
